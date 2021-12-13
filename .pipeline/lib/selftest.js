@@ -14,29 +14,12 @@ module.exports = (settings)=>{
   var result = ''
   var failureSummary = ''
 
-  const testsvc_component = 'jh-etk-testsvc';
-  const components = ['jh-etk-primeadapter',
-                      'jh-etk-disputesvc',
-                      'jh-etk-eventsvc',
-                      'jh-etk-issuancesvc',
-                      'jh-etk-jiadapter',
-                      'jh-etk-paymentsvc',
-                      'jh-etk-rcmpadapter',
-                      //'jh-cmn-rideweb',
-                      'jh-etk-scweb',
-                      testsvc_component];
+  const components = ['rsbc-ride-kafka-mockproducer',
+                      'rsbc-ride-kafka-mockconsumer'];
 
-  const componentUrls = {"jh-etk-primeadapter": "http://localhost:8080/primeadapter/v3/ready" ,
-                         "jh-etk-disputesvc": "http://localhost:8080/dispute/v3/ready",
-                         "jh-etk-eventsvc": "http://localhost:8080/events/v3/ready",
-                         "jh-etk-icbcadapter": "http://localhost:8080/icbcadapter/v3/ready",
-                         "jh-etk-issuancesvc": "http://localhost:8080/issuancesvc/v3/ready",
-                         "jh-etk-jiadapter": "http://localhost:8080/dispute/v3/ready",
-                         "jh-etk-paymentsvc": "http://localhost:8080/payment/v3/ready",
-                         "jh-etk-rcmpadapter": "http://localhost:8080/etk/rcmp/v1/ready",
-                         //"jh-cmn-rideweb": "http://localhost:8080",
-                         "jh-etk-scweb": "http://localhost:8080/ready",
-                         "jh-etk-testsvc": "http://localhost:5000/ready"};
+  const componentUrls = {"rsbc-ride-kafka-mockproducer": "http://localhost:8080/rsbc-ride-kafka-mockproducer/ready" ,
+                         "rsbc-ride-kafka-mockconsumer": "http://localhost:8080/rsbc-ride-kafka-mockproducer/ready"
+                        };
 
 
   console.log("Running Application component self tests...")
@@ -49,12 +32,6 @@ module.exports = (settings)=>{
       }
       console.log(`Standby: ${standby}`)
       console.log(`Active: ${active}`)
-  }
-
-  // skip testsvc selftest in stage and prod
-  if (phase == "stage" || phase == "prod"){
-    console.log(`Remove ${testsvc_component} from selftest list during ${phase} deployment`)
-    components.splice(components.indexOf(testsvc_component), 1);
   }
 
   for (var component of components) {

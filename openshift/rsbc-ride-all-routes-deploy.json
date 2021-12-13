@@ -1,0 +1,75 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "${NAME}-all-routes-template",
+        "annotations": {
+            "description": "Deployment template for a ride app routes.",
+            "tags": "rsbc-ride",
+            "iconClass": "icon-java"
+        }
+    },
+    "objects": [
+        {
+            "kind": "Route",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "${NAME}-kafka-mockproducer${HOSTNAME_SUFFIX}",
+                "labels": {
+                    "app": "${NAME}",
+                    "component": "${NAME}-kafka-mockproducer${SUFFIX}",
+                    "name": "${NAME}-kafka-mockproducer${HOSTNAME_SUFFIX}"
+                },
+                "annotations": {
+                    "description": "SSG API route for kafka-mockproducer",
+                    "haproxy.router.openshift.io/timeout": "${HAPROXY_TIMEOUT}"
+                }
+            },
+            "spec": {
+                "host": "${NAME}-kafka-mockproducer${HOSTNAME_SUFFIX}.apps.silver.devops.gov.bc.ca",
+                "port": {
+                    "targetPort": "8080-tcp"
+                },
+                "tls": {
+                    "insecureEdgeTerminationPolicy": "Redirect",
+                    "termination": "edge"
+                },
+                "to": {
+                    "kind": "Service",
+                    "name": "${NAME}-kafka-mockproducer${SUFFIX}",
+                    "weight": 100
+                },
+                "wildcardPolicy": "None"
+            }
+        }
+        
+    ],
+    "parameters": [
+    {
+      "name": "NAME",
+      "displayName": "Name",
+      "description": "The name assigned to all of the OpenShift resources associated to the server instance.",
+      "required": true,
+      "value": "rsbc-ride"
+    },
+    {
+      "name": "SUFFIX",
+      "displayName": "Application name suffix",
+      "description": "Application name suffix",
+      "required": true
+    },
+    {
+      "name": "HOSTNAME_SUFFIX",
+      "displayName": "Application hostname suffix",
+      "description": "Application hostname suffix",
+      "required": true
+    },
+    {
+      "name": "HAPROXY_TIMEOUT",
+      "displayName": "HAPROXY_TIMEOUT",
+      "description": "HAPROXY_TIMEOUT",
+      "required": false,
+      "value": ""
+    }
+   ]
+}

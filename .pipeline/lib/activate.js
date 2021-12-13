@@ -15,24 +15,12 @@ module.exports = (settings)=>{
   var stsExists
   var backupPodExists
   var backupPod
-  const mocksvc_component = 'jh-etk-mocksvc';
-  const rideweb_component = 'jh-cmn-rideweb';
-  const ridesvc_component = 'jh-cmn-ridesvc';
-  const components = ['jh-etk-primeadapter',
-                      'jh-etk-disputesvc',
-                      'jh-etk-eventsvc',
-                      'jh-etk-icbcadapter',
-                      'jh-etk-issuancesvc',
-                      'jh-etk-jiadapter',
-                      mocksvc_component,
-                      'jh-etk-paymentsvc',
-                      'jh-etk-rcmpadapter',
-                      'jh-etk-scweb',
-                      rideweb_component,
-                      ridesvc_component,
+  const kafka_mockproducer_component = 'rsbc-ride-kafka-mockproducer';
+  const kafka_mockconsumer_component = 'rsbc-ride-kafka-mockconsumer';
+  const components = [kafka_mockproducer_component,
+                      kafka_mockconsumer_component
                     ];
-  const dbComponent = 'jh-etk-db';
-
+  
 
   console.log("Activating standby instance")
   console.log(`Standby: ${standby}`)
@@ -48,15 +36,13 @@ module.exports = (settings)=>{
   // Delete active routes
   console.log('Delete routes...')
   oc.raw('delete', ['route'], {selector:`app=${phases[phase].instance},env-name=${phases[phase].phase},github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phases[phase].namespace})
-  oc.raw('delete', ['route'], {selector:`app=jh-cmn${phases[phase].suffix},env-name=${phases[phase].phase},github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phases[phase].namespace})
-
-  // Delete db, mocksvc, testsvc "active" services
-  console.log('Delete services...')
-  oc.raw('delete', ['service'], {selector:`name=jh-etk-db-${phases[phase].tag}-active,app=${phases[phase].instance},env-name=${phases[phase].phase},github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phases[phase].namespace})
-  oc.raw('delete', ['service'], {selector:`name=jh-etk-mocksvc-${phases[phase].tag}-active,app=${phases[phase].instance},env-name=${phases[phase].phase},github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phases[phase].namespace})
-  oc.raw('delete', ['service'], {selector:`name=jh-etk-testsvc-${phases[phase].tag}-active,app=${phases[phase].instance},env-name=${phases[phase].phase},github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phases[phase].namespace})
   
-  objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/jh-etk-all-routes-deploy.json`, {
+  // Delete kafka-mockconsumer and kafka-mockproducer "active" services
+  console.log('Delete services...')
+  oc.raw('delete', ['service'], {selector:`name=rsbc-ride-kafka-mockconsumer-${phases[phase].tag}-active,app=${phases[phase].instance},env-name=${phases[phase].phase},github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phases[phase].namespace})
+  oc.raw('delete', ['service'], {selector:`name=rsbc-ride-kafka-mockproducer-${phases[phase].tag}-active,app=${phases[phase].instance},env-name=${phases[phase].phase},github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phases[phase].namespace})
+  
+  objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/rsbc-ride-all-routes-deploy.json`, {
     'param':{
       'NAME': phases[phase].name,
       'SUFFIX': phases[phase].suffix,
@@ -71,7 +57,7 @@ module.exports = (settings)=>{
       'CONFIGURED_RIDESVC_HOSTNAME': phases[phase].configured_ridesvc_hostname
     }
   }))
-  objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/jh-etk-bg-active-services.json`, {
+  objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/rsbc-ride-bg-active-services.json`, {
     'param':{
       'NAME': phases[phase].name,
       'PHASE': phases[phase].phase,
@@ -84,20 +70,12 @@ module.exports = (settings)=>{
   oc.applyAndDeploy(objects, phases[phase].instance)
 
   if(phase === 'prod') {
-    oc.raw('delete', ['route'], {selector:`name=jh-etk-icbcadapter-prod`, wait:'true', namespace:phases[phase].namespace})
-    oc.raw('delete', ['route'], {selector:`name=jh-etk-mocksvc-prod`, wait:'true', namespace:phases[phase].namespace})
-    oc.raw('delete', ['route'], {selector:`name=jh-etk-issuancesvc-prod`, wait:'true', namespace:phases[phase].namespace})
-    oc.raw('delete', ['route'], {selector:`name=jh-etk-jiadapter-prod`, wait:'true', namespace:phases[phase].namespace})
-    oc.raw('delete', ['route'], {selector:`name=jh-etk-primeadapter-prod`, wait:'true', namespace:phases[phase].namespace})
-    oc.raw('delete', ['route'], {selector:`name=jh-etk-eventsvc-prod`, wait:'true', namespace:phases[phase].namespace})
+    oc.raw('delete', ['route'], {selector:`name=rsbc-ride-kafka-mockconsumer-prod`, wait:'true', namespace:phases[phase].namespace})
+    oc.raw('delete', ['route'], {selector:`name=rsbc-ride-kafka-mockproducer-prod`, wait:'true', namespace:phases[phase].namespace})
   } else if(phase === 'stage') {
-    oc.raw('delete', ['route'], {selector:`name=jh-etk-icbcadapter-stage`, wait:'true', namespace:phases[phase].namespace})
-    oc.raw('delete', ['route'], {selector:`name=jh-etk-mocksvc-stage`, wait:'true', namespace:phases[phase].namespace})
-    oc.raw('delete', ['route'], {selector:`name=jh-etk-issuancesvc-stage`, wait:'true', namespace:phases[phase].namespace})
-    oc.raw('delete', ['route'], {selector:`name=jh-etk-jiadapter-stage`, wait:'true', namespace:phases[phase].namespace})
-    oc.raw('delete', ['route'], {selector:`name=jh-etk-primeadapter-stage`, wait:'true', namespace:phases[phase].namespace})
-    oc.raw('delete', ['route'], {selector:`name=jh-etk-eventsvc-stage`, wait:'true', namespace:phases[phase].namespace})
-  } 
+    oc.raw('delete', ['route'], {selector:`name=rsbc-ride-kafka-mockconsumer-stage`, wait:'true', namespace:phases[phase].namespace})
+    oc.raw('delete', ['route'], {selector:`name=rsbc-ride-kafka-mockproducer-stage`, wait:'true', namespace:phases[phase].namespace})
+ } 
   
   // Final step: idle all "new" standby (old active) components (including standby DB)
   console.log("Idle all new standby (old active) application components")
@@ -112,23 +90,11 @@ module.exports = (settings)=>{
     }
   }  
 
-  // Final step: idle "new" standby (old active) DB component
-  console.log("Idle the new standby (old active) database component");
-  const dbComponentInstance = `${dbComponent}-${phases[phase].tag}${active}`;
-  stsExists=oc.raw('get', ['sts'], {selector:`cluster-name=${dbComponentInstance}`, 'no-headers':'true', output:'custom-columns=NAME:.metadata.name', namespace:phases[phase].namespace})
-  if( stsExists.stdout.toString().includes(dbComponentInstance) ) {
-    console.log(`Scale ${dbComponentInstance} to zero...`)
-    oc.raw('scale', ['sts'], {selector:`cluster-name=${dbComponentInstance}`, replicas:'0', namespace:phases[phase].namespace})
-  } else {
-    console.log(`Could not scale down ${dbComponentInstance}`)
-  }
-
   // Final step: scale up new active (old standby) replicas from 1 to 3 (including standby DB)
   // The following application components shouldn't be scaled up: rideweb, ridesvc, mocksvc
-  components.splice(components.indexOf(mocksvc_component), 1);
-  components.splice(components.indexOf(rideweb_component), 1);
-  components.splice(components.indexOf(ridesvc_component), 1);
-
+  components.splice(components.indexOf(kafka_mockproducer_component), 1);
+  components.splice(components.indexOf(kafka_mockconsumer_component), 1);
+  
   console.log("Change all new active (old standby) application components replicas from 1 to 3")
   for (const component of components) {
     dcExists=oc.raw('get', ['dc'], {selector:`name=${component}-${phases[phase].tag}${standby}`, 'no-headers':'true', output:'custom-columns=NAME:.metadata.name', namespace:phases[phase].namespace})
@@ -141,14 +107,4 @@ module.exports = (settings)=>{
     }
   }  
 
-  // Final step: scale up new active (old standby) DB component from 1 to 3
-  console.log("Scale up new active (old standby) database component");
-  const dbComponentInstanceNewActive = `${dbComponent}-${phases[phase].tag}${standby}`;
-  stsExists=oc.raw('get', ['sts'], {selector:`cluster-name=${dbComponentInstanceNewActive}`, 'no-headers':'true', output:'custom-columns=NAME:.metadata.name', namespace:phases[phase].namespace})
-  if( stsExists.stdout.toString().includes(dbComponentInstanceNewActive) ) {
-    console.log(`Scale up ${dbComponentInstanceNewActive} to 3...`)
-    oc.raw('scale', ['sts'], {selector:`cluster-name=${dbComponentInstanceNewActive}`, replicas:'3', namespace:phases[phase].namespace})
-  } else {
-    console.log(`Could not scale up ${dbComponentInstanceNewActive}`)
-  }
 }

@@ -1,0 +1,79 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "${NAME}-active-service-template",
+    "annotations": {
+      "description": "Deployment template for blue/green active services."
+     }
+  },
+  "objects": [
+    {
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${NAME}-kafka-mockconsumer-${PHASE}-active",
+        "annotations": {
+          "description": "Exposes and load balances the kafka-mockconsumer component"
+        }
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "8080-tcp",
+            "port": 8080,
+            "targetPort": 8080
+          }
+        ],
+        "selector": {
+          "name": "${NAME}-kafka-mockconsumer${SUFFIX}",
+          "role": "leader"
+        }
+      }
+    }'
+	{
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${NAME}-kafka-mockproducer-${PHASE}-active",
+        "annotations": {
+          "description": "Exposes and load balances the kafka-mockproducer component"
+        }
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "8080-tcp",
+            "port": 8080,
+            "targetPort": 8080
+          }
+        ],
+        "selector": {
+          "name": "${NAME}-kafka-mockproducer${SUFFIX}",
+          "role": "leader"
+        }
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "name": "NAME",
+      "displayName": "Name",
+      "description": "The name assigned to all of the OpenShift associated resources.",
+      "required": true,
+      "value": "rsbc-ride"
+    },
+    {
+      "name": "SUFFIX",
+      "displayName": "Application name suffix",
+      "description": "Application name suffix",
+      "required": true
+    },
+    {
+      "name": "PHASE",
+      "displayName": "Application phase",
+      "description": "Application phase",
+      "required": true
+    }
+  ]
+}

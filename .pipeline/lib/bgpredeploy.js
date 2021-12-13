@@ -12,16 +12,9 @@ module.exports = (settings)=>{
   const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift'))
   var objects = []
   var dcExists
-  const dbComponent = 'jh-etk-db';
-  const components = ['jh-etk-primeadapter',
-                      'jh-etk-disputesvc',
-                      'jh-etk-eventsvc',
-                      'jh-etk-icbcadapter',
-                      'jh-etk-issuancesvc',
-                      'jh-etk-jiadapter',
-                      'jh-etk-paymentsvc',
-                      'jh-etk-rcmpadapter',
-                      'jh-etk-scweb'];
+  const components = ['rsbc-ride-kafka-mockproducer',
+                      'rsbc-ride-kafka-mockconsumer'
+                     ];
 
 
   console.log("Scale down active instance replicas from 3 to 1 ...")
@@ -50,13 +43,4 @@ module.exports = (settings)=>{
     }
   }
 
-  // Change current active DB replicas from 3 to 1 ...
-  const dbComponentInstance = `${dbComponent}-${phases[phase].tag}${active}`;
-  var stsExists=oc.raw('get', ['sts'], {selector:`cluster-name=${dbComponentInstance}`, 'no-headers':'true', output:'custom-columns=NAME:.metadata.name', namespace:phases[phase].namespace})
-  if( stsExists.stdout.toString().includes(dbComponentInstance) ) {
-    console.log(`Scale ${dbComponentInstance} to 1...`)
-    oc.raw('scale', ['sts'], {selector:`cluster-name=${dbComponentInstance}`, replicas:'1', namespace:phases[phase].namespace})
-  } else {
-    console.log(`Could not scale down ${dbComponentInstance}`)
-  }
 }

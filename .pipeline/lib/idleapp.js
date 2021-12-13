@@ -12,17 +12,9 @@ module.exports = (settings)=>{
   const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift'))
   var objects = []
   var dcExists
-  const components = ['jh-etk-primeadapter',
-                      'jh-etk-disputesvc',
-                      'jh-etk-eventsvc',
-                      'jh-etk-icbcadapter',
-                      'jh-etk-issuancesvc',
-                      'jh-etk-jiadapter',
-                      'jh-etk-mocksvc',
-                      'jh-etk-paymentsvc',
-                      'jh-etk-rcmpadapter',
-                      //'jh-cmn-rideweb',
-                      'jh-etk-scweb'];
+  const components = ['rsbc-ride-kafka-mockproducer',
+                      'rsbc-ride-kafka-mockconsumer'
+                     ];
 
 
   console.log("Idling Application components...")

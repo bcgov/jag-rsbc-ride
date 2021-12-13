@@ -1,0 +1,258 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "${NAME}-${COMPONENT}-deployment-template",
+    "annotations": {
+      "description": "Deployment template for kafka zookeeper.",
+      "tags": "${NAME}-${COMPONENT}"
+    }
+  },
+  "objects": [
+    {
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${NAME}-${COMPONENT}${SUFFIX}",
+        "annotations": {
+          "description": "Exposes and load balances the application pods"
+        }
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "2181-tcp",
+            "port": 2181,
+            "targetPort": 2181
+          }
+        ],
+        "selector": {
+          "cluster-name": "${NAME}-${COMPONENT}${SUFFIX}"
+        },
+        "sessionAffinity": "None",
+        "type": "ClusterIP"
+      },
+      "status": {
+        "loadBalancer": {}
+      }
+    },
+    {
+      "kind": "StatefulSet",
+      "apiVersion": "apps/v1",
+      "metadata": {
+        "name": "${NAME}-${COMPONENT}${SUFFIX}",
+        "annotations": {
+          "description": "Defines how to deploy the application server"
+        },
+        "labels": {
+          "app": "${NAME}",
+          "component": "${NAME}-${COMPONENT}",
+          "name": "${NAME}-${COMPONENT}${SUFFIX}",
+          "cluster-name": "${NAME}-${COMPONENT}${SUFFIX}"
+        }
+      },
+      "spec": {
+        "podManagementPolicy": "OrderedReady",
+        "replicas": "${{REPLICAS}}",
+        "revisionHistoryLimit": 10,
+        "volumes": null,
+        "selector": {
+          "matchLabels": {
+            "statefulset": "${NAME}-${COMPONENT}${SUFFIX}"
+          }
+        },
+        "serviceName": "${NAME}-${COMPONENT}${SUFFIX}",
+        "template": {
+          "metadata": {
+            "name": "${NAME}-${COMPONENT}${SUFFIX}",
+            "labels": {
+              "statefulset": "${NAME}-${COMPONENT}${SUFFIX}",
+              "cluster-name": "${NAME}-${COMPONENT}${SUFFIX}",
+              "app.kubernetes.io/name": "zookeeper"
+            }
+          },
+          "spec": {
+            "affinity": {
+              "podAntiAffinity": {
+                "requiredDuringSchedulingIgnoredDuringExecution": [
+                  {
+                    "labelSelector": {
+                      "matchExpressions": [
+                        {
+                          "key": "statefulset",
+                          "operator": "In",
+                          "values": [
+                            "${NAME}-${COMPONENT}${SUFFIX}"
+                          ]
+                        }
+                      ]
+                    },
+                    "topologyKey": "kubernetes.io/hostname"
+                  }
+                ]
+              }
+            },
+            "volumes": null,
+            "containers": [
+              {
+                "name": "${COMPONENT}",
+                "image": "strimzi/kafka:0.19.0-kafka-2.5.0",
+                "imagePullPolicy": "",
+                "args": [
+                  "sh", "-c",
+                  "bin/zookeeper-server-start.sh config/zookeeper.properties"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 2181,
+                    "protocol": "TCP"
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "LOG_DIR",
+                    "value": "/tmp/logs"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "${CPU_REQUEST}",
+                    "memory": "${MEMORY_REQUEST}"
+                  },
+                  "limits": {
+                    "cpu": "${CPU_LIMIT}",
+                    "memory": "${MEMORY_LIMIT}"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "mountPath": "/tmp/zookeeper",
+                    "name": "zookeeper"
+                  }
+                ]
+              }
+            ],
+            "dnsPolicy": "ClusterFirst",
+            "restartPolicy": "Always",
+            "schedulerName": "default-scheduler",
+            "securityContext": {},
+            "serviceAccountName": "",
+            "terminationGracePeriodSeconds": 0
+          }
+        },
+        "updateStrategy": {
+          "type": "RollingUpdate"
+        },
+        "volumeClaimTemplates": [
+          {
+            "metadata": {
+              "annotations": {
+                "volume.beta.kubernetes.io/storage-class": "${STORAGE_CLASS}"
+              },
+              "labels": {
+                "app": "${NAME}-${COMPONENT}${SUFFIX}"
+              },
+              "name": "zookeeper"
+            },
+            "spec": {
+              "storageClassName": "${STORAGE_CLASS}",
+              "accessModes": [
+                "ReadWriteOnce"
+              ],
+              "resources": {
+                "requests": {
+                  "storage": "${PVC_SIZE}"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "name": "COMPONENT",
+      "displayName": "Component",
+      "description": "The Component name assigned to all of the objects defined in this template.  You should keep this as default unless your know what your doing.",
+      "required": true,
+      "value": "zookeeper"
+    },
+    {
+      "name": "NAME",
+      "displayName": "Name",
+      "description": "The name assigned to all of the OpenShift resources associated to the server instance.",
+      "required": true,
+      "value": "rsbc-ride-kafka"
+    },
+      {
+        "name": "SUFFIX",
+        "displayName": "Application name suffix",
+        "description": "Application name suffix",
+        "required": true
+      },
+    {
+      "name": "VERSION",
+      "displayName": "Application version number",
+      "description": "Application version number",
+      "required": false
+    },
+    {
+      "name": "PHASE",
+      "displayName": "Application phase",
+      "description": "Application phase",
+      "required": false
+    },
+    {
+      "name": "CPU_REQUEST",
+      "displayName": "CPU Request",
+      "description": "Requested amount of CPU the container can use.",
+      "required": true,
+      "value": "10m"
+    },
+    {
+      "name": "CPU_LIMIT",
+      "displayName": "CPU Limit",
+      "description": "Maximum amount of CPU the container can use.",
+      "required": true,
+      "value": "150m"
+    },
+    {
+      "name": "MEMORY_REQUEST",
+      "displayName": "Memory Request",
+      "description": "Requested amount of memory the container can use.",
+      "required": true,
+      "value": "128Mi"
+    },
+    {
+      "name": "MEMORY_LIMIT",
+      "displayName": "Memory Limit",
+      "description": "Maximum amount of memory the container can use.",
+      "required": true,
+      "value": "256Mi"
+    },
+    {
+      "name": "LOG_LEVEL",
+      "displayName": "LOG_LEVEL",
+      "description": "LOG_LEVEL",
+      "required": true,
+      "value": "DEBUG"
+    },
+    {
+      "name": "REPLICAS",
+      "displayName": "REPLICAS",
+      "description": "The number of statefulSet replicas to use.",
+      "value": "1"
+    },
+    {
+      "name": "STORAGE_CLASS",
+      "value": "netapp-block-standard"
+    },
+    {
+      "description": "The size of the persistent volume to create.",
+      "displayName": "Persistent Volume Size",
+      "name": "PVC_SIZE",
+      "value": "5Gi"
+    }
+  ]
+}
