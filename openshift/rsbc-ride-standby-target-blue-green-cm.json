@@ -18,8 +18,8 @@
         },
         "kind": "ConfigMap",
         "metadata": {
-            "name": "jh-etk-standby-target-blue-green-cm",
-            "namespace": "5115cc-tools"
+            "name": "rsbc-ride-standby-target-blue-green-cm",
+            "namespace": "be5301-tools"
         }
     }
   ],
@@ -29,7 +29,7 @@
       "displayName": "Name",
       "description": "The name assigned to all of the OpenShift resources associated to the server instance.",
       "required": true,
-      "value": "jh-etk"
+      "value": "rsbc-ride"
     },
     {
       "name": "SUFFIX",
