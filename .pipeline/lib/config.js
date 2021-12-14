@@ -32,7 +32,8 @@ const phases = {
        cpu_limit: '150m',
        memory_request: '256Mi',
        memory_limit: '512Mi',
-       replicas: '1'
+       replicas: '1',
+       mocksvc_url: 'http://jh-etk-mocksvc-dev.apps.silver.devops.gov.bc.ca/mocksvc/v3'
   },
   dev: {namespace:'be5301-dev',
        name: `${name}`,
@@ -53,7 +54,8 @@ const phases = {
        cpu_limit: '200m',
        memory_request: '256Mi',
        memory_limit: '1Gi',
-       replicas: '1'
+       replicas: '1',
+       mocksvc_url: 'http://jh-etk-mocksvc-dev.apps.silver.devops.gov.bc.ca/mocksvc/v3'
   },
   stage: {namespace:'be5301-test',
        name: `${name}`,
@@ -75,7 +77,8 @@ const phases = {
        cpu_limit: '200m',
        memory_request: '256Mi',
        memory_limit: '1Gi',
-       replicas: '1'
+       replicas: '1',
+       mocksvc_url: 'http://jh-etk-mocksvc-stage.apps.silver.devops.gov.bc.ca/mocksvc/v3'
   },
   test: {namespace:'be5301-test',
        name: `${name}`,
@@ -96,7 +99,8 @@ const phases = {
        cpu_limit: '200m',
        memory_request: '256Mi',
        memory_limit: '1Gi',
-       replicas: '1'
+       replicas: '1',
+       mocksvc_url: 'http://jh-etk-mocksvc-test.apps.silver.devops.gov.bc.ca/mocksvc/v3'
   },
   prod: {namespace:'be5301-prod',
        name: `${name}`,
@@ -118,7 +122,8 @@ const phases = {
        cpu_limit: '200m',
        memory_request: '256Mi',
        memory_limit: '1Gi',
-       replicas: '1'
+       replicas: '1',
+       mocksvc_url: 'http://jh-etk-mocksvc.apps.silver.devops.gov.bc.ca/mocksvc/v3'
   },
 };
 

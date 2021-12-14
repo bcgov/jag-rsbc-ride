@@ -1,4 +1,4 @@
-package bcgov.jh.ride;
+package bcgov.rsbc.ride.kafka.mockproducer;
 
 import java.time.Duration;
 

@@ -269,6 +269,12 @@
       "description": "LOG_LEVEL",
       "required": true,
       "value": "DEBUG"
+    },
+    {
+      "name": "MOCKSVC_URL",
+      "displayName": "MOCKSVC_URL",
+      "description": "MOCKSVC_URL",
+      "required": true
     }
   ]
 }

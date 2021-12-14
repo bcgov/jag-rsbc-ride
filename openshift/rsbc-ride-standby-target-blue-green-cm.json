@@ -5,7 +5,7 @@
     "name": "${NAME}-blue-green-deployment-template",
     "annotations": {
       "description": "Deployment template for Blue/Green ConfigMap.",
-      "tags": "jh-etk-standby-target-blue-green-cm",
+      "tags": "rsbc-ride-standby-target-blue-green-cm",
       "iconClass": "icon-java"
     }
   },

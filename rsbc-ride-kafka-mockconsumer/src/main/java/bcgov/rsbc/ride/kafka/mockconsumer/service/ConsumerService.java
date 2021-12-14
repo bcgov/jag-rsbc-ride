@@ -1,4 +1,4 @@
-package bcgov.jh.ride.service;
+package bcgov.rsbc.ride.kafka.mockconsumer.service;
 
 import java.net.URI;
 import javax.enterprise.context.ApplicationScoped;
@@ -9,7 +9,7 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import bcgov.jh.ride.model.EndpointProperties;
+import bcgov.rsbc.ride.kafka.mockconsumer.model.EndpointProperties;
 
 
 @ApplicationScoped

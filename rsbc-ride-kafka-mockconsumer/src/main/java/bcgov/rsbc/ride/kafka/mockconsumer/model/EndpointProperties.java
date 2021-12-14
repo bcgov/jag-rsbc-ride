@@ -1,4 +1,4 @@
-package bcgov.jh.ride.model;
+package bcgov.rsbc.ride.kafka.mockconsumer.model;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

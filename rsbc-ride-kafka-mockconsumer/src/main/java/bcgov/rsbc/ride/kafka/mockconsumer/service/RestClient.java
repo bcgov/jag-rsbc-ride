@@ -1,4 +1,4 @@
-package bcgov.jh.ride.service;
+package bcgov.rsbc.ride.kafka.mockconsumer.service;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;

@@ -72,7 +72,8 @@ module.exports = (settings)=>{
       'CPU_REQUEST': phases[phase].cpu_request,
       'CPU_LIMIT': phases[phase].cpu_limit,
       'MEMORY_REQUEST': phases[phase].memory_request,
-      'MEMORY_LIMIT': phases[phase].memory_limit
+      'MEMORY_LIMIT': phases[phase].memory_limit,
+      'MOCKSVC_URL': phases[phase].mocksvc_url
     }
   }))
 
@@ -81,8 +82,7 @@ module.exports = (settings)=>{
        'NAME': phases[phase].name,
        'SUFFIX': phases[phase].suffix,
        'HOSTNAME_SUFFIX': phases[phase].hostname_suffix,
-       'HAPROXY_TIMEOUT': phases[phase].haproxy_timeout,
-       'SSG_WHITELIST': phases[phase].ssg_whitelist
+       'HAPROXY_TIMEOUT': phases[phase].haproxy_timeout
      }
    }))
  

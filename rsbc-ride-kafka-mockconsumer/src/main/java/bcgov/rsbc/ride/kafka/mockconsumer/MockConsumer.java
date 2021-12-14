@@ -1,4 +1,4 @@
-package bcgov.jh.ride;
+package bcgov.rsbc.ride.kafka.mockconsumer;
 
 import java.util.concurrent.CompletionStage;
 
@@ -13,7 +13,7 @@ import org.eclipse.microprofile.reactive.messaging.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import bcgov.jh.ride.service.ConsumerService;
+import bcgov.rsbc.ride.kafka.mockconsumer.service.ConsumerService;
 import io.smallrye.reactive.messaging.kafka.Record;
 
 @Path("/")
