@@ -103,11 +103,6 @@ static Map exec(List args, File workingDirectory=null, Appendable stdout=null, A
                         println exec(['oc', "--namespace=${namespace}", 'delete', 'all', '-l', selector])
                         println exec(['oc', "--namespace=${namespace}", 'delete', 'pvc,Secret,configmap,Endpoints,RoleBinding,role,ServiceAccount', '-l', selector])
                     
-                        // Delete db ConfigMaps, e.g., jh-etk-db-pr-646-config and jh-etk-db-pr-646-leader. 
-                        // Their labels only contain app.kubernetes.io/name=patroni and cluster-name=jh-etk-db-pr-646, 
-                        // so the selector above failed to include them
-                        String selectorDBCM = "app.kubernetes.io/name=patroni,cluster-name=jh-etk-db-pr-${payload.number}"
-                        println exec(['oc', "--namespace=${namespace}", 'delete', 'configmap', '-l', selectorDBCM])
                     })
                 }
             }else if ("issue_comment" == ghEventType){

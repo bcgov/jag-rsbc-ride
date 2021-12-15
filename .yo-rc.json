@@ -1,0 +1,54 @@
+{
+  "generator-bcdk": {
+    "promptValues": {
+      "modules": {
+        "jenkins": {
+          "path": ".jenkins",
+          "namespace": "be5301-tools",
+          "name": "jenkins",
+          "version": "1.0.0",
+          "environments": {
+            "build": {
+              "namespace": "be5301-tools"
+            },
+            "dev": {
+              "namespace": "be5301-tools"
+            },
+            "prod": {
+              "namespace": "be5301-tools"
+            }
+          },
+          "jenkinsJobName": "_jenkins",
+          "github_owner": "bcgov",
+          "github_repo": "jag-rsbc-ride",
+          "jenkinsFilePath": ".jenkins/Jenkinsfile",
+          "uuid": "f0c05413-add7-439e-bd72-e8509dd8b3c8"
+        },
+        "jag-rsbc-ride": {
+          "name": "jag-rsbc-ride",
+          "version": "1.0.0",
+          "path": ".",
+          "environments": {
+            "build": {
+              "namespace": "be5301-tools"
+            },
+            "dev": {
+              "namespace": "be5301-dev"
+            },
+            "test": {
+              "namespace": "be5301-test"
+            },
+            "prod": {
+              "namespace": "be5301-prod"
+            }
+          },
+          "jenkinsJobName": "jag-rsbc-ride",
+          "github_owner": "bcgov",
+          "github_repo": "jag-rsbc-ride",
+          "jenkinsFilePath": "Jenkinsfile",
+          "uuid": "b687d676-cc6a-47ee-b196-8e7d624558ac"
+        }
+      }
+    }
+  }
+}

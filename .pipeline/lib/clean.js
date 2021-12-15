@@ -33,8 +33,6 @@ module.exports = (settings)=>{
         oc.raw('delete', ['all'], {selector:`app=jh-cmn${phase.suffix},env-id=${phase.changeId},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phase.namespace})
         oc.raw('delete', ['pvc,Secret,configmap,endpoints,RoleBinding,role,ServiceAccount,Endpoints'], {selector:`app=${phase.instance},env-id=${phase.changeId},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phase.namespace})
 
-        // manually clean up the Patroni DB-specific config maps
-        oc.raw('delete', ['configmap'], {selector:`app.kubernetes.io/name=patroni,cluster-name=jh-etk-db-patroni-${phase.tag},github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phase.namespace})
       }
     }
   }
