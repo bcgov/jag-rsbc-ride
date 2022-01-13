@@ -15,7 +15,7 @@ RUN [ "echo" , "src copied" ]
 USER root
 RUN chown -R quarkus /usr/src/app
 USER quarkus
-RUN mvn -f /usr/src/app/pom.xml -Pnative clean package
+RUN mvn -f /usr/src/app/pom.xml -Pnative -Dquarkus.native.native-image-xmx=4g clean package
 RUN [ "echo" , "mvn native build done" ]
 
 
