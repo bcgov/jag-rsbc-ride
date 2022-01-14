@@ -1,0 +1,24 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: ride-build-push-image-trigger
+spec:
+  namespaceSelector: {}
+  podTemplate: {}
+  resources: {}
+  serviceAccountName: service-tekton-triggers-sa
+  triggers:
+    - name: github-listener
+      bindings:
+        - kind: TriggerBinding
+          ref: pipeline-templates
+      interceptors:
+        - github:
+            eventTypes:
+              - pull_request
+              - push
+            secretRef:
+              secretKey: github-webhook-secret
+              secretName: github-webhook-secret
+      template:
+        ref: ride-build-push-image-trigger
