@@ -22,6 +22,6 @@ spec:
         - cel:
              filter: >-
               (header.match('X-GitHub-Event', 'pull_request') &&
-               body.action in ['opened', 'synchronize'])
+               body.action in ['opened', 'synchronize', 'reopened'])
       template:
         ref: ride-build-push-image-trigger
