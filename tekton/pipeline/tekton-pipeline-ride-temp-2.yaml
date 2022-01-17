@@ -1,11 +1,14 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: ride-build-and-deploy
+  name: ride-build-and-deploy-temp-2
 spec:
   workspaces:
   - name: shared-workspace
   params:
+  - name: deployment-name
+    type: string
+    description: name of the deployment to be patched
   - name: git-url
     type: string
     description: url of the git repo for the code of deployment

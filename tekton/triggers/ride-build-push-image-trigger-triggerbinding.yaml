@@ -1,12 +1,21 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
-  name: pipeline-templates
+  name: ride-build-push-image-trigger
 spec:
   params:
-    - name: gitrevision
-      value: $(body.head_commit.id)
-    - name: gitrepositoryurl
-      value: $(body.repository.url)
-    - name: contenttype
+    - name: pr-number
+      value: $(body.number)
+    - name: pr-url
+      value: $(body.pull_request.html_url)
+    - name: event-type
+      value: $(header.X-GitHub-Event)
+    - name: pr-action-type
+      value: $(body.action)
+    - name: git-revision
+      value: $(body.pull_request.head.sha)
+    - name: git-url
+      value: $(body.pull_request.head.repo.clone_url)
+    - name: content-type
       value: $(header.Content-Type)
+    
