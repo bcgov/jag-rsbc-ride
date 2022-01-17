@@ -16,9 +16,12 @@ spec:
         - github:
             eventTypes:
               - pull_request
-              - push
             secretRef:
               secretKey: github-webhook-secret
               secretName: github-webhook-secret
+        - cel:
+             filter: >-
+              (header.match('X-GitHub-Event', 'pull_request') &&
+               body.action in ['opened', 'synchronize'])
       template:
         ref: ride-build-push-image-trigger
