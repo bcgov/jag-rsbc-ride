@@ -1,7 +1,7 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: ride-build-push-image-trigger
+  name: ride-build-push-image-trigger-use-kaniko
 spec:
   params:
   - name: git-url
@@ -26,18 +26,15 @@ spec:
   - name: IMAGE-MOCKCONSUMER
     description: image of mockconsumer to be build from the code
     default: "image-registry.openshift-image-registry.svc:5000/be5301-tools/rsbc-ride-kafka-mockconsumer"
-  - name: IMAGE_REGISTRY
-    description: The Root url of the image registry.
-    default: " "
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
     metadata:
-      generateName: ride-build-and-deploy-run-
+      generateName: ride-build-and-deploy-run-use-kaniko-
     spec:
       serviceAccountName: service-tekton-triggers-sa
       pipelineRef:
-        name: ride-build-and-deploy
+        name: ride-build-and-deploy-use-kaniko
       params:
       - name: git-url
         value: $(tt.params.git-url)
@@ -55,8 +52,6 @@ spec:
         value: $(tt.params.DOCKERFILE-MOCKCONSUMER)
       - name: CONTEXT-MOCKCONSUMER
         value: $(tt.params.CONTEXT-MOCKCONSUMER)
-      - name: IMAGE_REGISTRY
-        value: $(tt.params.IMAGE_REGISTRY)
       workspaces:
       - name: shared-workspace
         volumeClaimTemplate:
@@ -70,7 +65,7 @@ spec:
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: ride-build-push-image-trigger
+  name: ride-build-push-image-trigger-use-kaniko
 spec:
   serviceAccountName: service-tekton-triggers-sa
   triggers:
@@ -87,14 +82,14 @@ spec:
               (header.match('X-GitHub-Event', 'pull_request') &&
                body.action in ['opened', 'synchronize', 'reopened'])
       bindings:
-        - ref: ride-build-push-image-trigger
+        - ref: ride-build-push-image-trigger-use-kaniko
       template:
-        ref: ride-build-push-image-trigger
+        ref: ride-build-push-image-trigger-use-kaniko
 ---
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
-  name: ride-build-push-image-trigger
+  name: ride-build-push-image-trigger-use-kaniko
 spec:
   params:
   - name: pr-number
