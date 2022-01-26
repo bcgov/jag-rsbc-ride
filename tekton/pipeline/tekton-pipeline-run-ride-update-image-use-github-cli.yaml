@@ -1,0 +1,89 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: ride-build-update-image-use-github-cli-run-sdfsd1
+  labels:
+    tekton.dev/pipeline: ride-build-update-image-use-github-cli
+spec:
+  params:
+    - name: git-url-destination
+      value: 'https://github.com/bcgov-c/tenant-gitops-be5301.git'
+    - name: git-revision-destination
+      value: feature/jhi-2933-update-ArgoCD-repo
+    - name: subdirectory-destination
+      value: ""
+    - name: pr-number
+      value: '3'
+    - name: new-image-tag
+      value: 5644s
+    - name: yq-command
+      value: |
+        set -e
+        pwd
+        ls
+        cd ./jag-rsbc-ride/overlays/dev/
+        pwd
+        cat kustomization.yaml
+        for var in *-template.yaml
+          do
+            /usr/bin/yq eval '.images[].newTag = "5644s"' "$var" > "${var%-*}.yaml"
+        done
+        cat kustomization.yaml
+    - name: GIT_SCRIPT
+      value: |
+        git init
+        git remote add origin https://github.com/bcgov-c/tenant-gitops-be5301
+        git pull origin feature/jhi-2933-update-ArgoCD-repo
+        git checkout feature/jhi-2933-update-ArgoCD-repo
+        git status   
+        cat $(workspaces.input.path)/jag-rsbc-ride/overlays/dev/kustomization.yaml
+        cat $(workspaces.source.path)/jag-rsbc-ride/overlays/dev/kustomization.yaml
+        cp $(workspaces.input.path)/jag-rsbc-ride/overlays/dev/kustomization.yaml $(workspaces.source.path)/jag-rsbc-ride/overlays/dev/kustomization.yaml
+        cat $(workspaces.source.path)/jag-rsbc-ride/overlays/dev/kustomization.yaml
+        
+        git config user.email "ellovechat@yahoo.ca"
+        git config user.name "echo-rsbc-ride-sa"
+
+        cat <<EOF > "$(workspaces.source.path)/jag-rsbc-ride/a.yaml"
+        bases:
+        - ../k8s-base
+        images:
+        - name: myapp
+          newName: registry.gitlab.com/jkpl/kustomize-demo
+          newTag: "${IMAGE_TAG}"
+        EOF
+        ls -al $(workspaces.source.path)/jag-rsbc-ride
+        git status
+        git add .
+        git commit -m "a test comments"
+        git push origin feature/jhi-2933-update-ArgoCD-repo
+  pipelineRef:
+    name: ride-build-update-image-use-github-cli
+  serviceAccountName: github-bot
+  workspaces:
+    - name: shared-workspace
+      volumeClaimTemplate:
+        apiVersion: v1
+        kind: PersistentVolumeClaim
+        metadata:
+          creationTimestamp: null
+          name: source-pvc
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 500Mi
+    - name: input
+      volumeClaimTemplate:
+        apiVersion: v1
+        kind: PersistentVolumeClaim
+        metadata:
+          creationTimestamp: null
+          name: input-pvc
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 500Mi

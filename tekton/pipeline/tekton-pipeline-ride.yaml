@@ -8,11 +8,18 @@ spec:
   params:
   - name: git-url
     type: string
-    description: url of the git repo for the code of deployment
+    description: url of the git repo for the source code for build
   - name: git-revision
     type: string
-    description: revision to be used from repo of the code for deployment
+    description: revision to be used from repo of the source code for build
     default: "master"
+  - name: git-url-destination
+    type: string
+    description: url of the git repo for the code of deployment
+  - name: git-revision-destination
+    type: string
+    description: revision to be used from repo of the code for deployment
+    default: "main"
   - name: IMAGE-MOCKPRODUCER
     type: string
     description: image for mockproducer to be build from the code
@@ -99,3 +106,48 @@ spec:
       workspace: shared-workspace
     runAfter:
     - generate-id
+  - name: fetch-destination-repository
+    taskRef:
+      name: git-clone
+      kind: ClusterTask
+    workspaces:
+    - name: output
+      workspace: shared-workspace
+    params:
+    - name: url
+      value: $(params.git-url-destination)
+    - name: subdirectory
+      value: "jag-rsbc-ride"
+    - name: deleteExisting
+      value: "true"
+    - name: revision
+      value: $(params.git-revision-destination)
+    runAfter:
+    - build-image-for-mockproducer
+    - build-image-for-mockconsumer
+  - name: yq-replace
+    taskRef:
+      name: t-yq
+    workspaces:
+    - name: output
+      workspace: shared-workspace
+    params:
+      - name: files
+        value:
+        - "./overlays/pr/kustomization-template.yaml"
+        - "./overlays/pr/custom-service-referenced-by-mockproducer-route.yaml"
+        - "./overlays/pr/custom-mockconsumer-env.yaml"
+        - "./overlays/pr/custom-servicename-kafka.yaml"
+        - "./overlays/pr/custom-servicename-kafka-zookeeper.yaml"
+        - "./overlays/pr/custom-mockproducer-pod-selector.yaml"
+        - "./overlays/pr/custom-mockproducer-service-pod-selector.yaml"
+        - "./overlays/pr/custom-mockconsumer-pod-selector.yaml"
+        - "./overlays/pr/custom-mockconsumer-service-pod-selector.yaml"
+        - "./overlays/pr/custom-kafka-pod-selector.yaml"
+        - "./overlays/pr/custom-kafka-service-pod-selector.yaml"
+        - "./overlays/pr/custom-kafka-zookeeper-pod-selector.yaml"
+        - "./overlays/pr/custom-kafka-zookeeper-service-pod-selector.yaml"
+      - name: expression
+        value: .image="$(params.new-image-sha)"
+    runAfter:
+    - fetch-destination-repository

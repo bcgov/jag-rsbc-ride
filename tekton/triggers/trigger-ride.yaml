@@ -35,7 +35,7 @@ spec:
     metadata:
       generateName: ride-build-and-deploy-run-
     spec:
-      serviceAccountName: service-tekton-triggers-sa
+      serviceAccountName: pipeline
       pipelineRef:
         name: ride-build-and-deploy
       params:
@@ -72,7 +72,7 @@ kind: EventListener
 metadata:
   name: ride-build-push-image-trigger
 spec:
-  serviceAccountName: service-tekton-triggers-sa
+  serviceAccountName: pipeline
   triggers:
     - name: github-listener
       interceptors:

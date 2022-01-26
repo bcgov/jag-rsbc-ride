@@ -20,11 +20,3 @@ spec:
     termination: edge
     insecureEdgeTerminationPolicy: None
   wildcardPolicy: None
-status:
-  ingress:
-    - routerName: default
-      conditions:
-        - type: Admitted
-          status: 'True'
-      wildcardPolicy: None
-      routerCanonicalHostname: apps.silver.devops.gov.bc.ca

@@ -1,0 +1,55 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: ride-build-update-image-run-aaaaa
+  labels:
+    tekton.dev/pipeline: ride-build-update-image
+spec:
+  params:
+    - name: git-url-destination
+      value: 'https://github.com/bcgov-c/tenant-gitops-be5301.git'
+    - name: git-revision-destination
+      value: feature/jhi-2933-update-ArgoCD-repo
+    - name: subdirectory-destination
+      value: ""
+    - name: pr-number
+      value: '3'
+    - name: new-image-tag
+      value: 5644s
+    - name: yq-command
+      value: |
+        set -e
+        pwd
+        ls
+        cd ./jag-rsbc-ride/overlays/dev/
+        pwd
+        cat kustomization.yaml
+        for var in *-template.yaml
+          do
+            /usr/bin/yq eval '.images[].newTag = "5644s"' "$var" > "${var%-*}.yaml"
+        done
+        cat kustomization.yaml
+    - name: GIT_SCRIPT
+      value: |
+         git status
+         git add .
+         git status
+         git commit -m "Updated imagetag for dev deployment"
+         git status
+  pipelineRef:
+    name: ride-build-update-image
+  serviceAccountName: github-bot
+  workspaces:
+    - name: shared-workspace
+      volumeClaimTemplate:
+        apiVersion: v1
+        kind: PersistentVolumeClaim
+        metadata:
+          creationTimestamp: null
+          name: source-pvc
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 500Mi

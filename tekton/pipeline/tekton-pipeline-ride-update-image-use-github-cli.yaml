@@ -1,0 +1,94 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: ride-build-update-image-use-github-cli
+spec:
+  workspaces:
+  - name: shared-workspace
+  - name: input
+  params:
+  - name: git-url-destination
+    type: string
+    description: url of the git repo for the code of deployment
+  - name: git-revision-destination
+    type: string
+    description: revision to be used from repo of the code for deployment
+    default: "feature/jhi-2933-update-ArgoCD-repo"
+  - name: subdirectory-destination
+    type: string
+    description: sub directory
+    default: ""
+  - name: pr-number
+    type: string
+    description: the PR number
+    default: ""
+  - name: new-image-tag
+    type: string
+    description: the new image tag
+    default: "5644s"
+  - name: yq-command
+    type: string
+    description: yq command
+    default: |
+      set -e
+      pwd
+      ls
+      cd ./jag-rsbc-ride/overlays/dev/
+      pwd
+      cat kustomization.yaml
+      for var in *-template.yaml
+        do
+          /usr/bin/yq eval '.images[].newTag = "5644s"' "$var" > "${var%-*}.yaml"
+      done
+      cat kustomization.yaml
+  - name: GIT_SCRIPT
+    type: string
+    description: git scripts
+    default: |
+        git init
+        git remote add origin https://github.com/bcgov-c/tenant-gitops-be5301
+        git pull origin feature/jhi-2933-update-ArgoCD-repo
+        git checkout feature/jhi-2933-update-ArgoCD-repo
+        git status
+  tasks:
+  - name: fetch-gitops-repo-as-input
+    taskRef:
+      name: git-clone
+      kind: ClusterTask
+    workspaces:
+    - name: output
+      workspace: input
+    params:
+    - name: url
+      value: $(params.git-url-destination)
+    - name: subdirectory
+      value: $(params.subdirectory-destination)
+    - name: deleteExisting
+      value: "true"
+    - name: revision
+      value: $(params.git-revision-destination)   
+  - name: yq-replace-image-tag
+    taskRef:
+      name: t-yq
+    workspaces:
+    - name: source
+      workspace: input
+    params:
+    - name: commands
+      value: $(params.yq-command)
+    runAfter:
+    - fetch-gitops-repo-as-input
+  - name: fetch-gitops-repo-as-source
+    taskRef:
+      name: git-cli
+      kind: ClusterTask
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    - name: input
+      workspace: input
+    params:
+    - name: GIT_SCRIPT
+      value: $(params.GIT_SCRIPT)
+    runAfter:
+    - yq-replace-image-tag
