@@ -30,26 +30,12 @@ spec:
     type: string
     description: yq command
     default: |
-      set -e
-      pwd
-      ls
-      cd ./jag-rsbc-ride/overlays/dev/
-      pwd
-      cat kustomization.yaml
-      for var in *-template.yaml
-        do
-          /usr/bin/yq eval '.images[].newTag = "5644s"' "$var" > "${var%-*}.yaml"
-      done
-      cat kustomization.yaml
+
   - name: GIT_SCRIPT
     type: string
     description: git scripts
     default: |
-        git init
-        git remote add origin https://github.com/bcgov-c/tenant-gitops-be5301
-        git pull origin feature/jhi-2933-update-ArgoCD-repo
-        git checkout feature/jhi-2933-update-ArgoCD-repo
-        git status
+
   tasks:
   - name: fetch-gitops-repo-as-input
     taskRef:

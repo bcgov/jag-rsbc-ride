@@ -21,13 +21,20 @@ spec:
         set -e
         pwd
         ls
-        cd ./jag-rsbc-ride/overlays/dev/
+        cd ./jag-rsbc-ride/overlays/pr/template/
         pwd
-        cat kustomization.yaml
+      
         for var in *-template.yaml
           do
-            /usr/bin/yq eval '.images[].newTag = "5644s"' "$var" > "${var%-*}.yaml"
+            sed "s/${PR}/pr-4/g" \
+            "$var" \
+            > "../${var%-*}.yaml"
         done
+
+        pwd
+        cd ..
+        /usr/bin/yq eval -i '.images[].newTag = "5644s"' "kustomization.yaml"
+        cat template/kustomization-template.yaml
         cat kustomization.yaml
     - name: GIT_SCRIPT
       value: |
@@ -36,24 +43,15 @@ spec:
         git pull origin feature/jhi-2933-update-ArgoCD-repo
         git checkout feature/jhi-2933-update-ArgoCD-repo
         git status   
-        cat $(workspaces.input.path)/jag-rsbc-ride/overlays/dev/kustomization.yaml
-        cat $(workspaces.source.path)/jag-rsbc-ride/overlays/dev/kustomization.yaml
-        cp $(workspaces.input.path)/jag-rsbc-ride/overlays/dev/kustomization.yaml $(workspaces.source.path)/jag-rsbc-ride/overlays/dev/kustomization.yaml
-        cat $(workspaces.source.path)/jag-rsbc-ride/overlays/dev/kustomization.yaml
+        cat $(workspaces.input.path)/jag-rsbc-ride/overlays/pr/kustomization.yaml
+        cp -r $(workspaces.input.path)/jag-rsbc-ride/overlays/pr/* $(workspaces.source.path)/jag-rsbc-ride/overlays/pr/
+        cat $(workspaces.source.path)/jag-rsbc-ride/overlays/pr/kustomization.yaml
         
         git config user.email "ellovechat@yahoo.ca"
         git config user.name "echo-rsbc-ride-sa"
 
-        cat <<EOF > "$(workspaces.source.path)/jag-rsbc-ride/a.yaml"
-        bases:
-        - ../k8s-base
-        images:
-        - name: myapp
-          newName: registry.gitlab.com/jkpl/kustomize-demo
-          newTag: "${IMAGE_TAG}"
-        EOF
-        ls -al $(workspaces.source.path)/jag-rsbc-ride
-        git status
+        ls -al $(workspaces.source.path)/jag-rsbc-ride/overlays/pr
+        
         git add .
         git commit -m "a test comments"
         git push origin feature/jhi-2933-update-ArgoCD-repo
