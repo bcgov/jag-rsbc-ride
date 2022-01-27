@@ -1,0 +1,37 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: ride-open-pr
+spec:
+  tasks:
+  - name: test-open-pr
+    taskRef:
+      name: t-github-open-pr
+  params:
+  - name: GITHUB_HOST_URL
+    description: The GitHub host, adjust this if you run a GitHub enteprise.
+    type: string
+  - name: REPO_FULL_NAME
+    description: The GitHub repository full name, e.g. - tektoncd/catalog
+    type: string
+  - name: GITHUB_TOKEN_SECRET_NAME
+    description: The name of the kubernetes secret that contains the GitHub token, default - github
+    type: string
+  - name: GITHUB_TOKEN_SECRET_KEY
+    description: The key within the kubernetes secret that contains the GitHub token, default - token
+    type: string
+  - name: AUTH_TYPE
+    description: The type of authentication to use. You could use the less secure "Basic" for example
+    type: string
+  - name: HEAD
+    description: The name of the branch where your changes are implemented.
+    type: string
+  - name: BASE
+    description: The name of the branch you want the changes pulled into.
+    type: string
+  - name: BODY
+    description: The body description of the pull request.
+    type: string
+  - name: TITLE
+    description: The title of the pull request.
+    type: string

@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: ride-build-and-deploy
+  name: ride-build-update-image-final
 spec:
   workspaces:
   - name: shared-workspace
@@ -44,7 +44,7 @@ spec:
   - name: git-revision-destination
     type: string
     description: revision to be used from repo of the code for deployment
-    default: "jag-rsbc-ride"
+    default: "pr"
   - name: subdirectory-destination
     type: string
     description: sub directory
@@ -53,56 +53,16 @@ spec:
     type: string
     description: the PR number
     default: ""
-  - name: GIT_USER_NAME_DESTINATION
+  - name: yq-command
     type: string
-    description: git user name
-    default: ""
-  - name: GIT_USER_EMAIL_DESTINATION
-    type: string
-    description: git user email
-    default: ""
-  - name: pr-destination
-    description: pr destination branch
-    type: string
-    default: ""
-  - name: git-commit-comments
-    description: git commit comments
-    type: string
-    default: ""
+    description: yq command
+    default: |
 
-  - name: GITHUB_HOST_URL
-    description: The GitHub host, adjust this if you run a GitHub enteprise.
+  - name: GIT_SCRIPT
     type: string
-    default: "api.github.com"
-  - name: REPO_FULL_NAME
-    description: The GitHub repository full name, e.g. - tektoncd/catalog
-    type: string
-    default: "bcgov-c/tenant-gitops-be5301"
-  - name: GITHUB_TOKEN_SECRET_NAME
-    description: The name of the kubernetes secret that contains the GitHub token, default - github
-    type: string
-    default: "argocd-repo-github-pat-token"
-  - name: GITHUB_TOKEN_SECRET_KEY
-    description: The key within the kubernetes secret that contains the GitHub token, default - token
-    type: string
-    default: "password"
-  - name: HEAD
-    description: The name of the branch where your changes are implemented.
-    type: string
-    default: "jag-rsbc-ride"
-  - name: BASE
-    description: The name of the branch you want the changes pulled into.
-    type: string
-    default: "main"
-  - name: BODY
-    description: The body description of the pull request.
-    type: string
-    default: "This pull request includes the following changes: RIDE components deployment manifest to pr, dev, test and prod environment;"
-  - name: TITLE
-    description: The title of the pull request.
-    type: string
-    default: "Deployment manifest"
-    
+    description: git scripts
+    default: |
+
   tasks:
   - name: fetch-ride-repo-to-build
     taskRef:
@@ -182,57 +142,32 @@ spec:
     - name: deleteExisting
       value: "true"
     - name: revision
-      value: $(params.git-revision-destination) 
+      value: $(params.git-revision-destination)  
     runAfter:
     - build-image-for-mockconsumer
     - build-image-for-mockproducer
   - name: yq-replace-image-tag
     taskRef:
-      name: t-ride-yq-03
+      name: t-yq
     workspaces:
     - name: source
       workspace: input
     params:
-    - name: git-revision-destination
-      value: $(params.git-revision-destination)
-    - name: pr-number
-      value: $(params.pr-number)
+    - name: commands
+      value: $(params.yq-command)
     runAfter:
     - fetch-gitops-repo-as-input
-  - name: fetch-gitops-repo-as-source-and-update
+  - name: fetch-gitops-repo-as-source
     taskRef:
-      name: t-ride-git-cli
+      name: git-cli
+      kind: ClusterTask
     workspaces:
     - name: source
-      workspace: shared-workspace
+      workspace: source
     - name: input
       workspace: input
     params:
-    - name: git-url-destination
-      value: $(params.git-url-destination)
-    - name: git-revision-destination
-      value: $(params.git-revision-destination)
-    - name: GIT_USER_NAME
-      value: $(params.GIT_USER_NAME_DESTINATION)
-    - name: GIT_USER_EMAIL
-      value: $(params.GIT_USER_EMAIL_DESTINATION)
+    - name: GIT_SCRIPT
+      value: $(params.GIT_SCRIPT)
     runAfter:
     - yq-replace-image-tag
-  - name: create-pr-to-master-branch
-    taskRef:
-      name: t-github-open-pr
-    params:
-      - name: GITHUB_HOST_URL
-        value: $(params.GITHUB_HOST_URL)
-      - name: REPO_FULL_NAME
-        value: $(params.REPO_FULL_NAME)
-      - name: HEAD
-        value: $(params.HEAD)
-      - name: BASE
-        value: $(params.BASE)
-      - name: TITLE
-        value: "$(params.TITLE) for $(params.git-commit-comments)"
-      - name: BODY
-        value: "$(params.BODY) for $(params.git-commit-comments)"
-    runAfter:
-    - fetch-gitops-repo-as-source-and-update

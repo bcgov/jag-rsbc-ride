@@ -22,19 +22,14 @@ spec:
     type: string
     description: the PR number
     default: ""
-  - name: new-image-tag
+  - name: GIT_USER_NAME_DESTINATION
     type: string
-    description: the new image tag
-    default: "5644s"
-  - name: yq-command
+    description: git user name
+    default: ""
+  - name: GIT_USER_EMAIL_DESTINATION
     type: string
-    description: yq command
-    default: |
-
-  - name: GIT_SCRIPT
-    type: string
-    description: git scripts
-    default: |
+    description: git user email
+    default: ""
 
   tasks:
   - name: fetch-gitops-repo-as-input
@@ -55,26 +50,51 @@ spec:
       value: $(params.git-revision-destination)   
   - name: yq-replace-image-tag
     taskRef:
-      name: t-yq
+      name: t-ride-yq-03
     workspaces:
     - name: source
       workspace: input
     params:
-    - name: commands
-      value: $(params.yq-command)
+    - name: git-revision-destination
+      value: $(params.git-revision-destination)
+    - name: pr-number
+      value: $(params.pr-number)
     runAfter:
     - fetch-gitops-repo-as-input
-  - name: fetch-gitops-repo-as-source
+  - name: fetch-gitops-repo-as-source-and-update
     taskRef:
-      name: git-cli
-      kind: ClusterTask
+      name: t-ride-git-cli
     workspaces:
     - name: source
       workspace: shared-workspace
     - name: input
       workspace: input
     params:
-    - name: GIT_SCRIPT
-      value: $(params.GIT_SCRIPT)
+    - name: git-url-destination
+      value: $(params.git-url-destination)
+    - name: git-revision-destination
+      value: $(params.git-revision-destination)
+    - name: GIT_USER_NAME
+      value: $(params.GIT_USER_NAME_DESTINATION)
+    - name: GIT_USER_EMAIL
+      value: $(params.GIT_USER_EMAIL_DESTINATION)
     runAfter:
-    - yq-replace-image-tag
+    - fetch-gitops-repo-as-input
+  - name: create-pr-to-master-branch
+    taskRef:
+      name: t-github-open-pr
+    params:
+      - name: GITHUB_HOST_URL
+        value: "https://github.com/"
+      - name: REPO_FULL_NAME
+        value: "bcgov-c/tenant-gitops-be5301"
+      - name: HEAD
+        value: $(params.git-revision-destination)
+      - name: BASE
+        value: main
+      - name: TITLE
+        value: $(params.pr-number)
+      - name: BODY
+        value: "The PR includes the following changes: RIDE components deployment manifest to pr, dev, test and prod environment"
+    runAfter:
+    - fetch-gitops-repo-as-source-and-update
