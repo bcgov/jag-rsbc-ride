@@ -13,7 +13,7 @@ spec:
   - name: git-revision-destination
     type: string
     description: revision to be used from repo of the code for deployment
-    default: "feature/jhi-2933-update-ArgoCD-repo"
+    default: "pr"
   - name: subdirectory-destination
     type: string
     description: sub directory

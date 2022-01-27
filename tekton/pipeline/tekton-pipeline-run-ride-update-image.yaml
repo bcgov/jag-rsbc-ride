@@ -9,7 +9,7 @@ spec:
     - name: git-url-destination
       value: 'https://github.com/bcgov-c/tenant-gitops-be5301.git'
     - name: git-revision-destination
-      value: feature/jhi-2933-update-ArgoCD-repo
+      value: pr
     - name: subdirectory-destination
       value: ""
     - name: pr-number

@@ -9,7 +9,7 @@ spec:
     - name: git-url-destination
       value: 'https://github.com/bcgov-c/tenant-gitops-be5301.git'
     - name: git-revision-destination
-      value: feature/jhi-2933-update-ArgoCD-repo
+      value: pr
     - name: subdirectory-destination
       value: ""
     - name: pr-number
@@ -25,10 +25,10 @@ spec:
         pwd
       
         for var in *-template.yaml
-          do
-            sed "s/${PR}/pr-4/g" \
-            "$var" \
-            > "../${var%-*}.yaml"
+        do
+          sed "s/PR-TO-BE-REPLACED/pr-4/g" \
+          "$var" \
+          > "../${var%-*}.yaml"
         done
 
         pwd
@@ -40,8 +40,8 @@ spec:
       value: |
         git init
         git remote add origin https://github.com/bcgov-c/tenant-gitops-be5301
-        git pull origin feature/jhi-2933-update-ArgoCD-repo
-        git checkout feature/jhi-2933-update-ArgoCD-repo
+        git pull origin pr
+        git checkout pr
         git status   
         cat $(workspaces.input.path)/jag-rsbc-ride/overlays/pr/kustomization.yaml
         cp -r $(workspaces.input.path)/jag-rsbc-ride/overlays/pr/* $(workspaces.source.path)/jag-rsbc-ride/overlays/pr/
@@ -54,7 +54,7 @@ spec:
         
         git add .
         git commit -m "a test comments"
-        git push origin feature/jhi-2933-update-ArgoCD-repo
+        git push origin pr
   pipelineRef:
     name: ride-build-update-image-use-github-cli
   serviceAccountName: github-bot
