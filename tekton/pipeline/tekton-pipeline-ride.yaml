@@ -120,15 +120,6 @@ spec:
       value: "true"
     - name: revision
       value: $(params.git-revision-source)
-  - name: generate-id
-    runAfter:
-    - fetch-ride-repo-to-build
-    taskRef:
-      kind: Task
-      name: t-generate-id
-    workspaces:
-    - name: source
-      workspace: shared-workspace
   - name: build-image-for-mockproducer
     taskRef:
       name: t-buildah-with-resource-setting
@@ -147,7 +138,7 @@ spec:
     - name: source
       workspace: shared-workspace
     runAfter:
-    - generate-id
+    - fetch-ride-repo-to-build
   - name: build-image-for-mockconsumer
     taskRef:
       name: t-buildah-with-resource-setting
@@ -166,7 +157,7 @@ spec:
     - name: source
       workspace: shared-workspace
     runAfter:
-    - generate-id
+    - fetch-ride-repo-to-build
   - name: fetch-gitops-repo-as-input
     taskRef:
       name: git-clone

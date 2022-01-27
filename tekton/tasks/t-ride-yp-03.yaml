@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: t-ride-yq-03-ride
+  name: t-ride-yq-03
   labels:
     app.kubernetes.io/version: "0.3"
   annotations:

@@ -37,57 +37,44 @@ spec:
   - name: subdirectory-destination
     description: sub directory
   - name: pr-number
-    type: string
     description: the PR number
     default: ""
   - name: GIT_USER_NAME_DESTINATION
-    type: string
     description: git user name
     default: ""
   - name: GIT_USER_EMAIL_DESTINATION
-    type: string
     description: git user email
     default: ""
   - name: pr-destination
     description: pr destination branch
-    type: string
     default: ""
   - name: git-commit-comments
     description: git commit comments
-    type: string
     default: ""
 
   - name: GITHUB_HOST_URL
     description: The GitHub host, adjust this if you run a GitHub enteprise.
-    type: string
     default: "api.github.com"
   - name: REPO_FULL_NAME
     description: The GitHub repository full name, e.g. - tektoncd/catalog
-    type: string
     default: "bcgov-c/tenant-gitops-be5301"
   - name: GITHUB_TOKEN_SECRET_NAME
     description: The name of the kubernetes secret that contains the GitHub token, default - github
-    type: string
     default: "argocd-repo-github-pat-token"
   - name: GITHUB_TOKEN_SECRET_KEY
     description: The key within the kubernetes secret that contains the GitHub token, default - token
-    type: string
     default: "password"
   - name: HEAD
     description: The name of the branch where your changes are implemented.
-    type: string
     default: "jag-rsbc-ride"
   - name: BASE
     description: The name of the branch you want the changes pulled into.
-    type: string
     default: "main"
   - name: BODY
     description: The body description of the pull request.
-    type: string
     default: "This pull request includes the following changes: RIDE components deployment manifest to pr, dev, test and prod environment;"
   - name: TITLE
     description: The title of the pull request.
-    type: string
     default: "Deployment manifest"
 
   resourcetemplates:
@@ -102,7 +89,7 @@ spec:
         serviceAccountName: github-bot
       - taskName: yq-replace-image-tag
         serviceAccountName: github-bot
-      - taskName: fetch-gitops-repo-as-source
+      - taskName: fetch-gitops-repo-as-source-and-update
         serviceAccountName: github-bot
       pipelineRef:
         name: ride-build-and-deploy
@@ -137,6 +124,10 @@ spec:
         value: "echo-rsbc-ride-sa"
       - name: GIT_USER_EMAIL_DESTINATION
         value: "ellovechat@yahoo.ca"
+      - name: pr-destination
+        value: ""
+      - name: git-commit-comments
+        value: ""
 
       - name: GITHUB_HOST_URL
         value: "api.github.com"
