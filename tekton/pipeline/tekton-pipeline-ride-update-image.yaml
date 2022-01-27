@@ -1,0 +1,96 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: ride-build-update-image
+spec:
+  workspaces:
+  - name: shared-workspace
+  params:
+  - name: git-url-destination
+    type: string
+    description: url of the git repo for the code of deployment
+  - name: git-revision-destination
+    type: string
+    description: revision to be used from repo of the code for deployment
+    default: "pr"
+  - name: subdirectory-destination
+    type: string
+    description: sub directory
+    default: ""
+  - name: pr-number
+    type: string
+    description: the PR number
+    default: ""
+  - name: new-image-tag
+    type: string
+    description: the new image tag
+    default: "5644s"
+  - name: yq-command
+    type: string
+    description: yq command
+    default: |
+        set -e
+        WORKINGDIR="$(dirname "$0")"
+        echo $WORKINGDIR
+        ls
+        cd $WORKINGDIR/template
+        pwd
+        ls
+        which yq
+        cd "./jag-rsbc-ride/overlays/dev/"
+        for var in *-template.yaml
+          do
+            /usr/bin/yq eval "'.images[].newTag = $(params.new-image-tag)'" "$var" > "${var%-*}.yaml"
+        done
+  - name: GIT_SCRIPT
+    type: string
+    description: git scripts
+    default: |
+        git status
+        git add .
+        git status
+        git commit -m "Updated imagetag for dev deployment"
+        git status
+        
+  tasks:
+  - name: fetch-destination-repository
+    taskRef:
+      name: git-clone
+      kind: ClusterTask
+    workspaces:
+    - name: output
+      workspace: shared-workspace
+    params:
+    - name: url
+      value: $(params.git-url-destination)
+    - name: subdirectory
+      value: $(params.subdirectory-destination)
+    - name: deleteExisting
+      value: "true"
+    - name: revision
+      value: $(params.git-revision-destination)    
+  - name: yq-replace-image-tag
+    taskRef:
+      name: t-yq
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    params:
+    - name: commands
+      value: $(params.yq-command)
+    runAfter:
+    - fetch-destination-repository
+  - name: update-gitops-repo
+    taskRef:
+      name: git-cli
+      kind: ClusterTask
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    - name: input
+      workspace: shared-workspace
+    params:
+    - name: GIT_SCRIPT
+      value: $(params.GIT_SCRIPT)
+    runAfter:
+    - yq-replace-image-tag
