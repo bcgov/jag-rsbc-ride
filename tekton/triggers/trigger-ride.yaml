@@ -32,10 +32,13 @@ spec:
 
   - name: git-url-destination
     description: url of the git repo for the code of deployment
+    default: "https://github.com/bcgov-c/tenant-gitops-be5301.git"
   - name: git-revision-destination
     description: revision to be used from repo of the code for deployment
+    default: "jag-rsbc-ride"
   - name: subdirectory-destination
     description: sub directory
+    default: ""
   - name: pr-number
     description: the PR number
     default: ""
@@ -110,24 +113,20 @@ spec:
         value: $(tt.params.DOCKERFILE-MOCKCONSUMER)
       - name: CONTEXT-MOCKCONSUMER
         value: $(tt.params.CONTEXT-MOCKCONSUMER)
-      - name: IMAGE_REGISTRY
-        value: $(tt.params.IMAGE_REGISTRY)
       - name: git-url-destination
         value: "https://github.com/bcgov-c/tenant-gitops-be5301"
       - name: git-revision-destination
-        value: ""
-      - name: subdirectory-destination
-        value: ""
+        value: $(tt.params.git-revision-destination)
       - name: pr-number
-        value: ""
+        value: $(tt.params.pr-number)
       - name: GIT_USER_NAME_DESTINATION
         value: "echo-rsbc-ride-sa"
       - name: GIT_USER_EMAIL_DESTINATION
         value: "ellovechat@yahoo.ca"
       - name: pr-destination
-        value: ""
+        value: $(tt.params.pr-destination)
       - name: git-commit-comments
-        value: ""
+        value: $(tt.params.git-commit-comments)
 
       - name: GITHUB_HOST_URL
         value: "api.github.com"
@@ -140,11 +139,11 @@ spec:
       - name: HEAD
         value: "jag-rsbc-ride"
       - name: BASE
-        value: "feature/update-argoCD-application-yaml"
+        value: "main"
       - name: TITLE
-        value: "title"
+        value: "$(tt.params.git-commit-comments) for $(tt.params.pr-number)"
       - name: BODY
-        value: "body"
+        value: "$(tt.params.git-commit-comments)  for $(tt.params.pr-number)"
 
       workspaces:
       - name: shared-workspace
@@ -167,19 +166,6 @@ spec:
           metadata:
             creationTimestamp: null
             name: input-pvc
-          spec:
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: 500Mi
-      - name: source
-        volumeClaimTemplate:
-          apiVersion: v1
-          kind: PersistentVolumeClaim
-          metadata:
-            creationTimestamp: null
-            name: source-pvc
           spec:
             accessModes:
               - ReadWriteOnce
@@ -218,7 +204,7 @@ metadata:
 spec:
   params:
   - name: pr-number
-    value: $(body.number)
+    value: "pr-$(body.number)"
   - name: pr-url
     value: $(body.pull_request.html_url)
   - name: event-type

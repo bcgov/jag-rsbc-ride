@@ -17,9 +17,6 @@ spec:
     - name: source
       description: A workspace that contains the file which needs to be altered.
   params:
-    - name: git-revision-destination
-      type: string
-      description: subfolder that holds files to execute the expression on; possible value- pr, dev, test or prod.
     - name: pr-number
       type: string
       description: Pull request number.
@@ -30,7 +27,7 @@ spec:
     - name: pr-destination
       description: pr destination branch
       type: string
-      default: "true"
+      default: ""
   steps:
     - name: replace-in-yaml
       image: $(params.image)

@@ -6,7 +6,6 @@ spec:
   workspaces:
   - name: shared-workspace
   - name: input
-  - name: source
   params:
   - name: git-url-source
     type: string
@@ -184,10 +183,10 @@ spec:
     - name: source
       workspace: input
     params:
-    - name: git-revision-destination
-      value: $(params.git-revision-destination)
     - name: pr-number
       value: $(params.pr-number)
+    - name: pr-destination
+      value: $(params.pr-destination)
     runAfter:
     - fetch-gitops-repo-as-input
   - name: fetch-gitops-repo-as-source-and-update
@@ -195,9 +194,9 @@ spec:
       name: t-ride-git-cli
     workspaces:
     - name: source
-      workspace: shared-workspace
-    - name: input
       workspace: input
+    - name: input
+      workspace: shared-workspace
     params:
     - name: git-url-destination
       value: $(params.git-url-destination)
@@ -207,6 +206,10 @@ spec:
       value: $(params.GIT_USER_NAME_DESTINATION)
     - name: GIT_USER_EMAIL
       value: $(params.GIT_USER_EMAIL_DESTINATION)
+    - name: git-commit-comments
+      value: $(params.git-commit-comments)
+    - name: pr-destination
+      value: $(params.pr-destination)
     runAfter:
     - yq-replace-image-tag
   - name: create-pr-to-master-branch
@@ -222,8 +225,8 @@ spec:
       - name: BASE
         value: $(params.BASE)
       - name: TITLE
-        value: "$(params.TITLE) for $(params.git-commit-comments)"
+        value: $(params.TITLE)
       - name: BODY
-        value: "$(params.BODY) for $(params.git-commit-comments)"
+        value: $(params.BODY)
     runAfter:
     - fetch-gitops-repo-as-source-and-update
