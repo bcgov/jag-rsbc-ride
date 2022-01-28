@@ -4,9 +4,9 @@ metadata:
   name: ride-build-push-image-trigger
 spec:
   params:
-  - name: git-url
+  - name: git-url-source
     description: url of the git repo for the code to be built
-  - name: git-revision
+  - name: git-revision-source
     description: revision to be used from repo of the code to be built
   - name: DOCKERFILE-MOCKPRODUCER
     description: Path to the Dockerfile to build mockproducer
@@ -29,6 +29,57 @@ spec:
   - name: IMAGE_REGISTRY
     description: The Root url of the image registry.
     default: " "
+
+  - name: git-url-destination
+    description: url of the git repo for the code of deployment
+    default: "https://github.com/bcgov-c/tenant-gitops-be5301.git"
+  - name: git-revision-destination
+    description: revision to be used from repo of the code for deployment
+    default: "deployment/jag-rsbc-ride"
+  - name: subdirectory-destination
+    description: sub directory
+    default: ""
+  - name: pr-number
+    description: the PR number
+    default: ""
+  - name: GIT_USER_NAME_DESTINATION
+    description: git user name
+    default: ""
+  - name: GIT_USER_EMAIL_DESTINATION
+    description: git user email
+    default: ""
+  - name: pr-destination
+    description: pr destination branch
+    default: ""
+  - name: git-commit-comments
+    description: git commit comments
+    default: ""
+
+  - name: GITHUB_HOST_URL
+    description: The GitHub host, adjust this if you run a GitHub enteprise.
+    default: "api.github.com"
+  - name: REPO_FULL_NAME
+    description: The GitHub repository full name, e.g. - tektoncd/catalog
+    default: "bcgov-c/tenant-gitops-be5301"
+  - name: GITHUB_TOKEN_SECRET_NAME
+    description: The name of the kubernetes secret that contains the GitHub token, default - github
+    default: "argocd-repo-github-pat-token"
+  - name: GITHUB_TOKEN_SECRET_KEY
+    description: The key within the kubernetes secret that contains the GitHub token, default - token
+    default: "password"
+  - name: HEAD
+    description: The name of the branch where your changes are implemented.
+    default: "deployment/jag-rsbc-ride"
+  - name: BASE
+    description: The name of the branch you want the changes pulled into.
+    default: "main"
+  - name: BODY
+    description: The body description of the pull request.
+    default: "This pull request includes the following changes: RIDE components deployment manifest to pr, dev, test and prod environment;"
+  - name: TITLE
+    description: The title of the pull request.
+    default: "Deployment manifest"
+
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
@@ -36,13 +87,20 @@ spec:
       generateName: ride-build-and-deploy-run-
     spec:
       serviceAccountName: pipeline
+      serviceAccountNames:
+      - taskName: fetch-gitops-repo-as-input
+        serviceAccountName: github-bot
+      - taskName: yq-replace-image-tag
+        serviceAccountName: github-bot
+      - taskName: fetch-gitops-repo-as-source-and-update
+        serviceAccountName: github-bot
       pipelineRef:
         name: ride-build-and-deploy
       params:
-      - name: git-url
-        value: $(tt.params.git-url)
-      - name: git-revision
-        value: $(tt.params.git-revision)
+      - name: git-url-source
+        value: $(tt.params.git-url-source)
+      - name: git-revision-source
+        value: $(tt.params.git-revision-source)
       - name: IMAGE-MOCKPRODUCER
         value: $(tt.params.IMAGE-MOCKPRODUCER)
       - name: DOCKERFILE-MOCKPRODUCER
@@ -55,14 +113,75 @@ spec:
         value: $(tt.params.DOCKERFILE-MOCKCONSUMER)
       - name: CONTEXT-MOCKCONSUMER
         value: $(tt.params.CONTEXT-MOCKCONSUMER)
-      - name: IMAGE_REGISTRY
-        value: $(tt.params.IMAGE_REGISTRY)
+      - name: git-url-destination
+        value: "https://github.com/bcgov-c/tenant-gitops-be5301"
+      - name: git-revision-destination
+        value: $(tt.params.git-revision-destination)
+      - name: pr-number
+        value: $(tt.params.pr-number)
+      - name: GIT_USER_NAME_DESTINATION
+        value: "echo-rsbc-ride-sa"
+      - name: GIT_USER_EMAIL_DESTINATION
+        value: "ellovechat@yahoo.ca"
+      - name: pr-destination
+        value: $(tt.params.pr-destination)
+      - name: git-commit-comments
+        value: $(tt.params.git-commit-comments)
+
+      - name: GITHUB_HOST_URL
+        value: "api.github.com"
+      - name: REPO_FULL_NAME
+        value: "bcgov-c/tenant-gitops-be5301"
+      - name: GITHUB_TOKEN_SECRET_NAME
+        value: "argocd-repo-github-pat-token"
+      - name: GITHUB_TOKEN_SECRET_KEY
+        value: "password"
+      - name: HEAD
+        value: "deployment/jag-rsbc-ride"
+      - name: BASE
+        value: "main"
+      - name: TITLE
+        value: "$(tt.params.git-commit-comments) for $(tt.params.pr-number)"
+      - name: BODY
+        value: "$(tt.params.git-commit-comments)  for $(tt.params.pr-number)"
+
       workspaces:
       - name: shared-workspace
         volumeClaimTemplate:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+            creationTimestamp: null
+            name: sw-pvc
           spec:
             accessModes:
-            - ReadWriteOnce
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 500Mi
+      - name: input
+        volumeClaimTemplate:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+            creationTimestamp: null
+            name: input-pvc
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 500Mi
+      - name: source
+        volumeClaimTemplate:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+            creationTimestamp: null
+            name: source-pvc
+          spec:
+            accessModes:
+              - ReadWriteOnce
             resources:
               requests:
                 storage: 500Mi
@@ -98,16 +217,20 @@ metadata:
 spec:
   params:
   - name: pr-number
-    value: $(body.number)
+    value: "pr-$(body.number)"
   - name: pr-url
     value: $(body.pull_request.html_url)
   - name: event-type
     value: $(header.X-GitHub-Event)
   - name: pr-action-type
     value: $(body.action)
-  - name: git-revision
+  - name: git-revision-source
     value: $(body.pull_request.head.sha)
-  - name: git-url
+  - name: git-url-source
     value: $(body.pull_request.head.repo.clone_url)
   - name: content-type
     value: $(header.Content-Type)
+  - name: pr-destination
+    value: $(body.pull_request.base.ref)
+  - name: git-commit-comments
+    value: $(body.pull_request.title)

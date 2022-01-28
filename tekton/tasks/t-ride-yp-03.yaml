@@ -1,0 +1,80 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: t-ride-yq-03
+  labels:
+    app.kubernetes.io/version: "0.3"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/categories: Developer Tools
+    tekton.dev/tags: yq
+    tekton.dev/displayName: "YQ replace"
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    This task can be used to replace fields in YAML files. For example for altering helm charts on GitOps repos.
+  workspaces:
+    - name: source
+      description: A workspace that contains the file which needs to be altered.
+  params:
+    - name: pr-number
+      type: string
+      description: Pull request number.
+    - name: new-image-tag
+      type: string
+      description: New image tag.
+    - name: image
+      type: string
+      description: The yq image to use.
+      default: docker.io/mikefarah/yq:4.16.2@sha256:0d4f6e27bdcac7316f635acd524ab0eecc4ad50834b54d10322268650c7712cb
+    - name: pr-destination
+      description: pr destination branch
+      type: string
+      default: ""
+  steps:
+    - name: replace-in-yaml
+      image: $(params.image)
+      workingDir: $(workspaces.source.path)
+      script: |
+        set -e
+        pwd
+        ls
+
+        # Update pr deployment manifest
+        cd ./jag-rsbc-ride/overlays/pr/template/
+        pwd
+      
+        # Dynamically replace string 'PR-TO-BE-REPLACED' from pr/templates/*-template.yaml with the pr-number,
+        # Store generated yaml files into pr/ folder
+        for var in *-template.yaml
+        do
+          sed "s/PR-TO-BE-REPLACED/"$(params.pr-number)"/g" "$var" > "../${var%-*}.yaml"
+        done
+
+        pwd
+        cd ..
+        # Updating pr/kustomization.yaml by replacing the value of images.newTag with new-image-tag.
+        /usr/bin/yq eval -i '.images[].newTag = "$(params.new-image-tag)"' "kustomization.yaml"
+        cat template/kustomization-template.yaml
+        cat kustomization.yaml
+
+        # When pr-destination is set to "main", update dev, test, and prod deployment manifest
+        if [ "$(params.pr-destination)" = "main" ] ; then
+          # Updating dev/kustomization.yaml by replacing the value of images.newTag with new-image-tag.
+          cd ../dev
+          cat kustomization.yaml
+          /usr/bin/yq eval -i '.images[].newTag = "$(params.new-image-tag)"' "kustomization.yaml"
+          cat kustomization.yaml
+
+          # Updating test/kustomization.yaml by replacing the value of images.newTag with new-image-tag.
+          cd ../test
+          cat kustomization.yaml
+          /usr/bin/yq eval -i '.images[].newTag = "$(params.new-image-tag)"' "kustomization.yaml"
+          cat kustomization.yaml
+
+          # Updating prod/kustomization.yaml by replacing the value of images.newTag with new-image-tag.
+          cd ../prod
+          cat kustomization.yaml
+          /usr/bin/yq eval -i '.images[].newTag = "$(params.new-image-tag)"' "kustomization.yaml"
+          cat kustomization.yaml
+        fi
