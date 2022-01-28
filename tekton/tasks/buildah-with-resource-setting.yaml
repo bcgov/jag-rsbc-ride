@@ -9,6 +9,9 @@ spec:
     - name: IMAGE_TAG
       description: Reference of the target image tag.
       default: latest
+    - name: IMAGE_TAG_1
+      description: Reference of the target image tag.
+      default: latest
     - name: BUILDAH_IMAGE
       description: Reference the image version of buildah.
       default: quay.io/buildah/stable:v1.17.0
@@ -94,6 +97,7 @@ spec:
           -u $IMAGE_REGISTRY_USER \
           -p $IMAGE_REGISTRY_PASS $(params.IMAGE_REGISTRY) > /dev/null
         buildah --storage-driver=$(params.STORAGE_DRIVER) tag $(params.IMAGE):$(params.IMAGE_TAG) $(params.IMAGE):latest
+        buildah --storage-driver=$(params.STORAGE_DRIVER) tag $(params.IMAGE):$(params.IMAGE_TAG) $(params.IMAGE):$(params.IMAGE_TAG_1)
         buildah --storage-driver=$(params.STORAGE_DRIVER) push $(params.IMAGE):latest
         set -x
       volumeMounts:

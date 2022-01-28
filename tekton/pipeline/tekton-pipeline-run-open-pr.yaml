@@ -18,7 +18,7 @@ spec:
         - name: GITHUB_TOKEN_SECRET_KEY
           value: "password"
         - name: HEAD
-          value: "jag-rsbc-ride"
+          value: "deployment/jag-rsbc-ride"
         - name: BASE
           value: "feature/update-argoCD-application-yaml"
         - name: TITLE

@@ -20,6 +20,9 @@ spec:
     - name: pr-number
       type: string
       description: Pull request number.
+    - name: new-image-tag
+      type: string
+      description: New image tag.
     - name: image
       type: string
       description: The yq image to use.
@@ -50,28 +53,28 @@ spec:
 
         pwd
         cd ..
-        # Updating pr/kustomization.yaml by replacing the value of images.newTag with pr-number.
-        /usr/bin/yq eval -i '.images[].newTag = "$(params.pr-number)"' "kustomization.yaml"
+        # Updating pr/kustomization.yaml by replacing the value of images.newTag with new-image-tag.
+        /usr/bin/yq eval -i '.images[].newTag = "$(params.new-image-tag)"' "kustomization.yaml"
         cat template/kustomization-template.yaml
         cat kustomization.yaml
 
         # When pr-destination is set to "main", update dev, test, and prod deployment manifest
         if [ "$(params.pr-destination)" = "main" ] ; then
-          # Updating dev/kustomization.yaml by replacing the value of images.newTag with pr-number.
+          # Updating dev/kustomization.yaml by replacing the value of images.newTag with new-image-tag.
           cd ../dev
           cat kustomization.yaml
-          /usr/bin/yq eval -i '.images[].newTag = "$(params.pr-number)"' "kustomization.yaml"
+          /usr/bin/yq eval -i '.images[].newTag = "$(params.new-image-tag)"' "kustomization.yaml"
           cat kustomization.yaml
 
-          # Updating test/kustomization.yaml by replacing the value of images.newTag with pr-number.
+          # Updating test/kustomization.yaml by replacing the value of images.newTag with new-image-tag.
           cd ../test
           cat kustomization.yaml
-          /usr/bin/yq eval -i '.images[].newTag = "$(params.pr-number)"' "kustomization.yaml"
+          /usr/bin/yq eval -i '.images[].newTag = "$(params.new-image-tag)"' "kustomization.yaml"
           cat kustomization.yaml
 
-          # Updating prod/kustomization.yaml by replacing the value of images.newTag with pr-number.
+          # Updating prod/kustomization.yaml by replacing the value of images.newTag with new-image-tag.
           cd ../prod
           cat kustomization.yaml
-          /usr/bin/yq eval -i '.images[].newTag = "$(params.pr-number)"' "kustomization.yaml"
+          /usr/bin/yq eval -i '.images[].newTag = "$(params.new-image-tag)"' "kustomization.yaml"
           cat kustomization.yaml
         fi

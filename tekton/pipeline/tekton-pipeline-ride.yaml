@@ -44,7 +44,7 @@ spec:
   - name: git-revision-destination
     type: string
     description: revision to be used from repo of the code for deployment
-    default: "jag-rsbc-ride"
+    default: "deployment/jag-rsbc-ride"
   - name: subdirectory-destination
     type: string
     description: sub directory
@@ -89,7 +89,7 @@ spec:
   - name: HEAD
     description: The name of the branch where your changes are implemented.
     type: string
-    default: "jag-rsbc-ride"
+    default: "deployment/jag-rsbc-ride"
   - name: BASE
     description: The name of the branch you want the changes pulled into.
     type: string
@@ -120,6 +120,15 @@ spec:
       value: "true"
     - name: revision
       value: $(params.git-revision-source)
+  - name: generate-build-id
+    taskRef:
+      kind: Task
+      name: t-generate-id
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    runAfter:
+    - fetch-ride-repo-to-build
   - name: build-image-for-mockproducer
     taskRef:
       name: t-buildah-with-resource-setting
@@ -127,6 +136,8 @@ spec:
     - name: IMAGE
       value: $(params.IMAGE-MOCKPRODUCER)
     - name: IMAGE_TAG
+      value: $(tasks.generate-build-id.results.build-uid)
+    - name: IMAGE_TAG_1
       value: $(params.pr-number)
     - name: DOCKERFILE
       value: $(params.DOCKERFILE-MOCKPRODUCER)
@@ -138,7 +149,7 @@ spec:
     - name: source
       workspace: shared-workspace
     runAfter:
-    - fetch-ride-repo-to-build
+    - generate-build-id
   - name: build-image-for-mockconsumer
     taskRef:
       name: t-buildah-with-resource-setting
@@ -146,6 +157,8 @@ spec:
     - name: IMAGE
       value: $(params.IMAGE-MOCKCONSUMER)
     - name: IMAGE_TAG
+      value: $(tasks.generate-build-id.results.build-uid)
+    - name: IMAGE_TAG_1
       value: $(params.pr-number)
     - name: DOCKERFILE
       value: $(params.DOCKERFILE-MOCKCONSUMER)
@@ -157,7 +170,7 @@ spec:
     - name: source
       workspace: shared-workspace
     runAfter:
-    - fetch-ride-repo-to-build
+    - generate-build-id
   - name: fetch-gitops-repo-as-input
     taskRef:
       name: git-clone
@@ -186,6 +199,8 @@ spec:
     params:
     - name: pr-number
       value: $(params.pr-number)
+    - name: new-image-tag
+      value: $(tasks.generate-build-id.results.build-uid)
     - name: pr-destination
       value: $(params.pr-destination)
     runAfter:
@@ -225,6 +240,10 @@ spec:
         value: $(params.GITHUB_HOST_URL)
       - name: REPO_FULL_NAME
         value: $(params.REPO_FULL_NAME)
+      - name: GITHUB_TOKEN_SECRET_NAME
+        value: "argocd-repo-github-pat-token"
+      - name: GITHUB_TOKEN_SECRET_KEY
+        value: "password"
       - name: HEAD
         value: $(params.HEAD)
       - name: BASE

@@ -35,7 +35,7 @@ spec:
     default: "https://github.com/bcgov-c/tenant-gitops-be5301.git"
   - name: git-revision-destination
     description: revision to be used from repo of the code for deployment
-    default: "jag-rsbc-ride"
+    default: "deployment/jag-rsbc-ride"
   - name: subdirectory-destination
     description: sub directory
     default: ""
@@ -69,7 +69,7 @@ spec:
     default: "password"
   - name: HEAD
     description: The name of the branch where your changes are implemented.
-    default: "jag-rsbc-ride"
+    default: "deployment/jag-rsbc-ride"
   - name: BASE
     description: The name of the branch you want the changes pulled into.
     default: "main"
@@ -137,7 +137,7 @@ spec:
       - name: GITHUB_TOKEN_SECRET_KEY
         value: "password"
       - name: HEAD
-        value: "jag-rsbc-ride"
+        value: "deployment/jag-rsbc-ride"
       - name: BASE
         value: "main"
       - name: TITLE

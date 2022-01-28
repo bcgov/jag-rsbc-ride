@@ -117,7 +117,7 @@ spec:
     - name: url
       value: $(params.git-url-destination)
     - name: subdirectory
-      value: "jag-rsbc-ride"
+      value: "deployment/jag-rsbc-ride"
     - name: deleteExisting
       value: "true"
     - name: revision
