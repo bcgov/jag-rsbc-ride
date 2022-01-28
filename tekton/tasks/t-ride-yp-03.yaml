@@ -59,13 +59,19 @@ spec:
         if [ "$(params.pr-destination)" = "main" ] ; then
           # Updating dev/kustomization.yaml by replacing the value of images.newTag with pr-number.
           cd ../dev
+          cat kustomization.yaml
           /usr/bin/yq eval -i '.images[].newTag = "$(params.pr-number)"' "kustomization.yaml"
+          cat kustomization.yaml
 
           # Updating test/kustomization.yaml by replacing the value of images.newTag with pr-number.
           cd ../test
+          cat kustomization.yaml
           /usr/bin/yq eval -i '.images[].newTag = "$(params.pr-number)"' "kustomization.yaml"
+          cat kustomization.yaml
 
           # Updating prod/kustomization.yaml by replacing the value of images.newTag with pr-number.
           cd ../prod
+          cat kustomization.yaml
           /usr/bin/yq eval -i '.images[].newTag = "$(params.pr-number)"' "kustomization.yaml"
+          cat kustomization.yaml
         fi

@@ -6,6 +6,7 @@ spec:
   workspaces:
   - name: shared-workspace
   - name: input
+  - name: source
   params:
   - name: git-url-source
     type: string
@@ -194,9 +195,9 @@ spec:
       name: t-ride-git-cli
     workspaces:
     - name: source
-      workspace: input
+      workspace: source
     - name: input
-      workspace: shared-workspace
+      workspace: input
     params:
     - name: git-url-destination
       value: $(params.git-url-destination)

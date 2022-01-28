@@ -172,6 +172,19 @@ spec:
             resources:
               requests:
                 storage: 500Mi
+      - name: source
+        volumeClaimTemplate:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+            creationTimestamp: null
+            name: source-pvc
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 500Mi
 ---
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
