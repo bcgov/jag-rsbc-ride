@@ -214,6 +214,10 @@ spec:
     runAfter:
     - yq-replace-image-tag
   - name: create-pr-to-master-branch
+    when:
+      - input: "$(params.pr-destination)"
+        operator: in
+        values: ["main"]
     taskRef:
       name: t-github-open-pr
     params:
