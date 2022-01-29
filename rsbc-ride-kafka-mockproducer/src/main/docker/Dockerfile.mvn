@@ -1,3 +1,4 @@
+@ -1,37 +0,0 @@
 ## Stage 1 : build with maven builder image with native capabilities
 FROM quay.io/quarkus/centos-quarkus-maven:21.3.0-java11 AS build
 RUN [ "pwd" ]
@@ -22,7 +23,7 @@ RUN [ "echo" , "mvn build done" ]
 ## Stage 2 : create the docker final image
 FROM registry.access.redhat.com/ubi8/ubi-minimal
 WORKDIR /work/
-COPY --from=build /usr/src/app/target/*.jar /work/application
+COPY --from=build /usr/src/app/target/*-runner /work/application -Dquarkus.package.type=uber-jar
 
 # set up permissions for user `1001`
 RUN chmod 775 /work /work/application \
@@ -33,5 +34,5 @@ RUN chmod 775 /work /work/application \
 EXPOSE 8080
 USER 1001
 
-# CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
-CMD ["java", "-jar", "./application"]
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
+# CMD ["java", "-jar", "./application"]

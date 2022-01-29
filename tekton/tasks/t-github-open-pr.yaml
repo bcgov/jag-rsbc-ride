@@ -141,7 +141,9 @@ spec:
         resp = conn.getresponse()
 
         # If PR already exists (the resp.status is 422), do not throw exception
-        if str(resp.status) != "422" and not str(resp.status).startswith("2"):
+        if str(resp.status) == "422":
+            print(resp.read())
+        elif not str(resp.status).startswith("2"):
             print("Error: %d" % (resp.status))
             print(resp.read())
             sys.exit(1)
