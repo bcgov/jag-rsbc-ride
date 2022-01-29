@@ -16,7 +16,7 @@ RUN [ "echo" , "src copied" ]
 USER root
 RUN chown -R quarkus /usr/src/app
 USER quarkus
-RUN mvn -f /usr/src/app/pom.xml clean package -Dquarkus.package.type=uber-jar
+RUN mvn -f /usr/src/app/pom.xml clean package
 RUN [ "echo" , "mvn build done" ]
 
 
@@ -34,5 +34,5 @@ RUN chmod 775 /work /work/application \
 EXPOSE 8080
 USER 1001
 
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
-# CMD ["java", "-jar", "./application"]
+# CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
+CMD ["java", "-jar", "./application"]
