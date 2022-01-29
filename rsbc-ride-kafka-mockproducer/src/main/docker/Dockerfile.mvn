@@ -16,14 +16,14 @@ RUN [ "echo" , "src copied" ]
 USER root
 RUN chown -R quarkus /usr/src/app
 USER quarkus
-RUN mvn -f /usr/src/app/pom.xml clean package
+RUN mvn -f /usr/src/app/pom.xml clean package -Dquarkus.package.type=uber-jar
 RUN [ "echo" , "mvn build done" ]
 
 
 ## Stage 2 : create the docker final image
 FROM registry.access.redhat.com/ubi8/ubi-minimal
 WORKDIR /work/
-COPY --from=build /usr/src/app/target/*-runner /work/application -Dquarkus.package.type=uber-jar
+COPY --from=build /usr/src/app/target/*-runner /work/application
 
 # set up permissions for user `1001`
 RUN chmod 775 /work /work/application \
