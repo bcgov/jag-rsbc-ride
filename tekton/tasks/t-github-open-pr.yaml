@@ -139,7 +139,9 @@ spec:
                 "Accept": "application/vnd.github.v3+json ",
             })
         resp = conn.getresponse()
-        if not str(resp.status).startswith("2"):
+
+        # If PR already exists (the resp.status is 422), do not throw exception
+        if str(resp.status) != "422" and not str(resp.status).startswith("2"):
             print("Error: %d" % (resp.status))
             print(resp.read())
             sys.exit(1)
