@@ -13,10 +13,7 @@ USER root
 RUN chown -R quarkus /usr/src/app
 USER quarkus
 RUN mvn -f /usr/src/app/pom.xml clean package -Dquarkus.package.type=fast-jar
-RUN [ "pwd" ]
 RUN ls /usr/src/app/target
-RUN [ "ls", "/usr/src/app/target" ]
-
 RUN [ "echo" , "mvn build done" ]
 
 
