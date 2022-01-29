@@ -7,9 +7,6 @@ RUN [ "ls", "-R" ]
 COPY pom.xml /usr/src/app/
 RUN [ "echo" , "pom copied" ]
 
-RUN mvn -f /usr/src/app/pom.xml -B de.qaware.maven:go-offline-maven-plugin:1.2.5:resolve-dependencies
-RUN [ "echo" , "mvn resolve dependencies done" ]
-
 COPY src /usr/src/app/src
 RUN [ "echo" , "src copied" ]
 
