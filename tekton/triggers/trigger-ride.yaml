@@ -10,7 +10,7 @@ spec:
     description: revision to be used from repo of the code to be built
   - name: DOCKERFILE-MOCKPRODUCER
     description: Path to the Dockerfile to build mockproducer
-    default: "./rsbc-ride-kafka-mockproducer/src/main/docker/Dockerfile.multistage"
+    default: "./rsbc-ride-kafka-mockproducer/src/main/docker/Dockerfile.mvn"
   - name: CONTEXT-MOCKPRODUCER
     description: Path to the mockproducer directory to use as context
     default: "./rsbc-ride-kafka-mockproducer"
@@ -19,7 +19,7 @@ spec:
     default: "image-registry.openshift-image-registry.svc:5000/be5301-tools/rsbc-ride-kafka-mockproducer"
   - name: DOCKERFILE-MOCKCONSUMER
     description: Path to the Dockerfile to build mockconsumer
-    default: "./rsbc-ride-kafka-mockconsumer/src/main/docker/Dockerfile.multistage"
+    default: "./rsbc-ride-kafka-mockconsumer/src/main/docker/Dockerfile.mvn"
   - name: CONTEXT-MOCKCONSUMER
     description: Path to the mockconsumer directory to use as context
     default: "./rsbc-ride-kafka-mockconsumer"
