@@ -171,7 +171,7 @@ spec:
       workspace: shared-workspace
     runAfter:
     - generate-build-id
-  - name: fetch-gitops-repo-as-input-pr
+  - name: fetch-gitops-repo-as-input
     taskRef:
       name: git-clone
       kind: ClusterTask
@@ -190,71 +190,7 @@ spec:
     runAfter:
     - build-image-for-mockconsumer
     - build-image-for-mockproducer
-  - name: yq-replace-image-tag-pr
-    taskRef:
-      name: t-ride-yq-03
-    workspaces:
-    - name: source
-      workspace: input
-    params:
-    - name: pr-number
-      value: $(params.pr-number)
-    - name: new-image-tag
-      value: $(tasks.generate-build-id.results.build-uid)
-    - name: pr-destination
-      value: $(params.pr-destination)
-    runAfter:
-    - fetch-gitops-repo-as-input-pr
-  - name: fetch-gitops-repo-as-source-and-update-pr
-    taskRef:
-      name: t-ride-git-cli
-    workspaces:
-    - name: source
-      workspace: source
-    - name: input
-      workspace: input
-    params:
-    - name: git-url-destination
-      value: $(params.git-url-destination)
-    - name: git-revision-destination
-      value: $(params.git-revision-destination)
-    - name: GIT_USER_NAME
-      value: $(params.GIT_USER_NAME_DESTINATION)
-    - name: GIT_USER_EMAIL
-      value: $(params.GIT_USER_EMAIL_DESTINATION)
-    - name: git-commit-comments
-      value: $(params.git-commit-comments)
-    - name: pr-destination
-      value: $(params.pr-destination)
-    runAfter:
-    - yq-replace-image-tag-pr
-  - name: fetch-gitops-repo-as-input
-    when:
-      - input: "$(params.pr-destination)"
-        operator: in
-        values: ["main"]
-    taskRef:
-      name: git-clone
-      kind: ClusterTask
-    workspaces:
-    - name: output
-      workspace: input
-    params:
-    - name: url
-      value: $(params.git-url-destination)
-    - name: subdirectory
-      value: $(params.subdirectory-destination)
-    - name: deleteExisting
-      value: "true"
-    - name: revision
-      value: $(params.git-revision-destination) 
-    runAfter:
-    - fetch-gitops-repo-as-source-and-update-pr
   - name: yq-replace-image-tag
-    when:
-      - input: "$(params.pr-destination)"
-        operator: in
-        values: ["main"]
     taskRef:
       name: t-ride-yq-03
     workspaces:
@@ -270,10 +206,6 @@ spec:
     runAfter:
     - fetch-gitops-repo-as-input
   - name: fetch-gitops-repo-as-source-and-update
-    when:
-      - input: "$(params.pr-destination)"
-        operator: in
-        values: ["main"]
     taskRef:
       name: t-ride-git-cli
     workspaces:
