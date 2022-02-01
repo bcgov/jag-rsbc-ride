@@ -151,7 +151,6 @@ spec:
           apiVersion: v1
           kind: PersistentVolumeClaim
           metadata:
-            creationTimestamp: null
             name: sw-pvc
           spec:
             accessModes:
@@ -164,7 +163,6 @@ spec:
           apiVersion: v1
           kind: PersistentVolumeClaim
           metadata:
-            creationTimestamp: null
             name: input-pvc
           spec:
             accessModes:
@@ -177,7 +175,6 @@ spec:
           apiVersion: v1
           kind: PersistentVolumeClaim
           metadata:
-            creationTimestamp: null
             name: source-pvc
           spec:
             accessModes:
