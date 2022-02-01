@@ -1,0 +1,39 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: ride-pipeline-run-cleanup
+spec:
+  params:
+  - name: pr-number
+    type: string
+    description: the PR number
+    default: ""
+  - name: namespace
+    description: Namespace to cleanup to in the target cluster
+  - name: keep
+    description: Amount of old resources to keep
+    default: "2"
+  - name: pipeline-name
+    description: Name of the pipeline to be cleaned
+    default: "ride-build-and-deploy"
+
+  tasks:
+  - name: cleanup-pipelinerun
+    taskRef:
+      name: tkn
+      kind: ClusterTask
+    params:
+    - name: SCRIPT
+      value: |
+            #!/bin/sh
+            set -ex
+            # A safety check, to avoid deleting too much!
+            if [[ $(params.keep) -eq 0 || $(params.keep) == "" ]]; then
+              echo "This task cannot be used to delete *all* resources from a cluster" >&2
+              echo "Please specifcy a value for keep > 0"
+              exit 1
+            fi
+            # Cleanup pipelineruns first, as this will delete tasksruns too
+            tkn pr delete -p $(params.pipeline-name) -n $(params.namespace) --keep $(params.keep)
+            # Keep double the amount of tr, for standalone trs
+            tkn tr delete -p $(params.pipeline-name) -n $(params.namespace) --keep $(( $(params.keep) * 2 ))

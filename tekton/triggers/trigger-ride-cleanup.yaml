@@ -1,0 +1,67 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: ride-pipeline-run-cleanup-trigger
+spec:
+  params:
+  - name: pr-number
+    description: the PR number
+    default: ""
+  - name: namespace
+    description: Namespace to cleanup to in the target cluster
+    default: "be5301-tools"
+  - name: keep
+    description: Amount of old resources to keep
+    default: "2"
+  - name: pipeline-name
+    description: Name of the pipeline to be cleaned
+    default: "ride-build-and-deploy"
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: ride-pipeline-run-cleanup-run-
+    spec:
+      serviceAccountName: pipeline
+      pipelineRef:
+        name: ride-pipeline-run-cleanup
+      params:
+      - name: namespace
+        value: $(tt.param.namespace)
+      - name: keep
+        value: $(tt.param.keep)
+      - name: pipeline-name
+        value: $(tt.param.pipeline-name)
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: ride-pipeline-run-cleanup-trigger
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - name: github-listener-1
+      interceptors:
+        - github:
+            secretRef:
+              secretName: github-webhook-secret
+              secretKey: github-webhook-secret
+            eventTypes:
+              - pull_request
+        - cel:
+            filter: >-
+              (header.match('X-GitHub-Event', 'pull_request') &&
+               body.action in ['closed'])
+      bindings:
+        - ref: ride-pipeline-run-cleanup-trigger
+      template:
+        ref: ride-pipeline-run-cleanup-trigger
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: ride-pipeline-run-cleanup-trigger
+spec:
+  params:
+  - name: pr-number
+    value: "pr-$(body.number)"
