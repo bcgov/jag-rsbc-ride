@@ -13,27 +13,65 @@ spec:
   - name: keep
     description: Amount of old resources to keep
     default: "2"
-  - name: pipeline-name
+  - name: build-pipeline-name
     description: Name of the pipeline to be cleaned
     default: "ride-build-and-deploy"
+  - name: cleanup-pipeline-name
+    description: Name of the pipeline to be cleaned
+    default: "ride-pipeline-run-cleanup"
 
   tasks:
-  - name: cleanup-pipelinerun
+  - name: delete-build-pipelinerun-instance
     taskRef:
       name: tkn
       kind: ClusterTask
     params:
     - name: SCRIPT
       value: |
-            #!/bin/sh
-            set -ex
-            # A safety check, to avoid deleting too much!
-            if [[ $(params.keep) -eq 0 || $(params.keep) == "" ]]; then
-              echo "This task cannot be used to delete *all* resources from a cluster" >&2
-              echo "Please specifcy a value for keep > 0"
-              exit 1
-            fi
-            # Cleanup pipelineruns first, as this will delete tasksruns too
-            tkn pr delete -p $(params.pipeline-name) -n $(params.namespace) --keep $(params.keep)
-            # Keep double the amount of tr, for standalone trs
-            tkn tr delete -p $(params.pipeline-name) -n $(params.namespace) --keep $(( $(params.keep) * 2 ))
+        #!/bin/bash
+        set -ex
+        
+        # A safety check, to avoid deleting too much!
+        if [[ $(params.keep) -eq 0 || $(params.keep) == "" ]]; then
+          echo "This task cannot be used to delete *all* resources from a cluster" >&2
+          echo "Please specifcy a value for keep > 0"
+          exit 1
+        fi
+
+        numOfCurrentPipelinerun=`tkn pr list | grep -c $(params.build-pipeline-name)`
+        echo "Number of current build pipelinerun instance: $numOfCurrentPipelinerun"
+
+        if [[ $(( $numOfCurrentPipelinerun )) -le $(( $(params.keep) )) ]]; then
+          echo "The number of pipelinerun instances less than number of instance to keep, cannot continue"
+          exit 0
+        fi
+
+        tkn pr delete -p $(params.build-pipeline-name) -n $(params.namespace) --keep $(params.keep)
+  - name: delete-cleanup-pipelinerun-instance
+    taskRef:
+      name: tkn
+      kind: ClusterTask
+    params:
+    - name: SCRIPT
+      value: |
+        #!/bin/bash
+        set -ex
+        
+        # A safety check, to avoid deleting too much!
+        if [[ $(params.keep) -eq 0 || $(params.keep) == "" ]]; then
+          echo "This task cannot be used to delete *all* resources from a cluster" >&2
+          echo "Please specifcy a value for keep > 0"
+          exit 1
+        fi
+
+        numOfCurrentPipelinerun=`tkn pr list | grep -c $(params.cleanup-pipeline-name)`
+        echo "Number of current build pipelinerun instance: $numOfCurrentPipelinerun"
+
+        if [[ $(( $numOfCurrentPipelinerun )) -le $(( $(params.keep) )) ]]; then
+          echo "The number of pipelinerun instances less than number of instance to keep, cannot continue"
+          exit 0
+        fi
+
+        tkn pr delete -p $(params.cleanup-pipeline-name) -n $(params.namespace) --keep $(params.keep)
+    runAfter:
+    - delete-build-pipelinerun-instance

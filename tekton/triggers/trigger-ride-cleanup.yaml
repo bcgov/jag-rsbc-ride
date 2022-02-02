@@ -13,9 +13,12 @@ spec:
   - name: keep
     description: Amount of old resources to keep
     default: "2"
-  - name: pipeline-name
+  - name: build-pipeline-name
     description: Name of the pipeline to be cleaned
     default: "ride-build-and-deploy"
+  - name: cleanup-pipeline-name
+    description: Name of the pipeline to be cleaned
+    default: "ride-pipeline-run-cleanup"
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
@@ -27,11 +30,13 @@ spec:
         name: ride-pipeline-run-cleanup
       params:
       - name: namespace
-        value: $(tt.param.namespace)
+        value: $(tt.params.namespace)
       - name: keep
-        value: $(tt.param.keep)
-      - name: pipeline-name
-        value: $(tt.param.pipeline-name)
+        value: $(tt.params.keep)
+      - name: build-pipeline-name
+        value: $(tt.params.build-pipeline-name)
+      - name: cleanup-pipeline-name
+        value: $(tt.params.cleanup-pipeline-name)
 ---
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
