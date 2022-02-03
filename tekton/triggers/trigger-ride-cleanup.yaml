@@ -7,8 +7,11 @@ spec:
   - name: pr-number
     description: the PR number
     default: ""
-  - name: namespace
-    description: Namespace to cleanup to in the target cluster
+  - name: namespace-build
+    description: Namespace for pipeline build 
+    default: "be5301-tools"
+  - name: namespace-deployment
+    description: Namespace for deployment
     default: "be5301-tools"
   - name: keep
     description: Amount of old resources to keep
@@ -19,6 +22,7 @@ spec:
   - name: cleanup-pipeline-name
     description: Name of the pipeline to be cleaned
     default: "ride-pipeline-run-cleanup"
+
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
@@ -29,8 +33,12 @@ spec:
       pipelineRef:
         name: ride-pipeline-run-cleanup
       params:
-      - name: namespace
-        value: $(tt.params.namespace)
+      - name: pr-number
+        value: $(tt.params.pr-number)
+      - name: namespace-build
+        value: $(tt.params.namespace-build)
+      - name: namespace-deployment
+        value: $(tt.params.namespace-deployment)
       - name: keep
         value: $(tt.params.keep)
       - name: build-pipeline-name
