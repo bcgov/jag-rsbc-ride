@@ -1,0 +1,122 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: ride-pipeline-run-cleanup
+spec:
+  params:
+  - name: pr-number
+    type: string
+    description: the PR number
+    default: ""
+  - name: namespace-build
+    type: string
+    description: Namespace for pipeline build 
+    default: "be5301-tools"
+  - name: namespace-deployment
+    type: string
+    description: Namespace for deployment
+    default: "be5301-tools"
+  - name: keep
+    description: Amount of old resources to keep
+    default: "2"
+  - name: build-pipeline-name
+    description: Name of the pipeline to be cleaned
+    default: "ride-build-and-deploy"
+  - name: cleanup-pipeline-name
+    description: Name of the pipeline to be cleaned
+    default: "ride-pipeline-run-cleanup"
+
+  tasks:
+  - name: delete-build-pipelinerun-instance
+    taskRef:
+      name: tkn
+      kind: ClusterTask
+    params:
+    - name: SCRIPT
+      value: |
+        #!/bin/bash
+        set -ex
+        
+        # A safety check, to avoid deleting too much!
+        if [[ $(params.keep) -eq 0 || $(params.keep) == "" ]]; then
+          echo "This task cannot be used to delete *all* resources from a cluster" >&2
+          echo "Please specifcy a value for keep > 0"
+          exit 1
+        fi
+
+        numOfCurrentPipelinerun=`tkn pr list | grep -c $(params.build-pipeline-name)`
+        echo "Number of current build pipelinerun instance: $numOfCurrentPipelinerun"
+
+        if [[ $(( $numOfCurrentPipelinerun )) -le $(( $(params.keep) )) ]]; then
+          echo "The number of pipelinerun instances less than number of instance to keep, cannot continue"
+          exit 0
+        fi
+
+        tkn pr delete -p $(params.build-pipeline-name) -n $(params.namespace-build) --keep $(params.keep)
+  - name: delete-cleanup-pipelinerun-instance
+    taskRef:
+      name: tkn
+      kind: ClusterTask
+    params:
+    - name: SCRIPT
+      value: |
+        #!/bin/bash
+        set -ex
+        
+        # A safety check, to avoid deleting too much!
+        if [[ $(params.keep) -eq 0 || $(params.keep) == "" ]]; then
+          echo "This task cannot be used to delete *all* resources from a cluster" >&2
+          echo "Please specifcy a value for keep > 0"
+          exit 1
+        fi
+
+        numOfCurrentPipelinerun=`tkn pr list | grep -c $(params.cleanup-pipeline-name)`
+        echo "Number of current build pipelinerun instance: $numOfCurrentPipelinerun"
+
+        if [[ $(( $numOfCurrentPipelinerun )) -le $(( $(params.keep) )) ]]; then
+          echo "The number of pipelinerun instances less than number of instance to keep, cannot continue"
+          exit 0
+        fi
+
+        tkn pr delete -p $(params.cleanup-pipeline-name) -n $(params.namespace-build) --keep $(params.keep)
+    runAfter:
+    - delete-build-pipelinerun-instance
+  - name: delete-pr-instance
+    taskRef:
+      name: openshift-client-v0-22-0
+      kind: ClusterTask
+    params:
+    - name: SCRIPT
+      value: |
+        #!/bin/bash
+        set -ex
+        
+        # delete deployments    
+        echo 'Delete deployments for $(params.pr-number) environment in $(params.namespace-deployment) namespace'
+        oc delete deployment -n $(params.namespace-deployment) --selector='app=rsbc-ride-$(params.pr-number)'
+
+        # delete services
+        echo 'Delete services for $(params.pr-number) environment in $(params.namespace-deployment) namespace'
+        oc delete service -n $(params.namespace-deployment) --selector='app=rsbc-ride-$(params.pr-number)'
+
+        # delete statefulset
+        echo 'Delete statefulset for $(params.pr-number) environment in $(params.namespace-deployment) namespace'
+        oc delete statefulset -n $(params.namespace-deployment) --selector='app=rsbc-ride-$(params.pr-number)' 
+
+        # delete pvc
+        echo 'Delete pvc for $(params.pr-number) environment in $(params.namespace-deployment) namespace'
+        oc delete pvc -n $(params.namespace-deployment) --selector='app=rsbc-ride-$(params.pr-number)' 
+
+        # delete route
+        echo 'Delete route for $(params.pr-number) environment in $(params.namespace-deployment) namespace'
+        oc delete route -n $(params.namespace-deployment) --selector='app=rsbc-ride-$(params.pr-number)' 
+
+        # delete deployment configs    
+        echo 'Delete deployments for $(params.pr-number) environment in $(params.namespace-deployment) namespace'
+        oc delete dc -n $(params.namespace-deployment) --selector='app=rsbc-ride-$(params.pr-number)'
+
+        # delete configmap
+        echo 'Delete configmap for $(params.pr-number) environment in $(params.namespace-deployment) namespace'
+        oc delete configmap -n $(params.namespace-deployment) --selector='app=rsbc-ride-$(params.pr-number)' 
+    runAfter:
+    - delete-cleanup-pipelinerun-instance
