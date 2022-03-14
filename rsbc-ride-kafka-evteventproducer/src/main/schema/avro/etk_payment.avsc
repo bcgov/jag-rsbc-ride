@@ -1,0 +1,29 @@
+{
+    "name": "payment_event",
+    "type": "record",
+    "namespace": "bcgov.rsbc.ride.kafka.evteventproducer.model.payment",
+    "fields": [
+        {
+            "name": "columns",
+            "type": {
+                "type": "array",
+                "items": {
+                    "type": "record",
+                    "name": "columnValues",
+                    "fields": [
+                        {
+                            "name": "personId",
+                            "type": "string",
+                            "default": "null"
+                        },
+                        {
+                            "name": "email",
+                            "type": "string",
+                            "default": "null"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

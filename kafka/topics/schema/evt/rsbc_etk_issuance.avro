@@ -1,0 +1,293 @@
+{
+    "name": "issuance_event",
+    "type": "record",
+    "namespace": "jag_rsbc_ride.kafka.topics.schema.evt",
+    "fields": [
+        {
+            "name": "columns",
+            "type": {
+                "type": "array",
+                "items": {
+                    "type": "record",
+                    "name": "columnValues",
+                    "fields": [
+                        {
+                            "name": "count_nbr",
+                            "doc": "",
+                            "type": "string"
+                        },
+                        {
+                            "name": "act_cd",
+                            "doc": "",
+                            "type": "string"
+                        },
+                        {
+                            "name": "section_txt",
+                            "doc": "",
+                            "type": "string"
+                        },
+                        {
+                            "name": "section_dsc",
+                            "doc": "",
+                            "type": "string"
+                        },
+                        {
+                            "name": "fine_amt",
+                            "doc": "",
+                            "type": "string"
+                        },
+                        {
+                            "name": "wording_nbr",
+                            "type": [
+                                "null",
+                                "string"
+                              ],
+                            "default": null
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "submit_dt",
+            "doc": "",
+            "type": "string"
+        },
+        {
+            "name": "sent_tm",
+            "doc": "",
+            "type": "string"
+        },
+        {
+            "name": "ticket_no",
+            "doc": "",
+            "type": "string"
+        },
+        {
+            "name": "drivers_licence_province_cd",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "person_gender_cd",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "person_residence_city_nm",
+            "doc": "",
+            "type": "string"
+        },
+        {
+            "name": "person_residence_province_cd",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "young_person_yn",
+            "doc": "",
+            "type": "string"
+        },
+        {
+            "name": "offender_type_cd",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "violation_dt",
+            "doc": "",
+            "type": "string"
+        },
+        {
+            "name": "violation_tm",
+            "doc": "",
+            "type": "string"
+        },
+        {
+            "name": "violation_highway_nm",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "violation_city_cd",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "violation_city_nm",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "vehicle_province_cd",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "vehicle_nsc_puj_cd",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "vehicle_make_cd",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "vehicle_type_cd",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "vehicle_yy",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "accident_yn",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "dispute_address_txt",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "court_location_cd",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "mre_agency_txt",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "enforcement_jurisdiction_cd",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "enforcement_jurisdiction_txt",
+            "doc": "",
+            "type": "string"
+        },
+        {
+            "name": "certificate_of_service_dt",
+            "doc": "",
+            "type": "string"
+        },
+        {
+            "name": "certificate_of_service_no",
+            "doc": "",
+            "type": "string"
+        },
+        {
+            "name": "e_violation_form_no",
+            "doc": "",
+            "type": "string"
+        },
+        {
+            "name": "count_qty",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "mre_minor_version_txt",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "enforcement_officer_no",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "enforcement_officer_nm",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "file_nm",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "profile_nm",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "enforcement_org_unit_cd",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "enforcement_org_unit_cd_txt",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "vehicle_style_txt",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "vehicle_original_colour_cd",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "vehicle_original_colour_txt",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "reg_owner_nm",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "dl_produced_yn",
+            "doc": "",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "change_address_yn",
+            "doc": "",
+            "type": "string",
+            "default": null
+        }
+    ]
+}
