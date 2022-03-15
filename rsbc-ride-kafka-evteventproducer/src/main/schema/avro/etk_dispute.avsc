@@ -1,40 +1,35 @@
 {
-    "name": "EVT_Payment_Event",
+    "name": "EVT_Dispute_Event",
     "type": "record",
-    "namespace": "bcgov.rsbc.ride.kafka.evteventproducer.model.payment",
+    "namespace": "bcgov.rsbc.ride.kafka.evteventproducer.model.dispute",
     "fields": [
         {
-            "name": "ticket_no",
+            "name": "contravention_no",
             "doc": "",
             "type": "string"
         },
         {
-            "name": "count_nbr",
+            "name": "dispute_type",
             "doc": "",
             "type": "string"
         },
         {
-            "name": "transaction_id",
+            "name": "ticketed_amt",
             "doc": "",
             "type": "string"
         },
         {
-            "name": "payment_card_type_txt",
+            "name": "compressed_section",
             "doc": "",
             "type": "string"
         },
         {
-            "name": "payment_ticket_type_cd",
+            "name": "count_act_regulation",
             "doc": "",
             "type": "string"
         },
         {
-            "name": "payment_amt",
-            "doc": "",
-            "type": "string"
-        },
-        {
-            "name": "receipt_nbr",
+            "name": "created_dtmz",
             "doc": "",
             "type": "string"
         }
