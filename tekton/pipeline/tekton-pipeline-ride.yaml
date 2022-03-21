@@ -15,6 +15,15 @@ spec:
     type: string
     description: revision to be used from repo of the source code for build
     default: "master"
+  - name: IMAGE-EVTEVENTPRODUCER
+    type: string
+    description: image for EVTEVENTPRODUCER to be build from the code
+  - name: DOCKERFILE-EVTEVENTPRODUCER
+    type: string
+    description: Path to the Dockerfile to build EVTEVENTPRODUCER
+  - name: CONTEXT-EVTEVENTPRODUCER
+    type: string
+    description: Path to the EVTEVENTPRODUCER directory to use as context
   - name: IMAGE-MOCKPRODUCER
     type: string
     description: image for mockproducer to be build from the code
@@ -129,6 +138,27 @@ spec:
       workspace: shared-workspace
     runAfter:
     - fetch-ride-repo-to-build
+  - name: build-image-for-evteventproducer
+    taskRef:
+      name: t-buildah-with-resource-setting
+    params:
+    - name: IMAGE
+      value: $(params.IMAGE-EVTEVENTPRODUCER)
+    - name: IMAGE_TAG
+      value: $(tasks.generate-build-id.results.build-uid)
+    - name: IMAGE_TAG_1
+      value: $(params.pr-number)
+    - name: DOCKERFILE
+      value: $(params.DOCKERFILE-EVTEVENTPRODUCER)
+    - name: CONTEXT
+      value: $(params.CONTEXT-EVTEVENTPRODUCER)
+    - name: IMAGE_REGISTRY
+      value: $(params.IMAGE_REGISTRY)
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    runAfter:
+    - generate-build-id
   - name: build-image-for-mockproducer
     taskRef:
       name: t-buildah-with-resource-setting
@@ -190,6 +220,7 @@ spec:
     runAfter:
     - build-image-for-mockconsumer
     - build-image-for-mockproducer
+    - build-image-for-evteventproducer
   - name: yq-replace-image-tag
     taskRef:
       name: t-ride-yq-03
