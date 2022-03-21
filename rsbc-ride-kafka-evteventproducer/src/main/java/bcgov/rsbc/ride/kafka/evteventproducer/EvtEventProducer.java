@@ -117,7 +117,7 @@ public class EvtEventProducer {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/etk/disputeSUEvent")
+    @Path("/etk/disputeStatusUpdateEvent")
     public Response publishVTDispuateSUEvent(EVT_DisputeStatusUpdate_Event disputeSUEvent) {
     	logger.info("Publish etkDisputeStatusUpdateEvent [payload: {}] to kafka.", disputeSUEvent);
 
