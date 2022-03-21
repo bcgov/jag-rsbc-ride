@@ -16,6 +16,9 @@ import io.smallrye.mutiny.Multi;
 import io.smallrye.reactive.messaging.MutinyEmitter;
 import io.smallrye.reactive.messaging.kafka.Record;
 import bcgov.rsbc.ride.kafka.evteventproducer.model.issuance.EVT_Issuance_Event;
+import bcgov.rsbc.ride.kafka.evteventproducer.model.payment.EVT_Payment_Event;
+import bcgov.rsbc.ride.kafka.evteventproducer.model.dispute.EVT_Dispute_Event;
+import bcgov.rsbc.ride.kafka.evteventproducer.model.dispute_statusupdate.EVT_DisputeStatusUpdate_Event;
 
 /**
  * The Class KafkaClients.
@@ -41,13 +44,8 @@ public class EvtEventConsumer {
 //    public Multi<String> stream() {
 //        return issuanceEvents.map(issuanceEvent -> String.format("'%s' from %s", issuanceEvent.getTicketNo(), issuanceEvent.getSentTm()));
 //    }
-    
-    @Incoming("incoming-evtIssuanceEvent")
-    public void receive(EVT_Issuance_Event event) {
-        logger.info("Received evt issuance event, ticketNO: {}; ticketSubmitDate: {}; ticketSentTime: {}. Payload: {}", event.getTicketNo(), event.getSubmitDt(), event.getSentTm(), event);
-    }
-    
-    //Multi<Movie> movies;
+
+//    Multi<Movie> movies;
     
 //    @Incoming("incoming-evtIssuanceEvent")
 //    public CompletionStage<Void> receive(Message<Record<Integer, EVT_Issuance_Event>> record) {
@@ -55,4 +53,25 @@ public class EvtEventConsumer {
 //        return record.ack();
 //    }
 
+    @Incoming("incoming-evtIssuanceEvent")
+    public void receive(EVT_Issuance_Event event) {
+        logger.info("Received evt issuance event, ticketNO: {}; ticketSubmitDate: {}; ticketSentTime: {}. Payload: {}", event.getTicketNo(), event.getSubmitDt(), event.getSentTm(), event);
+    }
+    
+    
+
+    @Incoming("incoming-vtPaymentEvent")
+    public void receive(EVT_Payment_Event event) {
+        logger.info("Received payment event, ticketNO: {}; Payload: {}", event.getTicketNo(), event);
+    }
+
+    @Incoming("incoming-vtDisputeEvent")
+    public void receive(EVT_Dispute_Event event) {
+        logger.info("Received dispute event, contraventionNO: {}; Payload: {}", event.getContraventionNo(), event);
+    }
+
+    @Incoming("incoming-vtDisputeSUEvent")
+    public void receive(EVT_DisputeStatusUpdate_Event event) {
+        logger.info("Received dispute status update event, ticketNO: {}; Payload: {}", event.getTicketNo(), event);
+    }
 }
