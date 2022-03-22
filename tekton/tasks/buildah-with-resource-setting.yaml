@@ -64,10 +64,10 @@ spec:
               key: $(params.IMAGE_REGISTRY_PASS)
       resources:
         requests:
-          memory: 4Gi
+          memory: 1Gi
           cpu: 500m
         limits:
-          memory: 8Gi
+          memory: 2Gi
           cpu: 800m
     - name: trivy-scan
       image: docker.io/aquasec/trivy

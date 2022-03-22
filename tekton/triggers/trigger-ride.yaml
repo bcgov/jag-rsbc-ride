@@ -8,6 +8,15 @@ spec:
     description: url of the git repo for the code to be built
   - name: git-revision-source
     description: revision to be used from repo of the code to be built
+  - name: DOCKERFILE-EVTEVENTPRODUCER
+    description: Path to the Dockerfile to build EVTEVENTPRODUCER
+    default: "./rsbc-ride-kafka-evteventproducer/src/main/docker/Dockerfile.mvn"
+  - name: CONTEXT-EVTEVENTPRODUCER
+    description: Path to the EVTEVENTPRODUCER directory to use as context
+    default: "./rsbc-ride-kafka-evteventproducer"
+  - name: IMAGE-EVTEVENTPRODUCER
+    description: image of EVTEVENTPRODUCER to be build from the code
+    default: "image-registry.openshift-image-registry.svc:5000/be5301-tools/rsbc-ride-kafka-evteventproducer"
   - name: DOCKERFILE-MOCKPRODUCER
     description: Path to the Dockerfile to build mockproducer
     default: "./rsbc-ride-kafka-mockproducer/src/main/docker/Dockerfile.mvn"
@@ -101,6 +110,12 @@ spec:
         value: $(tt.params.git-url-source)
       - name: git-revision-source
         value: $(tt.params.git-revision-source)
+      - name: IMAGE-EVTEVENTPRODUCER
+        value: $(tt.params.IMAGE-EVTEVENTPRODUCER)
+      - name: DOCKERFILE-EVTEVENTPRODUCER
+        value: $(tt.params.DOCKERFILE-EVTEVENTPRODUCER)
+      - name: CONTEXT-EVTEVENTPRODUCER
+        value: $(tt.params.CONTEXT-EVTEVENTPRODUCER)
       - name: IMAGE-MOCKPRODUCER
         value: $(tt.params.IMAGE-MOCKPRODUCER)
       - name: DOCKERFILE-MOCKPRODUCER
