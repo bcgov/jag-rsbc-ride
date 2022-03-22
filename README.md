@@ -29,8 +29,8 @@ This table summarizes the components that comprise the RIDE application.
 | [rsbc-ride-kafka-evteventproducer](rsbc-ride-kafka-evteventproducer/README.md) | Business Logic Service | Accept business events sent from jh-etk system, and publish them to Kafka |
 | [rsbc-ride-kafka-mockproducer](rsbc-ride-kafka-mockproducer/README.md) | Business Logic Service | Simulate kafka producer |
 | [rsbc-ride-kafka-mockconsumer](rsbc-ride-kafka-mockconsumer/README.md) | Business Logic Service | Simulate kafka consumer |
-| [Apache Kafka]() | --- | --- |
-| [Apicurio Service Registry]() | --- | --- |
+| [Kafka (RedHat AMQ Strems)](https://access.redhat.com/documentation/en-us/red_hat_amq_streams/2.0/html/amq_streams_on_openshift_overview/index) | Event engine | Distributed event streaming platform. It's the core of RIDE. It is used by RSBC business areas for high performance data pipelines, data integration, streaming analysis, etc. |
+| [Apicurio Service Registry](https://www.apicur.io/registry/) | Service Registry | It's a runtime system (server) that stores a specific set of artifacts (files). In the context of RIDE, it's used to store a set of kafka topic schemas. |
 
 ## 5. Directory Structure
 
@@ -40,10 +40,3 @@ This table summarizes the components that comprise the RIDE application.
     rsbc-ride-kafka-mockconsumer/       - RIDE mock kafka events consumer component folder
     tekton/            					- Folder contains RIDE specific tasks, triggers, and pipelines definition; which can be used to reproduce the pipeline.
     README.md                  			- This file
-
-
-## 6. Build the app and execute unit test cases
-
-```
-mvn clean package
-```
