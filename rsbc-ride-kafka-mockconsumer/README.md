@@ -1,6 +1,6 @@
 # mockconsumer Project
 
-THis project simulates kafka consumer. The mock event payload is in string format, not validated or deserialized against any schema. It is built in Quarkus, the Supersonic Subatomic Java Framework.
+This project simulates kafka consumer. The mock event payload is in string format, not validated or deserialized against any schema. It is built in Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 

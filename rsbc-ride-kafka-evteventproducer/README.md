@@ -1,6 +1,8 @@
-# evteventproducer Project
+# rsbc-ride-kafka-evteventproducer Project
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This project accepts business events (i.e., Issuance event, payment event, dispute event and dispute status update event) sent from jh-etk system, publishs them to Kafka. Each event received is validated/serialized against the associating avro schema registered in Apicurio service registry, the serialized event payload (in binary format) will be published to Kafka. 
+
+It is built in Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
