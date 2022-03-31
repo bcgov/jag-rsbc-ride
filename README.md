@@ -71,4 +71,3 @@ Tasks explanation:
 | delete-build-pipelinerun-instance | Delete the historical pipelinerun instance of pipeline **ride-build-and-deploy**. Only keep 2 most recent piepelinerun instances |
 | delete-cleanup-pipelinerun-instance | Delete the historical pipelinerun instance of pipeline **ride-pipeline-run-cleanup**. Only keep 2 most recent piepelinerun instances |
 | delete-pr-instance | Delete all assets, e.g., deployment, pods, statefulsets, etc, that are associated with the PR that's closed. |
-
