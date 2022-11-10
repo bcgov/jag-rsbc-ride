@@ -1,0 +1,161 @@
+{
+    "name": "df_appacceptedevent",
+    "type": "record",
+    "namespace": "bcgov.rsbc.ride.kafka.model",
+    "fields": [
+        {
+            "name": "typeofevent",
+            "doc": "",
+            "type": "string"
+        },
+        {
+                    "name": "df_appacceptedpayload",
+                    "doc": "",
+                    "type": {
+                         "type": "array",
+                         "items": {
+                            "type": "record",
+                                                "name": "df_appacceptedpayloadrecord",
+                                                "fields": [
+                                                        {
+                                                            "name": "event_version",
+                                                            "doc": "",
+                                                            "type": "float"
+                                                        },
+                                                        {
+                                                            "name": "event_dtm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "event_type",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "prohibition_no",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "prohibition_no_clean",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "is_adp",
+                                                            "doc": "",
+                                                            "type": "boolean"
+                                                        },
+                                                        {
+                                                            "name": "is_irp",
+                                                            "doc": "",
+                                                            "type": "boolean"
+                                                        },
+                                                        {
+                                                            "name": "is_ul",
+                                                            "doc": "",
+                                                            "type": "boolean"
+                                                        },
+                                                        {
+                                                            "name": "licence_not_surrendered",
+                                                            "doc": "",
+                                                            "type": "boolean"
+                                                        },
+                                                        {
+                                                            "name": "licence_lost_or_stolen",
+                                                            "doc": "",
+                                                            "type": "boolean"
+                                                        },
+                                                        {
+                                                            "name": "licence_not_issued",
+                                                            "doc": "",
+                                                            "type": "boolean"
+                                                        },
+                                                        {
+                                                            "name": "dt_of_service",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "applicant_role",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "applicant_first_nm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "applicant_last_nm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "applicant_phone_no",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "applicant_email_addr",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "applicant_email_confirm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "driver_first_nm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "driver_last_nm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "driver_information_driver_dl",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "street_information_street_addr",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "driver_city_town",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "driver_province",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "driver_postal_cde",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "applicant_signature",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "applicant_dt_signed",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        }
+                                                    ]
+                         }
+
+                    }
+        }
+    ]
+}

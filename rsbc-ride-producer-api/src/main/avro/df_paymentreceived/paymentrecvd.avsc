@@ -1,0 +1,76 @@
+{
+    "name": "df_payrecvdevent",
+    "type": "record",
+    "namespace": "bcgov.rsbc.ride.kafka.model",
+    "fields": [
+        {
+            "name": "typeofevent",
+            "doc": "",
+            "type": "string"
+        },
+        {
+                    "name": "df_payrecvdpayload",
+                    "doc": "",
+                    "type": {
+                         "type": "array",
+                         "items": {
+                            "type": "record",
+                                                "name": "df_payrecvdpayloadrecord",
+                                                "fields": [
+                                                        {
+                                                            "name": "event_version",
+                                                            "doc": "",
+                                                            "type": "float"
+                                                        },
+                                                        {
+                                                            "name": "event_dtm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "event_type",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "reciept_no",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "receipt_dtm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "receipt_amt",
+                                                            "doc": "",
+                                                            "type": "float"
+                                                        },
+                                                        {
+                                                            "name": "payment_method",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "card_type",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "transaction_id",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "prohibition_no",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        }
+                                                    ]
+                         }
+
+                    }
+        }
+    ]
+}

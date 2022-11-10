@@ -1,0 +1,61 @@
+{
+    "name": "df_disclosuresentevent",
+    "type": "record",
+    "namespace": "bcgov.rsbc.ride.kafka.model",
+    "fields": [
+        {
+            "name": "typeofevent",
+            "doc": "",
+            "type": "string"
+        },
+        {
+                    "name": "df_disclosuresentpayload",
+                    "doc": "",
+                    "type": {
+                         "type": "array",
+                         "items": {
+                            "type": "record",
+                                                "name": "df_disclosuresentpayloadrecord",
+                                                "fields": [
+                                                        {
+                                                            "name": "event_version",
+                                                            "doc": "",
+                                                            "type": "float"
+                                                        },
+                                                        {
+                                                            "name": "event_dtm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "event_type",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "applicant_nm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "applicant_email",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "prohibition_no",
+                                                            "doc": "",
+                                                            "type": "int"
+                                                        },
+                                                        {
+                                                            "name": "hold_until",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        }
+                                                    ]
+                         }
+
+                    }
+        }
+    ]
+}

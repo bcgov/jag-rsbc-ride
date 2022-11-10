@@ -1,0 +1,46 @@
+{
+    "name": "df_evidencesubmittedevent",
+    "type": "record",
+    "namespace": "bcgov.rsbc.ride.kafka.model",
+    "fields": [
+        {
+            "name": "typeofevent",
+            "doc": "",
+            "type": "string"
+        },
+        {
+                    "name": "df_evidencesubmittedpayload",
+                    "doc": "",
+                    "type": {
+                         "type": "array",
+                         "items": {
+                            "type": "record",
+                                                "name": "df_evidencesubmittedpayloadrecord",
+                                                "fields": [
+                                                        {
+                                                            "name": "event_version",
+                                                            "doc": "",
+                                                            "type": "float"
+                                                        },
+                                                        {
+                                                            "name": "event_dtm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "event_type",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "prohibition_no",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        }
+                                                    ]
+                         }
+
+                    }
+        }
+    ]
+}
