@@ -1,5 +1,5 @@
 {
-    "name": "df_disclosuresentevent",
+    "name": "disclosuresentevent",
     "type": "record",
     "namespace": "bcgov.rsbc.ride.kafka.models",
     "fields": [
@@ -9,46 +9,46 @@
             "type": "string"
         },
         {
-                    "name": "df_disclosuresentpayload",
+                    "name": "disclosuresentpayload",
                     "doc": "",
                     "type": {
                          "type": "array",
                          "items": {
                             "type": "record",
-                                                "name": "df_disclosuresentpayloadrecord",
+                                                "name": "disclosuresentpayloadrecord",
                                                 "fields": [
                                                         {
-                                                            "name": "event_version",
+                                                            "name": "eventVersion",
                                                             "doc": "",
                                                             "type": "float"
                                                         },
                                                         {
-                                                            "name": "event_dtm",
+                                                            "name": "eventDtm",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "event_type",
+                                                            "name": "eventType",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "applicant_nm",
+                                                            "name": "applicantNm",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "applicant_email",
+                                                            "name": "applicantEmail",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "prohibition_no",
+                                                            "name": "prohibitionNo",
                                                             "doc": "",
                                                             "type": "int"
                                                         },
                                                         {
-                                                            "name": "hold_until",
+                                                            "name": "holdUntil",
                                                             "doc": "",
                                                             "type": "string"
                                                         }

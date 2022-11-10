@@ -1,5 +1,5 @@
 {
-    "name": "df_reviewscheduleddevent",
+    "name": "reviewscheduleddevent",
     "type": "record",
     "namespace": "bcgov.rsbc.ride.kafka.models",
     "fields": [
@@ -9,41 +9,41 @@
             "type": "string"
         },
         {
-                    "name": "df_reviewscheduledpayload",
+                    "name": "reviewscheduledpayload",
                     "doc": "",
                     "type": {
                          "type": "array",
                          "items": {
                             "type": "record",
-                                                "name": "df_reviewscheduledpayloadrecord",
+                                                "name": "reviewscheduledpayloadrecord",
                                                 "fields": [
                                                         {
-                                                            "name": "event_version",
+                                                            "name": "eventVersion",
                                                             "doc": "",
                                                             "type": "float"
                                                         },
                                                         {
-                                                            "name": "event_dtm",
+                                                            "name": "eventDtm",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "event_type",
+                                                            "name": "eventType",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "prohibition_no",
+                                                            "name": "prohibitionNo",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "review_start_dtm",
+                                                            "name": "reviewStartDtm",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "review_end_dtm",
+                                                            "name": "reviewEndDtm",
                                                             "doc": "",
                                                             "type": "string"
                                                         }

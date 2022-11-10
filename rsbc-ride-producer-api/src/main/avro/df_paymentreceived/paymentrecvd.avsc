@@ -1,5 +1,5 @@
 {
-    "name": "df_payrecvdevent",
+    "name": "payrecvdevent",
     "type": "record",
     "namespace": "bcgov.rsbc.ride.kafka.models",
     "fields": [
@@ -9,61 +9,61 @@
             "type": "string"
         },
         {
-                    "name": "df_payrecvdpayload",
+                    "name": "payrecvdpayload",
                     "doc": "",
                     "type": {
                          "type": "array",
                          "items": {
                             "type": "record",
-                                                "name": "df_payrecvdpayloadrecord",
+                                                "name": "payrecvdpayloadrecord",
                                                 "fields": [
                                                         {
-                                                            "name": "event_version",
+                                                            "name": "eventVersion",
                                                             "doc": "",
                                                             "type": "float"
                                                         },
                                                         {
-                                                            "name": "event_dtm",
+                                                            "name": "eventDtm",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "event_type",
+                                                            "name": "eventType",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "reciept_no",
+                                                            "name": "recieptNo",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "receipt_dtm",
+                                                            "name": "receiptDtm",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "receipt_amt",
+                                                            "name": "receiptAmt",
                                                             "doc": "",
                                                             "type": "float"
                                                         },
                                                         {
-                                                            "name": "payment_method",
+                                                            "name": "paymentMethod",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "card_type",
+                                                            "name": "cardType",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "transaction_id",
+                                                            "name": "transactionId",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "prohibition_no",
+                                                            "name": "prohibitionNo",
                                                             "doc": "",
                                                             "type": "string"
                                                         }

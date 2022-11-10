@@ -1,5 +1,5 @@
 {
-    "name": "df_appacceptedevent",
+    "name": "appacceptedevent",
     "type": "record",
     "namespace": "bcgov.rsbc.ride.kafka.models",
     "fields": [
@@ -9,146 +9,146 @@
             "type": "string"
         },
         {
-                    "name": "df_appacceptedpayload",
+                    "name": "appacceptedpayload",
                     "doc": "",
                     "type": {
                          "type": "array",
                          "items": {
                             "type": "record",
-                                                "name": "df_appacceptedpayloadrecord",
+                                                "name": "appacceptedpayloadrecord",
                                                 "fields": [
                                                         {
-                                                            "name": "event_version",
+                                                            "name": "eventVersion",
                                                             "doc": "",
                                                             "type": "float"
                                                         },
                                                         {
-                                                            "name": "event_dtm",
+                                                            "name": "eventDtm",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "event_type",
+                                                            "name": "eventType",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "prohibition_no",
+                                                            "name": "prohibitionNo",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "prohibition_no_clean",
+                                                            "name": "prohibitionNoClean",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "is_adp",
+                                                            "name": "isAdp",
                                                             "doc": "",
                                                             "type": "boolean"
                                                         },
                                                         {
-                                                            "name": "is_irp",
+                                                            "name": "isIrp",
                                                             "doc": "",
                                                             "type": "boolean"
                                                         },
                                                         {
-                                                            "name": "is_ul",
+                                                            "name": "isUl",
                                                             "doc": "",
                                                             "type": "boolean"
                                                         },
                                                         {
-                                                            "name": "licence_not_surrendered",
+                                                            "name": "licenceNotSurrendered",
                                                             "doc": "",
                                                             "type": "boolean"
                                                         },
                                                         {
-                                                            "name": "licence_lost_or_stolen",
+                                                            "name": "licenceLostOrStolen",
                                                             "doc": "",
                                                             "type": "boolean"
                                                         },
                                                         {
-                                                            "name": "licence_not_issued",
+                                                            "name": "licenceNotIssued",
                                                             "doc": "",
                                                             "type": "boolean"
                                                         },
                                                         {
-                                                            "name": "dt_of_service",
+                                                            "name": "dtOfService",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "applicant_role",
+                                                            "name": "applicantRole",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "applicant_first_nm",
+                                                            "name": "applicantFirstNm",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "applicant_last_nm",
+                                                            "name": "applicantLastNm",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "applicant_phone_no",
+                                                            "name": "applicantPhoneNo",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "applicant_email_addr",
+                                                            "name": "applicantEmailAddr",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "applicant_email_confirm",
+                                                            "name": "applicantEmailConfirm",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "driver_first_nm",
+                                                            "name": "driverFirstNm",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "driver_last_nm",
+                                                            "name": "driverLastNm",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "driver_information_driver_dl",
+                                                            "name": "driverInformationDriverDl",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "street_information_street_addr",
+                                                            "name": "streetInformationStreetAddr",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "driver_city_town",
+                                                            "name": "driverCityTown",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "driver_province",
+                                                            "name": "driverProvince",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "driver_postal_cde",
+                                                            "name": "driverPostalCde",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "applicant_signature",
+                                                            "name": "applicantSignature",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "applicant_dt_signed",
+                                                            "name": "applicantDtSigned",
                                                             "doc": "",
                                                             "type": "string"
                                                         }

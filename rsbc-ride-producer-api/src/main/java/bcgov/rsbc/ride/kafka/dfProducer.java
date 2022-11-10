@@ -20,19 +20,21 @@ import org.slf4j.LoggerFactory;
 import io.smallrye.reactive.messaging.MutinyEmitter;
 import io.smallrye.reactive.messaging.kafka.Record;
 
-import bcgov.rsbc.ride.kafka.models.df_appacceptedevent;
-import bcgov.rsbc.ride.kafka.models.df_appacceptedpayloadrecord;
-import bcgov.rsbc.ride.kafka.models.df_disclosuresentevent;
-import bcgov.rsbc.ride.kafka.models.df_disclosuresentpayloadrecord;
-import bcgov.rsbc.ride.kafka.models.df_evidencesubmittedevent;
-import bcgov.rsbc.ride.kafka.models.df_evidencesubmittedpayloadrecord;
-import bcgov.rsbc.ride.kafka.models.df_payrecvdevent;
-import bcgov.rsbc.ride.kafka.models.df_payrecvdpayloadrecord;
-import bcgov.rsbc.ride.kafka.models.df_reviewscheduleddevent;
-import bcgov.rsbc.ride.kafka.models.df_reviewscheduledpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.appacceptedevent;
+import bcgov.rsbc.ride.kafka.models.appacceptedpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.disclosuresentevent;
+import bcgov.rsbc.ride.kafka.models.disclosuresentpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.evidencesubmittedevent;
+import bcgov.rsbc.ride.kafka.models.evidencesubmittedpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.payrecvdevent;
+import bcgov.rsbc.ride.kafka.models.payrecvdpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.reviewscheduleddevent;
+import bcgov.rsbc.ride.kafka.models.reviewscheduledpayloadrecord;
 
 @Path("/dfevents")
 public class dfProducer {
+
+    private final static Logger logger = LoggerFactory.getLogger(dfProducer.class);
 
 
 
@@ -42,4 +44,133 @@ public class dfProducer {
     public String dfping() {
         return "df";
     }
+
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/appaccepted")
+    public Response publishappAcceptedEvent(appacceptedevent eventobj) {
+        logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getAppacceptedpayload());
+//        logger.info("{}",issuanceEvent.getPayload().get(0));
+        logger.info("{}",eventobj.getTypeofevent());
+//        return Response.ok().entity("Issuance event sent successfully").build();
+//        payloadrecord payloaddata=(payloadrecord) testeventobj.getPayload().get(0);
+
+        try {
+            //Change sendAndAwait to wait at most 5 seconds.
+            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            logger.info("Kafka event UID: {}", uid);
+//            emitterTestEvt.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+            return Response.ok().entity("success").build();
+        } catch (Exception e) {
+            logger.error("Exception occurred while sending issuance event, exception details: {}", e.toString() + "; " + e.getMessage());
+            return Response.serverError().entity("Failed sending test event to kafka").build();
+        }
+    }
+
+
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/disclosuresent")
+    public Response publishDisclosureEvent(disclosuresentevent eventobj) {
+        logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getDisclosuresentpayload());
+//        logger.info("{}",issuanceEvent.getPayload().get(0));
+        logger.info("{}",eventobj.getTypeofevent());
+//        return Response.ok().entity("Issuance event sent successfully").build();
+//        payloadrecord payloaddata=(payloadrecord) testeventobj.getPayload().get(0);
+
+        try {
+            //Change sendAndAwait to wait at most 5 seconds.
+            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            logger.info("Kafka event UID: {}", uid);
+//            emitterTestEvt.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+            return Response.ok().entity("success").build();
+        } catch (Exception e) {
+            logger.error("Exception occurred while sending issuance event, exception details: {}", e.toString() + "; " + e.getMessage());
+            return Response.serverError().entity("Failed sending test event to kafka").build();
+        }
+    }
+
+
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/evidencesubmitted")
+    public Response publishEvidenceSubmitEvent(evidencesubmittedevent eventobj) {
+        logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getEvidencesubmittedpayload());
+//        logger.info("{}",issuanceEvent.getPayload().get(0));
+        logger.info("{}",eventobj.getTypeofevent());
+//        return Response.ok().entity("Issuance event sent successfully").build();
+//        payloadrecord payloaddata=(payloadrecord) testeventobj.getPayload().get(0);
+
+        try {
+            //Change sendAndAwait to wait at most 5 seconds.
+            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            logger.info("Kafka event UID: {}", uid);
+//            emitterTestEvt.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+            return Response.ok().entity("success").build();
+        } catch (Exception e) {
+            logger.error("Exception occurred while sending issuance event, exception details: {}", e.toString() + "; " + e.getMessage());
+            return Response.serverError().entity("Failed sending test event to kafka").build();
+        }
+    }
+
+
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/paymentreceived")
+    public Response publishPaymentRecvdEvent(payrecvdevent eventobj) {
+        logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getPayrecvdpayload());
+//        logger.info("{}",issuanceEvent.getPayload().get(0));
+        logger.info("{}",eventobj.getTypeofevent());
+//        return Response.ok().entity("Issuance event sent successfully").build();
+//        payloadrecord payloaddata=(payloadrecord) testeventobj.getPayload().get(0);
+
+        try {
+            //Change sendAndAwait to wait at most 5 seconds.
+            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            logger.info("Kafka event UID: {}", uid);
+//            emitterTestEvt.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+            return Response.ok().entity("success").build();
+        } catch (Exception e) {
+            logger.error("Exception occurred while sending issuance event, exception details: {}", e.toString() + "; " + e.getMessage());
+            return Response.serverError().entity("Failed sending test event to kafka").build();
+        }
+    }
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/reviewscheduled")
+    public Response publishReviewSchedEvent(reviewscheduleddevent eventobj) {
+        logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getReviewscheduledpayload());
+//        logger.info("{}",issuanceEvent.getPayload().get(0));
+        logger.info("{}",eventobj.getTypeofevent());
+//        return Response.ok().entity("Issuance event sent successfully").build();
+//        payloadrecord payloaddata=(payloadrecord) testeventobj.getPayload().get(0);
+
+        try {
+            //Change sendAndAwait to wait at most 5 seconds.
+            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            logger.info("Kafka event UID: {}", uid);
+//            emitterTestEvt.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+            return Response.ok().entity("success").build();
+        } catch (Exception e) {
+            logger.error("Exception occurred while sending issuance event, exception details: {}", e.toString() + "; " + e.getMessage());
+            return Response.serverError().entity("Failed sending test event to kafka").build();
+        }
+    }
+
+
+
+
+
+
+
 }

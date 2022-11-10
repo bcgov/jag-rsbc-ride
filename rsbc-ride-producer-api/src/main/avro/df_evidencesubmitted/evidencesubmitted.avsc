@@ -1,5 +1,5 @@
 {
-    "name": "df_evidencesubmittedevent",
+    "name": "evidencesubmittedevent",
     "type": "record",
     "namespace": "bcgov.rsbc.ride.kafka.models",
     "fields": [
@@ -9,31 +9,31 @@
             "type": "string"
         },
         {
-                    "name": "df_evidencesubmittedpayload",
+                    "name": "evidencesubmittedpayload",
                     "doc": "",
                     "type": {
                          "type": "array",
                          "items": {
                             "type": "record",
-                                                "name": "df_evidencesubmittedpayloadrecord",
+                                                "name": "evidencesubmittedpayloadrecord",
                                                 "fields": [
                                                         {
-                                                            "name": "event_version",
+                                                            "name": "eventVersion",
                                                             "doc": "",
                                                             "type": "float"
                                                         },
                                                         {
-                                                            "name": "event_dtm",
+                                                            "name": "eventDtm",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "event_type",
+                                                            "name": "eventType",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "prohibition_no",
+                                                            "name": "prohibitionNo",
                                                             "doc": "",
                                                             "type": "string"
                                                         }
