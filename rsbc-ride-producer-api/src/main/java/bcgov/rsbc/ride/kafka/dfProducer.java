@@ -20,7 +20,16 @@ import org.slf4j.LoggerFactory;
 import io.smallrye.reactive.messaging.MutinyEmitter;
 import io.smallrye.reactive.messaging.kafka.Record;
 
-import bcgov.rsbc.ride.kafka.model.testevent;
+import bcgov.rsbc.ride.kafka.models.df_appacceptedevent;
+import bcgov.rsbc.ride.kafka.models.df_appacceptedpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.df_disclosuresentevent;
+import bcgov.rsbc.ride.kafka.models.df_disclosuresentpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.df_evidencesubmittedevent;
+import bcgov.rsbc.ride.kafka.models.df_evidencesubmittedpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.df_payrecvdevent;
+import bcgov.rsbc.ride.kafka.models.df_payrecvdpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.df_reviewscheduleddevent;
+import bcgov.rsbc.ride.kafka.models.df_reviewscheduledpayloadrecord;
 
 @Path("/dfevents")
 public class dfProducer {

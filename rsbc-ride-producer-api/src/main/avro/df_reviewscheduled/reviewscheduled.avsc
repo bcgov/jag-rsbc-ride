@@ -1,7 +1,7 @@
 {
     "name": "df_reviewscheduleddevent",
     "type": "record",
-    "namespace": "bcgov.rsbc.ride.kafka.model",
+    "namespace": "bcgov.rsbc.ride.kafka.models",
     "fields": [
         {
             "name": "typeofevent",
