@@ -1,0 +1,36 @@
+ame: General Flow
+
+on:
+  push:
+    branches:   
+      - 'feature/producerapi-deployv1'
+
+
+jobs:
+  pre_req_steps:
+    name: Pre-requisites for the build and deploy
+    runs-on: ubuntu-latest
+    environment: pr
+    # env:
+    #   build_config_name: "jh-etk-biadapter-buildconfig"
+    #   base_image_tag: "1"
+    #   PR_NUMBER: ${{ github.event.number }}
+    #   PR_IMAGE_STREAM_TAG: pr-build-${{ github.sha}}
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3      
+      - name: Authenticate and set context
+        uses: redhat-actions/oc-login@v1.1.2
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL_SILVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_SA_PIPELINE_TOKEN_SILVER }}
+          namespace: "${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools"
+      - name: Create Secrets
+        run: |
+          cd rsbc-ride-producer-api/openshift
+          oc process -f producer-api-secret.yml --param-file build-params.yml --param NAMESPACE=${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools | oc apply -f -
+      - name: Start the build and push
+        run: |
+          oc start-build ${{ env.build_config_name }} --follow --wait
