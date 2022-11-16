@@ -30,7 +30,23 @@ jobs:
       - name: Create Secrets
         run: |
           cd rsbc-ride-producer-api/openshift
-          oc process -f producer-api-secret.yml --param NAMESPACE=${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools | oc apply -f -
-      - name: Start the build and push
-        run: |
-          oc start-build ${{ env.build_config_name }} --follow --wait
+          oc process -f producer-api-secret.yml --param NAMESPACE=${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools --param APP_ACCEPTED_EVENT_TOPIC=${{ secrets.APP_ACCEPTED_EVENT_TOPIC }} \
+          --param TEST_EVENT_TOPIC=${{ secrets.TEST_EVENT_TOPIC }} \
+          --param DISCLOSURE_EVENT_TOPIC=${{ secrets.DISCLOSURE_EVENT_TOPIC }} \
+          --param EVSUBMITTED_EVENT_TOPIC=${{ secrets.EVSUBMITTED_EVENT_TOPIC }} \
+          --param IMAGE_NAMESPACE=${{ secrets.IMAGE_NAMESPACE }} \
+          --param IMAGE_REGISTRY=${{ secrets.IMAGE_REGISTRY }} \
+          --param KAFKA_SASL_CONFIG=${{ secrets.KAFKA_SASL_CONFIG }} \
+          --param KAFKA_SASL_MECH=${{ secrets.KAFKA_SASL_MECH }} \
+          --param KAFKA_SCHEMA_REGISTRY=${{ secrets.KAFKA_SCHEMA_REGISTRY }} \
+          --param KAFKA_SEC_PROTOCOL=${{ secrets.KAFKA_SEC_PROTOCOL }} \
+          --param KAFKA_SERVER=${{ secrets.KAFKA_SERVER }} \
+          --param PAYRECVD_EVENT_TOPIC=${{ secrets.PAYRECVD_EVENT_TOPIC }} \
+          --param REVSCHED_EVENT_TOPIC=${{ secrets.REVSCHED_EVENT_TOPIC }} \
+          --param SSL_PROTOCOL=${{ secrets.SSL_PROTOCOL }} \
+          --param SSL_TRUSTSTORE=${{ secrets.SSL_TRUSTSTORE }} \
+          --param SSL_TRUSTTORE_PASS=${{ secrets.SSL_TRUSTTORE_PASS }} \
+          --param SSL_TRUSTTORE_TYPE=${{ secrets.SSL_TRUSTTORE_TYPE }} | oc apply -f -
+      # - name: Start the build and push
+      #   run: |
+      #     oc start-build ${{ env.build_config_name }} --follow --wait
