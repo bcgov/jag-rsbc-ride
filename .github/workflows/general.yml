@@ -30,7 +30,7 @@ jobs:
       - name: Create Secrets
         run: |
           cd rsbc-ride-producer-api/openshift
-          oc process -f producer-api-secret.yml --param-file build-params.yml --param NAMESPACE=${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools | oc apply -f -
+          oc process -f producer-api-secret.yml --param NAMESPACE=${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools | oc apply -f -
       - name: Start the build and push
         run: |
           oc start-build ${{ env.build_config_name }} --follow --wait
