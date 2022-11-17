@@ -39,7 +39,7 @@ objects:
           memory: 8Gi
         requests:
           cpu: 1
-          memory: 8Gi
+          memory: 6Gi
       strategy:
         type: Docker
         dockerStrategy:
