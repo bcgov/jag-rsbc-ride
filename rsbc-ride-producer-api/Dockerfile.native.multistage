@@ -14,6 +14,7 @@ WORKDIR /code
 COPY ./src /code/src
 RUN ls /code/src
 RUN ls -a
+RUN env
 RUN ./gradlew build -Dquarkus.package.type=native
 
 
