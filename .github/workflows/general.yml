@@ -60,7 +60,7 @@ jobs:
       - name: Apply Build Yaml
         run: |
           cd rsbc-ride-producer-api/openshift
-          oc process -f producer-api-build.yml --param-file producer-api-build.yml | oc apply -f -
+          oc process -f producer-api-build.yml --param-file producer-api-build-params.yml | oc apply -f -
           
       - name: Start the build and push
         run: |
