@@ -48,19 +48,9 @@ objects:
       #   - type: ConfigChange
 parameters:
   - name: NAME
-    required: true
   - name: COMPONENT
-    # value: ride
   - name: VERSION
-    required: true
-    # value: "1.1"
   - name: SOURCE_CONTEXT_DIR
-    required: true
-    # value: "rsbc-ride-producer-api"
   - name: SOURCE_REPOSITORY_URL
-    required: true
-    # value: "https://github.com/bcgov/jag-rsbc-ride"
   - name: SOURCE_REPOSITORY_REF
-    required: true
   - name: BUILD_CONFIG_SUFFIX
-  
