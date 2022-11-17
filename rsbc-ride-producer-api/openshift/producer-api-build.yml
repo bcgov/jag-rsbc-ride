@@ -78,4 +78,3 @@ parameters:
     value: pr
   - name: COMPONENT
     value: producer-api
-    
