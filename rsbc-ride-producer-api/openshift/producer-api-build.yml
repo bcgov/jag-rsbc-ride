@@ -62,6 +62,4 @@ parameters:
   - name: SOURCE_REPOSITORY_REF
     required: true
   - name: BUILD_CONFIG_SUFFIX
-    required: true
-    value: pr
   - name: COMPONENT
