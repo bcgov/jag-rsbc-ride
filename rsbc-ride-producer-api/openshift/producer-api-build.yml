@@ -39,9 +39,92 @@ objects:
       strategy:
         type: Docker
         dockerStrategy:
-          envFrom:
-          - secretRef:
-              name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          env:
+          - name: APP_ACCEPTED_EVENT_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: APP_ACCEPTED_EVENT_TOPIC
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: DISCLOSURE_EVENT_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: DISCLOSURE_EVENT_TOPIC
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: EVSUBMITTED_EVENT_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: EVSUBMITTED_EVENT_TOPIC
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: IMAGE_NAMESPACE
+            valueFrom:
+              secretKeyRef:
+                key: IMAGE_NAMESPACE
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: IMAGE_REGISTRY
+            valueFrom:
+              secretKeyRef:
+                key: IMAGE_REGISTRY
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: KAFKA_SASL_CONFIG
+            valueFrom:
+              secretKeyRef:
+                key: KAFKA_SASL_CONFIG
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: KAFKA_SASL_MECH
+            valueFrom:
+              secretKeyRef:
+                key: KAFKA_SASL_MECH
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: KAFKA_SCHEMA_REGISTRY
+            valueFrom:
+              secretKeyRef:
+                key: KAFKA_SCHEMA_REGISTRY
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: KAFKA_SEC_PROTOCOL
+            valueFrom:
+              secretKeyRef:
+                key: KAFKA_SEC_PROTOCOL
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: KAFKA_SERVER
+            valueFrom:
+              secretKeyRef:
+                key: KAFKA_SERVER
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: PAYRECVD_EVENT_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: PAYRECVD_EVENT_TOPIC
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: REVSCHED_EVENT_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: REVSCHED_EVENT_TOPIC
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: SSL_PROTOCOL
+            valueFrom:
+              secretKeyRef:
+                key: SSL_PROTOCOL
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: SSL_TRUSTSTORE
+            valueFrom:
+              secretKeyRef:
+                key: SSL_TRUSTSTORE
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: SSL_TRUSTTORE_PASS
+            valueFrom:
+              secretKeyRef:
+                key: SSL_TRUSTTORE_PASS
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: SSL_TRUSTTORE_TYPE
+            valueFrom:
+              secretKeyRef:
+                key: SSL_TRUSTTORE_TYPE
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+          - name: TEST_EVENT_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: TEST_EVENT_TOPIC
+                name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
           dockerfilePath: Dockerfile.native.multistage
       output:
         to:
