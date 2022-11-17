@@ -49,6 +49,7 @@ objects:
 parameters:
   - name: NAME
     required: true
+  - name: COMPONENT
     # value: ride
   - name: VERSION
     required: true
@@ -62,4 +63,4 @@ parameters:
   - name: SOURCE_REPOSITORY_REF
     required: true
   - name: BUILD_CONFIG_SUFFIX
-  - name: COMPONENT
+  
