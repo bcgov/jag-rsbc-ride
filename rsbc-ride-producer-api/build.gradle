@@ -22,8 +22,8 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'io.apicurio:apicurio-registry-utils-serde:1.3.2.Final'
 
-    implementation 'io.quarkus:quarkus-kubernetes:2.14.0.Final'
-    implementation 'io.quarkus:quarkus-container-image-jib:2.14.0.Final'
+    // implementation 'io.quarkus:quarkus-kubernetes:2.14.0.Final'
+    // implementation 'io.quarkus:quarkus-container-image-jib:2.14.0.Final'
 
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.smallrye.reactive:smallrye-reactive-messaging-in-memory'
