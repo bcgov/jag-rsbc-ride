@@ -28,6 +28,7 @@ objects:
         secrets:
           - secret:
               name: kafka-cert-secret-pr
+            destinationDir: "tmp"
         git:
           uri: ${SOURCE_REPOSITORY_URL}
           ref: ${SOURCE_REPOSITORY_REF}
