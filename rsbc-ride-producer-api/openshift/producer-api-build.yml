@@ -55,7 +55,7 @@ parameters:
     # value: "1.1"
   - name: SOURCE_CONTEXT_DIR
     required: true
-    value: "rsbc-ride-producer-api/"
+    value: "rsbc-ride-producer-api"
   - name: SOURCE_REPOSITORY_URL
     required: true
     value: "https://github.com/bcgov/jag-rsbc-ride"
