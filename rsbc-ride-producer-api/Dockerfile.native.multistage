@@ -1,7 +1,7 @@
 ## Stage 1 : build with maven builder image with native capabilities
 FROM image-registry.openshift-image-registry.svc:5000/be5301-tools/quarkus-builder-image:1.0 AS build
 USER root
-RUN microdnf install findutils
+# RUN microdnf install findutils
 COPY --chown=quarkus:quarkus ./gradlew /code/gradlew
 COPY --chown=quarkus:quarkus ./gradle /code/gradle
 COPY --chown=quarkus:quarkus ./build.gradle /code/
@@ -22,7 +22,8 @@ RUN ls /code
 # RUN ls -a
 # RUN cp ./ca.p12 /tmp/ca.p12
 # RUN ls /tmp
-RUN ./gradlew build -Dquarkus.package.type=native
+RUN ./gradlew build
+# RUN ./gradlew build -Dquarkus.package.type=native
 
 
 
