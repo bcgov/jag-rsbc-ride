@@ -27,7 +27,7 @@ objects:
         contextDir: ${SOURCE_CONTEXT_DIR}
         secrets:
           - secret:
-            name: rsbc-ride-redhat-kafka-dev-cluster-ca-cert
+              name: rsbc-ride-redhat-kafka-dev-cluster-ca-cert
         git:
           uri: ${SOURCE_REPOSITORY_URL}
           ref: ${SOURCE_REPOSITORY_REF}
