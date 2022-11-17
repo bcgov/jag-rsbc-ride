@@ -40,7 +40,7 @@ jobs:
     name: Build and Push the image
     runs-on: ubuntu-latest
     environment: pr
-    # needs: pre_req_steps
+    needs: pre_req_steps
     env:
       build_config_name: "ride-producer-api-pr"
       # base_image_tag: "1"
