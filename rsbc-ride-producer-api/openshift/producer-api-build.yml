@@ -39,6 +39,9 @@ objects:
       strategy:
         type: Docker
         dockerStrategy:
+          envFrom:
+          - secretRef:
+              name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
           dockerfilePath: Dockerfile.native.multistage
       output:
         to:
