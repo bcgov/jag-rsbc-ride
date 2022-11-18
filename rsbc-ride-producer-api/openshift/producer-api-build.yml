@@ -27,7 +27,7 @@ objects:
         contextDir: ${SOURCE_CONTEXT_DIR}
         secrets:
           - secret:
-              name: kafka-cert-secret-pr
+              name: kafka-cert-secret-build-${BUILD_CONFIG_SUFFIX}
             destinationDir: "tmp"
         git:
           uri: ${SOURCE_REPOSITORY_URL}
