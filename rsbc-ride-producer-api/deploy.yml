@@ -57,3 +57,10 @@ spec:
             - containerPort: 8080
               name: http
               protocol: TCP
+          # volumeMounts:
+          # - name: clustercert
+          #   mountPath: /deployments
+      volumes:
+      - name: clustercert
+        secret:
+          secretName: rsbc-ride-redhat-kafka-dev-cluster-ca-cert

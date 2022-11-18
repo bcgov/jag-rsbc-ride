@@ -11,7 +11,9 @@ COPY --chown=quarkus:quarkus ./gradle.properties /code/
 # COPY --chown=quarkus:quarkus /tmp/ca.p12 /code/
 # COPY --chown=quarkus:quarkus /tmp/ca.p12 /tmp/
 RUN mkdir /deployments
-COPY --chown=quarkus:quarkus /tmp/ca.p12 /deployments/
+# RUN mkdir /deployments/certs
+# COPY --chown=quarkus:quarkus /tmp/ca.p12 /deployments/certs
+COPY --chown=quarkus:quarkus /tmp/ca.p12 /deployments
 RUN chmod +x /code/gradlew
 USER quarkus
 
@@ -36,8 +38,9 @@ COPY --from=build --chown=185 /code/build/quarkus-app/lib/ /deployments/lib/
 COPY --from=build --chown=185 /code/build/quarkus-app/*.jar /deployments/
 COPY --from=build --chown=185 /code/build/quarkus-app/app/ /deployments/app/
 COPY --from=build --chown=185 /code/build/quarkus-app/quarkus/ /deployments/quarkus/
+USER 185
 COPY --from=build --chown=185 /deployments/ca.p12 /deployments/ca.p12
-USER root
+
 # RUN mkdir /code
 # COPY --from=build --chown=185 /code/ca.p12 /code/ca.p12
 # RUN chown 185 /code
