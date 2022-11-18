@@ -8,8 +8,8 @@ COPY --chown=quarkus:quarkus ./build.gradle /code/
 COPY --chown=quarkus:quarkus ./settings.gradle /code/
 COPY --chown=quarkus:quarkus ./gradle.properties /code/
 COPY --chown=quarkus:quarkus ./gradle.properties /code/
-COPY --chown=quarkus:quarkus /tmp/ca.p12 /code/
-# COPY --chown=quarkus:quarkus /tmp/ca.p12 /tmp/
+# COPY --chown=quarkus:quarkus /tmp/ca.p12 /code/
+COPY --chown=quarkus:quarkus /tmp/ca.p12 /tmp/
 RUN chmod +x /code/gradlew
 USER quarkus
 # RUN mkdir /code
@@ -22,7 +22,7 @@ COPY ./src /code/src
 RUN ls /code
 RUN ls -a
 # RUN cp ./ca.p12 /tmp/ca.p12
-# RUN ls /tmp
+RUN ls /tmp
 RUN ./gradlew build
 RUN ls -a
 # RUN ./gradlew build -Dquarkus.package.type=native
@@ -34,11 +34,12 @@ COPY --from=build --chown=185 /code/build/quarkus-app/lib/ /deployments/lib/
 COPY --from=build --chown=185 /code/build/quarkus-app/*.jar /deployments/
 COPY --from=build --chown=185 /code/build/quarkus-app/app/ /deployments/app/
 COPY --from=build --chown=185 /code/build/quarkus-app/quarkus/ /deployments/quarkus/
-USER root
-RUN mkdir /code
-COPY --from=build --chown=185 /code/ca.p12 /code/ca.p12
-RUN chown 185 /code
-RUN chown 185 /code/ca.p12
+COPY --from=build --chown=185 /tmp/ca.p12 /tmp/ca.p12
+# USER root
+# RUN mkdir /code
+# COPY --from=build --chown=185 /code/ca.p12 /code/ca.p12
+# RUN chown 185 /code
+# RUN chown 185 /code/ca.p12
 
 EXPOSE 8080
 USER 185
