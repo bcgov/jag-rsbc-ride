@@ -10,13 +10,14 @@ COPY --chown=quarkus:quarkus ./gradle.properties /code/
 COPY --chown=quarkus:quarkus ./gradle.properties /code/
 # COPY --chown=quarkus:quarkus /tmp/ca.p12 /code/
 # COPY --chown=quarkus:quarkus /tmp/ca.p12 /tmp/
-RUN mkdir /deployments
+
 # RUN mkdir /deployments/certs
 # COPY --chown=quarkus:quarkus /tmp/ca.p12 /deployments/certs
-COPY --chown=quarkus:quarkus /tmp/ca.p12 /deployments
+
 RUN chmod +x /code/gradlew
 USER quarkus
-
+RUN mkdir /deployments
+COPY --chown=quarkus:quarkus /tmp/ca.p12 /deployments
 # RUN ls -a
 WORKDIR /code
 COPY ./src /code/src
