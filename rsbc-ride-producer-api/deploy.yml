@@ -57,9 +57,9 @@ spec:
             - containerPort: 8080
               name: http
               protocol: TCP
-          # volumeMounts:
-          # - name: clustercert
-          #   mountPath: /deployments
+          volumeMounts:
+          - name: clustercert
+            mountPath: /deployments/certs/server
       volumes:
       - name: clustercert
         secret:

@@ -10,14 +10,14 @@ COPY --chown=quarkus:quarkus ./gradle.properties /code/
 COPY --chown=quarkus:quarkus ./gradle.properties /code/
 # COPY --chown=quarkus:quarkus /tmp/ca.p12 /code/
 # COPY --chown=quarkus:quarkus /tmp/ca.p12 /tmp/
-
-# RUN mkdir /deployments/certs
+RUN mkdir /deployments
+RUN mkdir /deployments/certs
+RUN mkdir /deployments/server
 # COPY --chown=quarkus:quarkus /tmp/ca.p12 /deployments/certs
-
+COPY --chown=quarkus:quarkus /tmp/ca.p12 /deployments/certs/server
 RUN chmod +x /code/gradlew
 USER quarkus
-RUN mkdir /deployments
-COPY --chown=quarkus:quarkus /tmp/ca.p12 /deployments
+
 # RUN ls -a
 WORKDIR /code
 COPY ./src /code/src
@@ -34,18 +34,19 @@ RUN ls -a
 
 FROM image-registry.openshift-image-registry.svc:5000/be5301-tools/quarkus-ubi-base-image:1.1
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
+# USER root
 # We make four distinct layers so if there are application changes the library layers can be re-used
 COPY --from=build --chown=185 /code/build/quarkus-app/lib/ /deployments/lib/
 COPY --from=build --chown=185 /code/build/quarkus-app/*.jar /deployments/
 COPY --from=build --chown=185 /code/build/quarkus-app/app/ /deployments/app/
 COPY --from=build --chown=185 /code/build/quarkus-app/quarkus/ /deployments/quarkus/
-USER 185
-COPY --from=build --chown=185 /deployments/ca.p12 /deployments/ca.p12
+# USER 185
+# COPY --from=build --chown=185 /deployments/ca.p12 /deployments/ca.p12
 
 # RUN mkdir /code
 # COPY --from=build --chown=185 /code/ca.p12 /code/ca.p12
 # RUN chown 185 /code
-RUN chown 185 /deployments/ca.p12
+# RUN chown 185 /deployments/ca.p12
 
 EXPOSE 8080
 USER 185
