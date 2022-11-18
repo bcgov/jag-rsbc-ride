@@ -7,8 +7,8 @@ on:
 
 
 jobs:
-  pre_req_steps:
-    name: Pre-requisites for the build and deploy
+  create_env_secrets:
+    name: Create Env secret
     runs-on: ubuntu-latest
     environment: pr
     # env:
@@ -35,7 +35,7 @@ jobs:
         uses: redhat-actions/oc-login@v1.1.2
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL_SILVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_SA_PIPELINE_TOKEN_SILVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_SA_PIPELINE_TOKEN_SILVER_DEV }}
           namespace: "${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-dev"
       - name: Get Cluster ca secret for build
         run: |
@@ -49,9 +49,7 @@ jobs:
           namespace: "${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools"
       - name: Create cluster ca secret for build in tools
         run: |
-          oc project ${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools
-          oc create secret generic kafka-cert-secret-build-pr --from-file=./ca.p12
-          
+          oc create secret generic kafka-cert-secret-build-pr --dry-run=true --from-file=./ca.p12 -o yaml | oc apply -f -         
       
       
       
@@ -59,7 +57,7 @@ jobs:
     name: Build and Push the image
     runs-on: ubuntu-latest
     environment: pr
-    needs: pre_req_steps
+    needs: create_env_secrets
     env:
       build_config_name: "ride-producer-api-pr"
       # base_image_tag: "1"
