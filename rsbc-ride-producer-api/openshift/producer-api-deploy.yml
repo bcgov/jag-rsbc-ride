@@ -119,10 +119,10 @@ objects:
       name: ${NAME}-${COMPONENT}-clusterip-${SUFFIX}
     spec:
       ports:
-        - name: http
-          port: 80
-          targetPort: 8080
-     selector:
+      - name: http
+        port: 80
+        targetPort: 8080
+      selector:
         app.kubernetes.io/name: ${NAME}-${COMPONENT}-${SUFFIX}
         app: ${NAME}-${COMPONENT}-${SUFFIX}
       type: ClusterIP
