@@ -60,7 +60,7 @@ objects:
             app: ${NAME}-${COMPONENT}-${SUFFIX}
         spec:
           containers:            
-              image: image-registry.openshift-image-registry.svc:5000/${IMAGE_NAMESPACE}/${NAME}-${COMPONENT}-image-${SUFFIX}:${IMAGE_TAG}
+            - image: image-registry.openshift-image-registry.svc:5000/${IMAGE_NAMESPACE}/${NAME}-${COMPONENT}-image-${SUFFIX}:${IMAGE_TAG}
               imagePullPolicy: Always
               name: ${NAME}-${COMPONENT}-${SUFFIX}-container-1
               resources:
