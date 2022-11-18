@@ -25,26 +25,6 @@ RUN ls /code
 RUN ./gradlew build
 # RUN ./gradlew build -Dquarkus.package.type=native
 
-
-
-## Stage 2 : create the docker final image
-# FROM image-registry.openshift-image-registry.svc:5000/be5301-tools/quarkus-ubi-base-image:1.0
-# WORKDIR /work/
-# RUN chown 1001 /work \
-#     && chmod "g+rwX" /work \
-#     && chown 1001:root /work
-# COPY --from=build --chown=1001:root build/*-runner /work/application
-# # COPY --from=build --chown=1001:root /code/ca.p12 /tmp/ca.p12
-# # COPY --from=build --chown=1001:root /tmp/ca.p12 /tmp/ca.p12
-# # COPY --from=build --chown=1001:root /tmp/user.p12 /tmp/user.p12
-
-# EXPOSE 8080
-# USER 1001
-
-# CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
-
-
-
 FROM image-registry.openshift-image-registry.svc:5000/be5301-tools/quarkus-ubi-base-image:1.1
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
