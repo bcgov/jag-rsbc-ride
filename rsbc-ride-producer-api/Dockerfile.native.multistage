@@ -37,6 +37,8 @@ COPY --from=build --chown=185 /code/build/quarkus-app/quarkus/ /deployments/quar
 USER root
 RUN mkdir /code
 COPY --from=build --chown=185 /code/ca.p12 /code/ca.p12
+RUN chown 185 /code
+RUN chown 185 /code/ca.p12
 
 EXPOSE 8080
 USER 185
