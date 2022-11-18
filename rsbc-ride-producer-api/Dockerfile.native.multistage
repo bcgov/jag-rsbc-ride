@@ -12,7 +12,7 @@ COPY --chown=quarkus:quarkus ./gradle.properties /code/
 # COPY --chown=quarkus:quarkus /tmp/ca.p12 /tmp/
 RUN mkdir /deployments
 RUN mkdir /deployments/certs
-RUN mkdir /deployments/server
+RUN mkdir /deployments/certs/server
 # COPY --chown=quarkus:quarkus /tmp/ca.p12 /deployments/certs
 COPY --chown=quarkus:quarkus /tmp/ca.p12 /deployments/certs/server
 RUN chmod +x /code/gradlew
@@ -27,7 +27,7 @@ COPY ./src /code/src
 RUN ls /code
 RUN ls -a
 # RUN cp ./ca.p12 /tmp/ca.p12
-RUN ls /deployments
+RUN ls /deployments/certs/server
 RUN ./gradlew build
 RUN ls -a
 # RUN ./gradlew build -Dquarkus.package.type=native

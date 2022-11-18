@@ -60,6 +60,8 @@ spec:
           volumeMounts:
           - name: clustercert
             mountPath: /deployments/certs/server
+            readOnly: false
+            subPath: ""
       volumes:
       - name: clustercert
         secret:
