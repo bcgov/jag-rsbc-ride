@@ -36,10 +36,10 @@ objects:
       resources:
         limits:
           cpu: 1
-          memory: 2Gi
+          memory: 3Gi
         requests:
           cpu: 1
-          memory: 3Gi
+          memory: 2Gi
       strategy:
         type: Docker
         dockerStrategy:
