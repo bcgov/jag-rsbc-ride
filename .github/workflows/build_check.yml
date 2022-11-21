@@ -77,12 +77,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3      
-      - name: Authenticate and set context for tools secret creation
+      - name: Authenticate and set context for dev get cluster ca
         uses: redhat-actions/oc-login@v1.1.2
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL_SILVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_SA_PIPELINE_TOKEN_SILVER }}
-          namespace: "${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools"
+          openshift_token: ${{ secrets.OPENSHIFT_SA_PIPELINE_TOKEN_SILVER_DEV }}
+          namespace: "${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-dev"
+      - name: Get Cluster ca secret for build
+        run: |
+          mkdir /deployments
+          mkdir /deployments/certs
+          mkdir /deployments/certs/server
+          oc get secret ${{ secrets.CLUSTER_CA_SECRET_NAME }} -o jsonpath='{.data.ca\.p12}' | base64 -d -i > /deployments/certs/server/ca.p12
       - name: Perform a test build
         run: |
           cd rsbc-ride-producer-api
