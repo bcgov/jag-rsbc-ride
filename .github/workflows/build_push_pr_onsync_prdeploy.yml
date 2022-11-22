@@ -12,39 +12,32 @@ on:
 
 
 jobs:
-  test_check:
-    name: Test the Build
+  merge_pr_local:
+    name: Merge PR locally and create temp branch
     runs-on: ubuntu-latest
+    env:
+      build_config_name: "ride-vips-adapter-nginx-proxy-build-v2"
+      base_image_tag: "1"
+      PR_NUMBER: ${{ github.event.number }}
+      PR_IMAGE_STREAM_TAG: pr-build-${{ github.sha}}
+
+
     steps:
-      - name: test
+      - name: Merge the PR branch locally
         run: |
-          echo "new pr"
-  # merge_pr_local:
-  #   name: Merge PR locally and create temp branch
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     build_config_name: "ride-vips-adapter-nginx-proxy-build-v2"
-  #     base_image_tag: "1"
-  #     PR_NUMBER: ${{ github.event.number }}
-  #     PR_IMAGE_STREAM_TAG: pr-build-${{ github.sha}}
-
-
-  #   steps:
-  #     - name: Merge the PR branch locally
-  #       run: |
-  #         git clone "https://github.com/bcgov/rsbc-ride-adapters"
-  #         git config --global user.email "ride_vips_actions@gov.bc.ca"
-  #         git config --global user.name "ride_vips_actions"
-  #         git config --global pull.rebase true
-  #         cd rsbc-ride-adapters
-  #         git fetch
-  #         git branch -a
-  #         git checkout $GITHUB_HEAD_REF      
-  #         git checkout $GITHUB_BASE_REF  
-  #         git merge $GITHUB_HEAD_REF 
-  #         git checkout -b pr-${{ env.PR_NUMBER }}-branch
-  #         git remote add testbranch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-  #         git push -u testbranch pr-${{ env.PR_NUMBER }}-branch
+          git clone "https://github.com/bcgov/jag-rsbc-ride"
+          git config --global user.email "ride_actions@gov.bc.ca"
+          git config --global user.name "ride_actions"
+          git config --global pull.rebase true
+          cd rsbc-ride-adapters
+          git fetch
+          git branch -a
+          git checkout $GITHUB_HEAD_REF      
+          git checkout $GITHUB_BASE_REF  
+          git merge $GITHUB_HEAD_REF 
+          git checkout -b tempbranch/pr-${{ env.PR_NUMBER }}
+          git remote add testbranch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          git push -u testbranch tempbranch/pr-${{ env.PR_NUMBER }}
 
   # build_pr:
   #   name: Build and Push from PR temp branch
