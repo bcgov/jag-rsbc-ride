@@ -156,7 +156,7 @@ jobs:
       - name: Update app name label for PR deploy
         uses: mikefarah/yq@v4.28.1
         with:
-          cmd: yq eval -i '.commonLabels.app.kubernetes.io/name = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
+          cmd: yq eval -i '.commonLabels["app.kubernetes.io/name"] = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
       - name: Update app label for PR deploy
         uses: mikefarah/yq@v4.28.1
         with:
