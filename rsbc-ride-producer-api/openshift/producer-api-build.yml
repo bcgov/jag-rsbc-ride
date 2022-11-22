@@ -10,7 +10,7 @@ objects:
   - kind: ImageStream
     apiVersion: v1
     metadata:
-      name: ${NAME}-${COMPONENT}-image-${BUILD_CONFIG_SUFFIX}
+      name: ${NAME}-${IMAGE_NAME}-image-${BUILD_CONFIG_SUFFIX}
       labels:
         shared: "true"
   - kind: BuildConfig
@@ -133,7 +133,7 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: ${NAME}-${COMPONENT}-image-${BUILD_CONFIG_SUFFIX}:${VERSION}
+          name: ${NAME}-${IMAGE_NAME}-image-${BUILD_CONFIG_SUFFIX}:${VERSION}
       # triggers:
       #   - type: ConfigChange
 parameters:
@@ -145,5 +145,6 @@ parameters:
   - name: SOURCE_REPOSITORY_REF
   - name: BUILD_CONFIG_SUFFIX
   - name: BUILD_SECRET_NAME
+  - name: IMAGE_NAME
 
 
