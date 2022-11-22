@@ -2,6 +2,6 @@ NAME: ride
 VERSION: "1.0"
 SOURCE_REPOSITORY_REF: feature/producerapi-deployv1
 BUILD_CONFIG_SUFFIX: pr
-COMPONENT: producer-api
+COMPONENT: producer-api-build
 SOURCE_CONTEXT_DIR: rsbc-ride-producer-api
 SOURCE_REPOSITORY_URL: https://github.com/bcgov/jag-rsbc-ride
