@@ -110,6 +110,56 @@ jobs:
       - name: Start the build and push
         run: |
           oc start-build ${{ env.build_config_name }} --follow --wait
+      - name: Delete Temp Branch
+        run: |
+          git clone "https://github.com/bcgov/jag-rsbc-ride"
+          git config --global user.email "ride_actions@gov.bc.ca"
+          git config --global user.name "ride_actions"
+          git config --global pull.rebase true
+          cd jag-rsbc-ride
+          git fetch
+          git remote add testbranch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          git push -d testbranch tempbranch/pr-${{ env.PR_NUMBER }}
+
+
+
+  deploy_pr_argocd:
+    name: Push to Gitops repo for PR deployment via Argocd
+    runs-on: ubuntu-latest
+    needs: [merge_pr_local,create_env_secrets,build_push]
+    env:
+      PR_NUMBER: ${{ github.event.number }}
+      PR_IMAGE_STREAM_TAG: $GITHUB_SHA
+    steps:
+      - name: Checkout Gitops repository
+        uses: actions/checkout@v3
+        with:
+          repository: bcgov-c/tenant-gitops-be5301
+          ref: deployment/rsbc-ride-producer-api
+          token: ${{ secrets.GITOPS_GITHUB_TOKEN }}
+      # - name: New PR Branch
+      #   run: |
+      #     git config user.name github-actions
+      #     git config user.email github-actions@github.com
+      #     git pull
+      #     git checkout -b pr-branch-${{env.PR_NUMBER}}  
+      #     git push -u origin pr-branch-${{env.PR_NUMBER}} 
+      - name: Update Image tag for PR deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.images[0].newTag = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update name suffix for PR deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.nameSuffix = "-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
+      - name: Check Changed value
+        run: |
+          cat pr/kustomization.yaml
+      - name: Push Changes
+        run: |
+          git add .
+          git commit -m "updated pr details to yaml"
+          git push -u origin deployment/rsbc-ride-producer-api
 
 
   
