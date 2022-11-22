@@ -154,7 +154,7 @@ jobs:
           cmd: yq eval -i '.nameSuffix = "-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
       - name: Check Changed value
         run: |
-          cat pr/kustomization.yaml
+          cat overlays/pr/kustomization.yaml
       - name: Push Changes
         run: |
           git add .
