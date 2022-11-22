@@ -172,7 +172,7 @@ jobs:
       - name: Update sha annotation
         uses: mikefarah/yq@v4.28.1
         with:
-          cmd: yq eval -i '.commonAnnotations.commit_sha = "${{env.RELEASE_NAME}}"' 'overlays/pr/kustomization.yaml'
+          cmd: yq eval -i '.commonAnnotations.commit_sha = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/pr/kustomization.yaml'
       - name: Check Changed value
         run: |
           cat overlays/pr/kustomization.yaml
