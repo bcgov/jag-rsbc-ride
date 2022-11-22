@@ -30,7 +30,7 @@ jobs:
           git config --global user.name "ride_actions"
           git config --global pull.rebase true
           ls -a
-          cd rsbc-ride-adapters
+          cd jag-rsbc-ride
           git fetch
           git branch -a
           git checkout $GITHUB_HEAD_REF      
