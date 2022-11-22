@@ -153,18 +153,26 @@ jobs:
         uses: mikefarah/yq@v4.28.1
         with:
           cmd: yq eval -i '.nameSuffix = "-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
-      - name: Update commit sha for PR deploy
+      - name: Update app name label for PR deploy
         uses: mikefarah/yq@v4.28.1
         with:
-          cmd: yq eval -i '.commonLabels.commit_sha = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/pr/kustomization.yaml'
+          cmd: yq eval -i '.commonLabels.app.kubernetes.io/name = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update app label for PR deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonLabels.app = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
       - name: Update release name for PR deploy
         uses: mikefarah/yq@v4.28.1
         with:
-          cmd: yq eval -i '.commonLabels.release_name = "${{env.RELEASE_NAME}}"' 'overlays/pr/kustomization.yaml'
+          cmd: yq eval -i '.commonAnnotations.release_name = "${{env.RELEASE_NAME}}"' 'overlays/pr/kustomization.yaml'
       - name: Update hpa pr name
         uses: mikefarah/yq@v4.28.1
         with:
           cmd: yq eval -i '.spec.scaleTargetRef.name = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/custom-hpa-ride-producer-api.yml'
+      - name: Update sha annotation
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonAnnotations.commit_sha = "${{env.RELEASE_NAME}}"' 'overlays/pr/kustomization.yaml'
       - name: Check Changed value
         run: |
           cat overlays/pr/kustomization.yaml
