@@ -29,6 +29,7 @@ jobs:
           git config --global user.email "ride_actions@gov.bc.ca"
           git config --global user.name "ride_actions"
           git config --global pull.rebase true
+          ls -a
           cd rsbc-ride-adapters
           git fetch
           git branch -a
