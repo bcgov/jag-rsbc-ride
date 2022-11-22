@@ -8,6 +8,7 @@ on:
       - 'master'
       - 'feature/buildpushpr'
       - 'maincomponent/**'
+      - 'feature/producerapi-deployv1'
 
 jobs:
   test_build:
