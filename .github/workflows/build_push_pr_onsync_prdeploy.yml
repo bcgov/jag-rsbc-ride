@@ -161,6 +161,10 @@ jobs:
         uses: mikefarah/yq@v4.28.1
         with:
           cmd: yq eval -i '.commonLabels.release_name = "${{env.RELEASE_NAME}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update hpa pr name
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.spec.scaleTargetRef.name = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/custom-hpa-ride-producer-api.yaml'
       - name: Check Changed value
         run: |
           cat overlays/pr/kustomization.yaml
