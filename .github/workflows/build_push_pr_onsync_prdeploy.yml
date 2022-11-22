@@ -129,7 +129,7 @@ jobs:
     needs: [merge_pr_local,create_env_secrets,build_push]
     env:
       PR_NUMBER: ${{ github.event.number }}
-      PR_IMAGE_STREAM_TAG: $GITHUB_SHA
+      PR_IMAGE_STREAM_TAG: ${{ github.sha}}
       RELEASE_NAME: release_1_0
     steps:
       - name: Checkout Gitops repository
@@ -156,7 +156,7 @@ jobs:
       - name: Update commit sha for PR deploy
         uses: mikefarah/yq@v4.28.1
         with:
-          cmd: yq eval -i '.commonLabels.commit_sha = "$GITHUB_SHA"' 'overlays/pr/kustomization.yaml'
+          cmd: yq eval -i '.commonLabels.commit_sha = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/pr/kustomization.yaml'
       - name: Update release name for PR deploy
         uses: mikefarah/yq@v4.28.1
         with:
