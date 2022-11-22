@@ -2,7 +2,7 @@ name: Build, Push and deploy for PR-On Sync PR from feature to release branch
 
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [edited,synchronize]
     branches:
       - 'maincomponent/producerapi-release**'
     # branches-ignore:   
@@ -13,6 +13,8 @@ on:
 
 jobs:
   test_check:
+    name: Test the Build
+    runs-on: ubuntu-latest
     steps:
       - name: test
         run: |
