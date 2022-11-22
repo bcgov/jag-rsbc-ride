@@ -130,6 +130,7 @@ jobs:
     env:
       PR_NUMBER: ${{ github.event.number }}
       PR_IMAGE_STREAM_TAG: $GITHUB_SHA
+      RELEASE_NAME: release_1_0
     steps:
       - name: Checkout Gitops repository
         uses: actions/checkout@v3
@@ -152,11 +153,21 @@ jobs:
         uses: mikefarah/yq@v4.28.1
         with:
           cmd: yq eval -i '.nameSuffix = "-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update commit sha for PR deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonLabels.commit_sha = "$GITHUB_SHA"' 'overlays/pr/kustomization.yaml'
+      - name: Update release name for PR deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonLabels.release_name = "${{env.RELEASE_NAME}}"' 'overlays/pr/kustomization.yaml'
       - name: Check Changed value
         run: |
           cat overlays/pr/kustomization.yaml
       - name: Push Changes
         run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git add .
           git commit -m "updated pr details to yaml"
           git push -u origin deployment/rsbc-ride-producer-api
