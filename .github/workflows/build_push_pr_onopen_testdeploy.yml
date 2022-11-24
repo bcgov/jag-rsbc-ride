@@ -80,7 +80,7 @@ jobs:
   build_push:
     name: Build and Push the image
     runs-on: ubuntu-latest
-    environment: dev
+    environment: test
     needs: [merge_pr_local,create_env_secrets]
     env:
       build_config_name: "ride-producer-api-build-test"
