@@ -1,11 +1,10 @@
-name: Build, Push and deploy for PR-On Open new PR from feature to release branch
-
+name: Build, Push and deploy for PR-On Open new PR from release branch to devbranch
 on:
   pull_request:
-    types: [opened, reopened]
-    branches-ignore:   
-      - 'main'
-      - 'master'
+    types: [opened, reopened,edited,synchronize]
+    branches:   
+      - 'maincomponent/producerapi_devbranch'
+      # - 'master'
       # - 'release**'
 
 
@@ -14,7 +13,7 @@ jobs:
     steps:
       - name: test
         run: |
-        echo "new pr"
+          echo "new pr"
   # merge_pr_local:
   #   name: Merge PR locally and create temp branch
   #   runs-on: ubuntu-latest
