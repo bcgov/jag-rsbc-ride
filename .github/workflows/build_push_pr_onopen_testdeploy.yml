@@ -1,4 +1,4 @@
-name: Build, Push and deploy for PR-On Open new PR from release branch to test branch
+name: Build, Push and deploy for PR-On Open new PR from release branch to test branch(Deploy to Test)
 on:
   pull_request:
     types: [opened, reopened,edited,synchronize]

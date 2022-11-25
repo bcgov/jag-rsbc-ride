@@ -1,4 +1,4 @@
-name: Build, Push and deploy for PR-On Open new PR from feature to release branch
+name: Build, Push and deploy for PR-On Open new PR from feature to release branch(Deploy to PR)
 on:
   pull_request:
     types: [opened, reopened]
