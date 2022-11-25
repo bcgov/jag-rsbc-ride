@@ -1,10 +1,13 @@
-name: Build, Push and deploy for PR-On Open new PR from release branch to main branch(Deploy to PROD)
+name: Build, Push and deploy for PR-On Sync PR from feature to release branch
+
 on:
   pull_request:
-    types: [opened, reopened,edited,synchronize]
-    branches:   
-      - 'maincomponent/producerapi'
-      # - 'master'
+    types: [edited,synchronize]
+    branches:
+      - 'maincomponent/producerapi-release**'
+    # branches-ignore:   
+    #   - 'main'
+    #   - 'master'
       # - 'release**'
 
 
@@ -13,10 +16,10 @@ jobs:
     name: Merge PR locally and create temp branch
     runs-on: ubuntu-latest
     env:
-      # build_config_name: "ride-vips-adapter-nginx-proxy-build-v2"
-      # base_image_tag: "1"
+      build_config_name: "ride-vips-adapter-nginx-proxy-build-v2"
+      base_image_tag: "1"
       PR_NUMBER: ${{ github.event.number }}
-      # PR_IMAGE_STREAM_TAG: pr-build-${{ github.sha}}
+      PR_IMAGE_STREAM_TAG: pr-build-${{ github.sha}}
 
 
     steps:
@@ -33,17 +36,17 @@ jobs:
           git checkout $GITHUB_HEAD_REF      
           git checkout $GITHUB_BASE_REF  
           git merge $GITHUB_HEAD_REF 
-          git checkout -b tempbranch_proddeploy/pr-${{ env.PR_NUMBER }}
+          git checkout -b tempbranch/pr-${{ env.PR_NUMBER }}
           git remote add testbranch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-          git push -u testbranch tempbranch_proddeploy/pr-${{ env.PR_NUMBER }}
+          git push -u testbranch tempbranch/pr-${{ env.PR_NUMBER }}
 
   create_env_secrets:
     name: Create Env secret
     runs-on: ubuntu-latest
     needs: merge_pr_local
-    environment: prod
+    environment: pr
     env:
-      APP_VERSION: "prod"
+      APP_VERSION: "pr"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3      
@@ -57,12 +60,12 @@ jobs:
         run: |
           cd rsbc-ride-producer-api/openshift
           oc process -f producer-api-build-secret.yml --param VERSION=${{ env.APP_VERSION }} --param NAMESPACE=${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools --param APP_ACCEPTED_EVENT_TOPIC=${{ secrets.APP_ACCEPTED_EVENT_TOPIC }} --param TEST_EVENT_TOPIC=${{ secrets.TEST_EVENT_TOPIC }} --param DISCLOSURE_EVENT_TOPIC=${{ secrets.DISCLOSURE_EVENT_TOPIC }} --param EVSUBMITTED_EVENT_TOPIC=${{ secrets.EVSUBMITTED_EVENT_TOPIC }} --param IMAGE_NAMESPACE=${{ secrets.IMAGE_NAMESPACE }} --param IMAGE_REGISTRY=${{ secrets.IMAGE_REGISTRY }} --param KAFKA_SASL_CONFIG="${{ secrets.KAFKA_SASL_CONFIG }}" --param KAFKA_SASL_MECH=${{ secrets.KAFKA_SASL_MECH }} --param KAFKA_SCHEMA_REGISTRY=${{ secrets.KAFKA_SCHEMA_REGISTRY }} --param KAFKA_SEC_PROTOCOL=${{ secrets.KAFKA_SEC_PROTOCOL }} --param KAFKA_SERVER=${{ secrets.KAFKA_SERVER }} --param PAYRECVD_EVENT_TOPIC=${{ secrets.PAYRECVD_EVENT_TOPIC }} --param REVSCHED_EVENT_TOPIC=${{ secrets.REVSCHED_EVENT_TOPIC }} --param SSL_PROTOCOL=${{ secrets.SSL_PROTOCOL }} --param SSL_TRUSTSTORE=${{ secrets.SSL_TRUSTSTORE }} --param SSL_TRUSTTORE_PASS=${{ secrets.SSL_TRUSTTORE_PASS }} --param SSL_TRUSTTORE_TYPE=${{ secrets.SSL_TRUSTTORE_TYPE }} | oc apply -f -
-      - name: Authenticate and set context for test get cluster ca
+      - name: Authenticate and set context for dev get cluster ca
         uses: redhat-actions/oc-login@v1.1.2
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL_SILVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_SA_PIPELINE_TOKEN_SILVER_PROD }}
-          namespace: "${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-prod"
+          openshift_token: ${{ secrets.OPENSHIFT_SA_PIPELINE_TOKEN_SILVER_DEV }}
+          namespace: "${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-dev"
       - name: Get Cluster ca secret for build
         run: |
           oc get secret ${{ secrets.CLUSTER_CA_SECRET_NAME }} -o jsonpath='{.data.ca\.p12}' | base64 -d -i > ca.p12
@@ -80,10 +83,10 @@ jobs:
   build_push:
     name: Build and Push the image
     runs-on: ubuntu-latest
-    environment: prod
+    environment: pr
     needs: [merge_pr_local,create_env_secrets]
     env:
-      build_config_name: "ride-producer-api-build-prod"
+      build_config_name: "ride-producer-api-build-pr"
       PR_NUMBER: ${{ github.event.number }}
       # base_image_tag: "1"
       # PR_NUMBER: ${{ github.event.number }}
@@ -102,7 +105,7 @@ jobs:
       - name: Apply Build Yaml
         run: |
           cd rsbc-ride-producer-api/openshift
-          oc process -f producer-api-build.yml --param SOURCE_REPOSITORY_REF=tempbranch_proddeploy/pr-${{ env.PR_NUMBER }} --param-file producer-api-build-prod-params.yml --param VERSION=$GITHUB_SHA | oc apply -f -
+          oc process -f producer-api-build.yml --param SOURCE_REPOSITORY_REF=tempbranch/pr-${{ env.PR_NUMBER }} --param-file producer-api-build-pr-params.yml --param VERSION=$GITHUB_SHA | oc apply -f -
           
       - name: Start the build and push
         run: |
@@ -116,12 +119,12 @@ jobs:
           cd jag-rsbc-ride
           git fetch
           git remote add testbranch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-          git push -d testbranch tempbranch_proddeploy/pr-${{ env.PR_NUMBER }}
+          git push -d testbranch tempbranch/pr-${{ env.PR_NUMBER }}
 
 
 
-  deploy_prod_argocd:
-    name: Push to Gitops repo for prod deployment via Argocd
+  deploy_pr_argocd:
+    name: Push to Gitops repo for PR deployment via Argocd
     runs-on: ubuntu-latest
     needs: [merge_pr_local,create_env_secrets,build_push]
     env:
@@ -142,42 +145,41 @@ jobs:
       #     git pull
       #     git checkout -b pr-branch-${{env.PR_NUMBER}}  
       #     git push -u origin pr-branch-${{env.PR_NUMBER}} 
-      - name: Update Image tag for prod deploy
+      - name: Update Image tag for PR deploy
         uses: mikefarah/yq@v4.28.1
         with:
-          cmd: yq eval -i '.images[0].newTag = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/prod/kustomization.yaml'
-      # - name: Update name suffix for Dev deploy
-      #   uses: mikefarah/yq@v4.28.1
-      #   with:
-      #     cmd: yq eval -i '.nameSuffix = "-dev"' 'overlays/dev/kustomization.yaml'
-      # - name: Update app name label for Dev deploy
-      #   uses: mikefarah/yq@v4.28.1
-      #   with:
-      #     cmd: yq eval -i '.commonLabels["app.kubernetes.io/name"] = "ride-producer-api-dev"' 'overlays/pr/kustomization.yaml'
-      # - name: Update app label for PR deploy
-      #   uses: mikefarah/yq@v4.28.1
-      #   with:
-      #     cmd: yq eval -i '.commonLabels.app = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
-      - name: Update release name for prod deploy
+          cmd: yq eval -i '.images[0].newTag = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update name suffix for PR deploy
         uses: mikefarah/yq@v4.28.1
         with:
-          cmd: yq eval -i '.commonAnnotations.release_name = "${{env.RELEASE_NAME}}"' 'overlays/prod/kustomization.yaml'
-      # - name: Update hpa Dev name
-      #   uses: mikefarah/yq@v4.28.1
-      #   with:
-      #     cmd: yq eval -i '.spec.scaleTargetRef.name = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/custom-hpa-ride-producer-api.yml'
+          cmd: yq eval -i '.nameSuffix = "-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update app name label for PR deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonLabels["app.kubernetes.io/name"] = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update app label for PR deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonLabels.app = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update release name for PR deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonAnnotations.release_name = "${{env.RELEASE_NAME}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update hpa pr name
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.spec.scaleTargetRef.name = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/custom-hpa-ride-producer-api.yml'
       - name: Update sha annotation
         uses: mikefarah/yq@v4.28.1
         with:
-          cmd: yq eval -i '.commonAnnotations.commit_sha = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/prod/kustomization.yaml'
+          cmd: yq eval -i '.commonAnnotations.commit_sha = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/pr/kustomization.yaml'
       - name: Check Changed value
         run: |
-          cat overlays/prod/kustomization.yaml
+          cat overlays/pr/kustomization.yaml
       - name: Push Changes
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
-          git commit -m "updated prod deploy details to prod overlay yaml"
+          git commit -m "updated pr details to yaml"
           git push -u origin deployment/rsbc-ride-producer-api
-        
