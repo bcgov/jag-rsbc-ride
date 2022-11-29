@@ -61,5 +61,15 @@ with a given partner system (i.e. the how)
 ![Deploy to Prod](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-infrastructure-test&revision=true)  
 
 ### <b>RIDE Monitoring Stack</b>  
->![Deploy to Tools](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-monitoring-stack&revision=true)
+>![Deploy to Tools](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-monitoring-stack&revision=true)  
+
+### <b>RIDE VIPS Adapter</b>  
+><u>Dev Deployment</u>   
+>![Deploy to Dev](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-vips-adapter-dev&revision=true)
+>
+><u>Test Deployment</u>  
+>![Deploy to Test](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-vips-adapter-test&revision=true)
+>
+><u>PROD Deployment</u>    
+![Deploy to Prod](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-vips-adapter-test&revision=true)  
 
