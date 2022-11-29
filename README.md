@@ -1,3 +1,11 @@
+
+[![Build and Push To Dev](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_devdeploy.yml/badge.svg)](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_devdeploy.yml)
+
+[![Build and Push To Test](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_testdeploy.yml/badge.svg)](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_testdeploy.yml)
+
+[![Build and Push To Prod](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_proddeploy.yml/badge.svg)](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_proddeploy.yml)
+
+
 # RIDE
 RIDE (RoadSafetyBC Integrated Digital Ecosystem) is the technical name for a suite of microservices that implement RoadSafetyBC's RIDE application.  
 This repository contains the code, the how-to guides, and the build and deployment scripts needed to develop and run RIDE.
