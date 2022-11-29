@@ -5,6 +5,17 @@
 
 [![Build and Push To Prod](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_proddeploy.yml/badge.svg)](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_proddeploy.yml)
 
+## Dev Deployment
+![Deploy to Dev](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-producer-api-dev&revision=true)
+
+## Test Deployment
+![Deploy to Test](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-producer-api-test&revision=true)
+
+
+## PROD Deployment
+![Deploy to Prod](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-producer-api-prod&revision=true)
+
+
 
 # RIDE
 RIDE (RoadSafetyBC Integrated Digital Ecosystem) is the technical name for a suite of microservices that implement RoadSafetyBC's RIDE application.  
