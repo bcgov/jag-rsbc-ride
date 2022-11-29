@@ -31,35 +31,35 @@ with a given partner system (i.e. the how)
 ## 7. Component Build and Deploy Status    
 
 ### <b>RIDE Producer API</b>
-
-<u>Build Status</u>
-
-[![Build and Push To Dev](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_devdeploy.yml/badge.svg)](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_devdeploy.yml)
-
-[![Build and Push To Test](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_testdeploy.yml/badge.svg)](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_testdeploy.yml)
-
-[![Build and Push To Prod](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_proddeploy.yml/badge.svg)](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_proddeploy.yml)
-
-<u>Dev Deployment</u>   
-![Deploy to Dev](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-producer-api-dev&revision=true)
-
-<u>Test Deployment</u>  
-![Deploy to Test](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-producer-api-test&revision=true)
-
-
-<u>PROD Deployment</u>    
-![Deploy to Prod](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-producer-api-prod&revision=true)
+>
+><u>Build Status</u>
+>
+>[![Build and Push To Dev](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_devdeploy.yml/badge.svg)](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_devdeploy.yml)
+>
+>[![Build and Push To Test](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_testdeploy.yml/badge.svg)](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_testdeploy.yml)
+>
+>[![Build and Push To Prod](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_proddeploy.yml/badge.svg)](https://github.com/bcgov/jag-rsbc-ride/actions/workflows/build_push_pr_onopen_proddeploy.yml)
+>
+><u>Dev Deployment</u>   
+>![Deploy to Dev](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-producer-api-dev&revision=true)
+>
+><u>Test Deployment</u>  
+>![Deploy to Test](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-producer-api-test&revision=true)
+>
+><u>PROD Deployment</u>    
+>![Deploy to Prod](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-producer-api-prod&revision=true)
 
 
 ### <b>Kafka Cluster Components</b>  
+><u>Dev Deployment</u>   
+>![Deploy to Dev](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-infrastructure-dev&revision=true)
+>
+><u>Test Deployment</u>  
+>![Deploy to Test](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-infrastructure-test&revision=true)
+>
+><u>PROD Deployment</u>    
+![Deploy to Prod](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-infrastructure-test&revision=true)  
 
-<u>Dev Deployment</u>   
-![Deploy to Dev](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-infrastructure-dev&revision=true)
-
-<u>Test Deployment</u>  
-![Deploy to Test](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-infrastructure-test&revision=true)
-
-
-<u>PROD Deployment</u>    
-![Deploy to Prod](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-infrastructure-test&revision=true)
+### <b>RIDE Monitoring Stack</b>  
+>![Deploy to Tools](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-monitoring-stack&revision=true)
 
