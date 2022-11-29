@@ -28,7 +28,7 @@ with a given partner system (i.e. the how)
 ## 6. Development flow
 
 
-## 7. Component Status    
+## 7. Component Build and Deploy Status    
 
 ### <b>RIDE Producer API</b>
 
@@ -49,3 +49,17 @@ with a given partner system (i.e. the how)
 
 <u>PROD Deployment</u>    
 ![Deploy to Prod](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-producer-api-prod&revision=true)
+
+
+### <b>Kafka Cluster Components</b>  
+
+<u>Dev Deployment</u>   
+![Deploy to Dev](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-infrastructure-dev&revision=true)
+
+<u>Test Deployment</u>  
+![Deploy to Test](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-infrastructure-test&revision=true)
+
+
+<u>PROD Deployment</u>    
+![Deploy to Prod](https://argocd-shared.apps.silver.devops.gov.bc.ca/api/badge?name=be5301-ride-infrastructure-test&revision=true)
+
