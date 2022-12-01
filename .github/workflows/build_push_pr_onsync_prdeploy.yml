@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [edited,synchronize]
     branches:
-      - 'maincomponent/producerapi-release**'
+      - 'maincomponent2211/producerapi-release**'
     # branches-ignore:   
     #   - 'main'
     #   - 'master'
