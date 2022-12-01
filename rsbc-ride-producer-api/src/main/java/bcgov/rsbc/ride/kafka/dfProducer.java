@@ -7,6 +7,7 @@ import javax.ws.rs.core.MediaType;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -33,6 +34,12 @@ import bcgov.rsbc.ride.kafka.models.payrecvdevent;
 import bcgov.rsbc.ride.kafka.models.payrecvdpayloadrecord;
 import bcgov.rsbc.ride.kafka.models.reviewscheduleddevent;
 import bcgov.rsbc.ride.kafka.models.reviewscheduledpayloadrecord;
+
+import io.quarkus.mongodb.panache.PanacheQuery;
+import bcgov.rsbc.ride.kafka.apiKeys;
+import javax.ws.rs.*;
+
+
 
 @Path("/dfevents")
 public class dfProducer {
@@ -75,25 +82,38 @@ public class dfProducer {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/appaccepted")
-    public Response publishappAcceptedEvent(appacceptedevent eventobj) {
-        logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getAppacceptedpayload());
-//        logger.info("{}",issuanceEvent.getPayload().get(0));
-        logger.info("{}",eventobj.getTypeofevent());
-//        return Response.ok().entity("Issuance event sent successfully").build();
-        appacceptedpayloadrecord payloaddata=(appacceptedpayloadrecord) eventobj.getAppacceptedpayload().get(0);
-
-        try {
-            //Change sendAndAwait to wait at most 5 seconds.
-            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-            logger.info("Kafka event UID: {}", uid);
-            emitterAppAccptdEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
-//            return Response.ok().entity("success").build();
-//            return Response.ok().entity("success").build();
-            return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
-        } catch (Exception e) {
-            logger.error("Exception occurred while sending app_accepted event, exception details: {}", e.toString() + "; " + e.getMessage());
-            return Response.serverError().entity("Failed sending  event to kafka").build();
+    public Response publishappAcceptedEvent(@HeaderParam("ride-api-key") String apiKey, appacceptedevent eventobj) {
+        if(apiKey== null){
+            return Response.serverError().status(401).entity("Auth Error").build();
         }
+        PanacheQuery<apiKeys> queryKeys = apiKeys.find("apikeyval", apiKey);
+        List<apiKeys> foundKeys = queryKeys.list();
+        long foundKeyCount=queryKeys.count();
+
+        if(foundKeyCount==0){
+            return Response.serverError().status(401).entity("Auth Error").build();
+        }else{
+            logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getAppacceptedpayload());
+//        logger.info("{}",issuanceEvent.getPayload().get(0));
+            logger.info("{}",eventobj.getTypeofevent());
+//        return Response.ok().entity("Issuance event sent successfully").build();
+            appacceptedpayloadrecord payloaddata=(appacceptedpayloadrecord) eventobj.getAppacceptedpayload().get(0);
+
+            try {
+                //Change sendAndAwait to wait at most 5 seconds.
+                Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                logger.info("Kafka event UID: {}", uid);
+                emitterAppAccptdEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+//            return Response.ok().entity("success").build();
+//            return Response.ok().entity("success").build();
+                return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
+            } catch (Exception e) {
+                logger.error("Exception occurred while sending app_accepted event, exception details: {}", e.toString() + "; " + e.getMessage());
+                return Response.serverError().entity("Failed sending  event to kafka").build();
+            }
+
+        }
+
     }
 
 
@@ -102,23 +122,36 @@ public class dfProducer {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/disclosuresent")
-    public Response publishDisclosureEvent(disclosuresentevent eventobj) {
-        logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getDisclosuresentpayload());
-//        logger.info("{}",issuanceEvent.getPayload().get(0));
-        logger.info("{}",eventobj.getTypeofevent());
-//        return Response.ok().entity("Issuance event sent successfully").build();
-        disclosuresentpayloadrecord payloaddata=(disclosuresentpayloadrecord) eventobj.getDisclosuresentpayload().get(0);
+    public Response publishDisclosureEvent(@HeaderParam("ride-api-key") String apiKey, disclosuresentevent eventobj) {
 
-        try {
-            //Change sendAndAwait to wait at most 5 seconds.
-            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-            logger.info("Kafka event UID: {}", uid);
-            emitterDisclosureSentEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
-            return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
-        } catch (Exception e) {
-            logger.error("Exception occurred while sending disclosure event, exception details: {}", e.toString() + "; " + e.getMessage());
-            return Response.serverError().entity("Failed sending  event to kafka").build();
+        if(apiKey== null){
+            return Response.serverError().status(401).entity("Auth Error").build();
         }
+        PanacheQuery<apiKeys> queryKeys = apiKeys.find("apikeyval", apiKey);
+        List<apiKeys> foundKeys = queryKeys.list();
+        long foundKeyCount=queryKeys.count();
+
+        if(foundKeyCount==0){
+            return Response.serverError().status(401).entity("Auth Error").build();
+        }else{
+            logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getDisclosuresentpayload());
+//        logger.info("{}",issuanceEvent.getPayload().get(0));
+            logger.info("{}",eventobj.getTypeofevent());
+//        return Response.ok().entity("Issuance event sent successfully").build();
+            disclosuresentpayloadrecord payloaddata=(disclosuresentpayloadrecord) eventobj.getDisclosuresentpayload().get(0);
+
+            try {
+                //Change sendAndAwait to wait at most 5 seconds.
+                Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                logger.info("Kafka event UID: {}", uid);
+                emitterDisclosureSentEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+                return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
+            } catch (Exception e) {
+                logger.error("Exception occurred while sending disclosure event, exception details: {}", e.toString() + "; " + e.getMessage());
+                return Response.serverError().entity("Failed sending  event to kafka").build();
+            }
+        }
+
     }
 
 
@@ -127,23 +160,37 @@ public class dfProducer {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/evidencesubmitted")
-    public Response publishEvidenceSubmitEvent(evidencesubmittedevent eventobj) {
-        logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getEvidencesubmittedpayload());
-//        logger.info("{}",issuanceEvent.getPayload().get(0));
-        logger.info("{}",eventobj.getTypeofevent());
-//        return Response.ok().entity("Issuance event sent successfully").build();
-        evidencesubmittedpayloadrecord payloaddata=(evidencesubmittedpayloadrecord) eventobj.getEvidencesubmittedpayload().get(0);
+    public Response publishEvidenceSubmitEvent(@HeaderParam("ride-api-key") String apiKey, evidencesubmittedevent eventobj) {
 
-        try {
-            //Change sendAndAwait to wait at most 5 seconds.
-            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-            logger.info("Kafka event UID: {}", uid);
-            emitterEvidenceSubmitEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
-            return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
-        } catch (Exception e) {
-            logger.error("Exception occurred while sending evidence submitted event, exception details: {}", e.toString() + "; " + e.getMessage());
-            return Response.serverError().entity("Failed sending event to kafka").build();
+        if(apiKey== null){
+            return Response.serverError().status(401).entity("Auth Error").build();
         }
+        PanacheQuery<apiKeys> queryKeys = apiKeys.find("apikeyval", apiKey);
+        List<apiKeys> foundKeys = queryKeys.list();
+        long foundKeyCount=queryKeys.count();
+
+        if(foundKeyCount==0){
+            return Response.serverError().status(401).entity("Auth Error").build();
+        }else{
+            logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getEvidencesubmittedpayload());
+//        logger.info("{}",issuanceEvent.getPayload().get(0));
+            logger.info("{}",eventobj.getTypeofevent());
+//        return Response.ok().entity("Issuance event sent successfully").build();
+            evidencesubmittedpayloadrecord payloaddata=(evidencesubmittedpayloadrecord) eventobj.getEvidencesubmittedpayload().get(0);
+
+            try {
+                //Change sendAndAwait to wait at most 5 seconds.
+                Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                logger.info("Kafka event UID: {}", uid);
+                emitterEvidenceSubmitEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+                return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
+            } catch (Exception e) {
+                logger.error("Exception occurred while sending evidence submitted event, exception details: {}", e.toString() + "; " + e.getMessage());
+                return Response.serverError().entity("Failed sending event to kafka").build();
+            }
+
+        }
+
     }
 
 
@@ -152,46 +199,72 @@ public class dfProducer {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/paymentreceived")
-    public Response publishPaymentRecvdEvent(payrecvdevent eventobj) {
-        logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getPayrecvdpayload());
-//        logger.info("{}",issuanceEvent.getPayload().get(0));
-        logger.info("{}",eventobj.getTypeofevent());
-//        return Response.ok().entity("Issuance event sent successfully").build();
-        payrecvdpayloadrecord payloaddata=(payrecvdpayloadrecord) eventobj.getPayrecvdpayload().get(0);
+    public Response publishPaymentRecvdEvent(@HeaderParam("ride-api-key") String apiKey, payrecvdevent eventobj) {
 
-        try {
-            //Change sendAndAwait to wait at most 5 seconds.
-            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-            logger.info("Kafka event UID: {}", uid);
-            emitterPayRecvdEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
-            return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
-        } catch (Exception e) {
-            logger.error("Exception occurred while sending payment_received event, exception details: {}", e.toString() + "; " + e.getMessage());
-            return Response.serverError().entity("Failed sending event to kafka").build();
+        if(apiKey== null){
+            return Response.serverError().status(401).entity("Auth Error").build();
         }
+        PanacheQuery<apiKeys> queryKeys = apiKeys.find("apikeyval", apiKey);
+        List<apiKeys> foundKeys = queryKeys.list();
+        long foundKeyCount=queryKeys.count();
+
+        if(foundKeyCount==0){
+            return Response.serverError().status(401).entity("Auth Error").build();
+        }else{
+            logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getPayrecvdpayload());
+//        logger.info("{}",issuanceEvent.getPayload().get(0));
+            logger.info("{}",eventobj.getTypeofevent());
+//        return Response.ok().entity("Issuance event sent successfully").build();
+            payrecvdpayloadrecord payloaddata=(payrecvdpayloadrecord) eventobj.getPayrecvdpayload().get(0);
+
+            try {
+                //Change sendAndAwait to wait at most 5 seconds.
+                Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                logger.info("Kafka event UID: {}", uid);
+                emitterPayRecvdEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+                return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
+            } catch (Exception e) {
+                logger.error("Exception occurred while sending payment_received event, exception details: {}", e.toString() + "; " + e.getMessage());
+                return Response.serverError().entity("Failed sending event to kafka").build();
+            }
+        }
+
     }
 
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/reviewscheduled")
-    public Response publishReviewSchedEvent(reviewscheduleddevent eventobj) {
-        logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getReviewscheduledpayload());
-//        logger.info("{}",issuanceEvent.getPayload().get(0));
-        logger.info("{}",eventobj.getTypeofevent());
-//        return Response.ok().entity("Issuance event sent successfully").build();
-        reviewscheduledpayloadrecord payloaddata=(reviewscheduledpayloadrecord) eventobj.getReviewscheduledpayload().get(0);
+    public Response publishReviewSchedEvent(@HeaderParam("ride-api-key") String apiKey, reviewscheduleddevent eventobj) {
 
-        try {
-            //Change sendAndAwait to wait at most 5 seconds.
-            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-            logger.info("Kafka event UID: {}", uid);
-            emitterRevSchedEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
-            return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
-        } catch (Exception e) {
-            logger.error("Exception occurred while sending review_scheduled event, exception details: {}", e.toString() + "; " + e.getMessage());
-            return Response.serverError().entity("Failed sending event to kafka").build();
+        if(apiKey== null){
+            return Response.serverError().status(401).entity("Auth Error").build();
         }
+        PanacheQuery<apiKeys> queryKeys = apiKeys.find("apikeyval", apiKey);
+        List<apiKeys> foundKeys = queryKeys.list();
+        long foundKeyCount=queryKeys.count();
+
+        if(foundKeyCount==0){
+            return Response.serverError().status(401).entity("Auth Error").build();
+        }else{
+            logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getReviewscheduledpayload());
+//        logger.info("{}",issuanceEvent.getPayload().get(0));
+            logger.info("{}",eventobj.getTypeofevent());
+//        return Response.ok().entity("Issuance event sent successfully").build();
+            reviewscheduledpayloadrecord payloaddata=(reviewscheduledpayloadrecord) eventobj.getReviewscheduledpayload().get(0);
+
+            try {
+                //Change sendAndAwait to wait at most 5 seconds.
+                Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                logger.info("Kafka event UID: {}", uid);
+                emitterRevSchedEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+                return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
+            } catch (Exception e) {
+                logger.error("Exception occurred while sending review_scheduled event, exception details: {}", e.toString() + "; " + e.getMessage());
+                return Response.serverError().entity("Failed sending event to kafka").build();
+            }
+        }
+
     }
 
 
