@@ -52,7 +52,7 @@ public class RideProducerAPI {
     public Response publishTestEvent(@HeaderParam("ride-api-key") String apiKey, testevent testeventobj) {
         logger.info(apiKey);
         List<apiKeys> allkeys = apiKeys.listAll();
-        logger.info(String.valueOf(allkeys.get(0)));
+        logger.info(String.valueOf(allkeys.get(0).apikeyval));
 //        apiKeys.
         logger.info("Publish testevent [payload: {}] to kafka.", testeventobj.getPayload());
 //        logger.info("{}",issuanceEvent.getPayload().get(0));
