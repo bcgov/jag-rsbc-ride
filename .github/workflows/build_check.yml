@@ -30,6 +30,8 @@ jobs:
       SSL_TRUSTSTORE: ${{ secrets.SSL_TRUSTSTORE }}
       SSL_TRUSTTORE_PASS: ${{ secrets.SSL_TRUSTTORE_PASS }}
       SSL_TRUSTTORE_TYPE: ${{ secrets.SSL_TRUSTTORE_TYPE }}
+      MONGO_CONN_STR: ${{ secrets.MONGO_CONN_STR }}
+      AUTH_DB_NAME: ${{ secrets.AUTH_DB_NAME }}
 
 
     steps:
