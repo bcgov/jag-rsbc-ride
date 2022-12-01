@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 
+# import mongoengine
+# mongoengine.connect( host='')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -70,15 +73,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ride_producerapi_auth_project.wsgi.application'
 
+# AUTHENTICATION_BACKENDS = (
+#     'mongoengine.django.auth.MongoEngineBackend',
+# )
+
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
+#
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'default': {
+            'ENGINE': 'djongo',
+            'NAME': 'producer-api-auth',
+            # 'ENFORCE_SCHEMA': False,
+            'CLIENT': {
+                'host': ''
+            }
+        }
+
+
 }
 
 

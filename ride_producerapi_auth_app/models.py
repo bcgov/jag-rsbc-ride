@@ -10,7 +10,7 @@ class AppName(models.Model):
         ('E', 'Enabled'),
         ('D', 'Disabled')
     )
-    appname=models.CharField(max_length=210)
+    appname=models.CharField(max_length=205)
     appcode=models.CharField(max_length=20,primary_key=True)
     id = models.UUIDField(default=uuid.uuid4, editable=False)
     appstatus = models.CharField(max_length=64, choices=sttschoices)
@@ -48,6 +48,7 @@ class AppName(models.Model):
 class ApiKey(models.Model):
     appid=models.ForeignKey(AppName,on_delete=models.CASCADE)
     apikey = models.UUIDField(default=uuid.uuid4, editable=True,primary_key=True)
+    apikeyval=models.CharField(max_length=200,default=uuid.uuid4)
     created=models.DateTimeField(auto_now_add=True,auto_now=False)
     updated = models.DateTimeField(auto_now=True)
 
