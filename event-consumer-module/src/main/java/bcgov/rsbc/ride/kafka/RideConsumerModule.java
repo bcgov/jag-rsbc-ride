@@ -25,16 +25,23 @@ import org.eclipse.microprofile.reactive.messaging.Message;
 //import io.smallrye.mutiny.Multi;
 import io.smallrye.reactive.messaging.MutinyEmitter;
 import io.smallrye.reactive.messaging.kafka.Record;
+import io.smallrye.reactive.messaging.annotations.Blocking;
 
 import bcgov.rsbc.ride.kafka.models.testevent;
 import bcgov.rsbc.ride.kafka.models.payloadrecord;
 
+import bcgov.rsbc.ride.kafka.service.ConsumerService;
 
 
 @Path("/consume")
 public class RideConsumerModule {
 
     private final static Logger logger = LoggerFactory.getLogger(RideConsumerModule.class);
+
+    @Inject
+    ConsumerService consumerService;
+
+
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -48,7 +55,22 @@ public class RideConsumerModule {
 //    @GET
 //    @Path("/ping2")
     @Incoming("incoming-testevent")
+    @Blocking
     public void receive(payloadrecord event) {
         logger.info("Payload: {}", event);
+//        payloadrecord payloaddata=event;
+        try {
+            //Change sendAndAwait to wait at most 5 seconds.
+            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            logger.info("Kafka event UID: {}", uid);
+            consumerService.publishEventtoDecodedTopic(event.toString(),"sample");
+//            emitterTestEvt.send(Record.of(uid, payloaddata));
+//            return Response.ok().entity("success").build();
+        } catch (Exception e) {
+            logger.error("Exception occurred while sending issuance event, exception details: {}", e.toString() + "; " + e.getMessage());
+//            return Response.serverError().entity("Failed sending test event to kafka").build();
+        }
+//        String et= ((String) event);
+//        logger.info(et);
     }
 }
