@@ -29,7 +29,7 @@ public class ConsumerService {
 
     @Inject
     @Channel("outgoing-testevent")
-    MutinyEmitter<Record<Long, String>> emitterTestEvt;
+    MutinyEmitter<Record<String, String>> emitterTestEvt;
 
 
 
@@ -42,7 +42,7 @@ public class ConsumerService {
                 // code block
                 logger.info(eventPayload);
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-                emitterTestEvt.send(Record.of(uid, eventPayload)).await().atMost(Duration.ofSeconds(5));
+                emitterTestEvt.send(Record.of(uid.toString(), eventPayload)).await().atMost(Duration.ofSeconds(5));
                 break;
             case "y":
                 // code block
