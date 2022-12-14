@@ -30,11 +30,22 @@ import io.smallrye.reactive.messaging.annotations.Blocking;
 import bcgov.rsbc.ride.kafka.models.testevent;
 import bcgov.rsbc.ride.kafka.models.payloadrecord;
 
+import bcgov.rsbc.ride.kafka.models.appacceptedevent;
+import bcgov.rsbc.ride.kafka.models.appacceptedpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.disclosuresentevent;
+import bcgov.rsbc.ride.kafka.models.disclosuresentpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.evidencesubmittedevent;
+import bcgov.rsbc.ride.kafka.models.evidencesubmittedpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.payrecvdevent;
+import bcgov.rsbc.ride.kafka.models.payrecvdpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.reviewscheduleddevent;
+import bcgov.rsbc.ride.kafka.models.reviewscheduledpayloadrecord;
+
 import bcgov.rsbc.ride.kafka.service.ConsumerService;
 
 
 @Path("/consumedf")
-public class RideConsumerModule {
+public class RideDFConsumerModule {
 
     private final static Logger logger = LoggerFactory.getLogger(RideConsumerModule.class);
 
@@ -54,7 +65,7 @@ public class RideConsumerModule {
 
     @Incoming("incoming-appaccepted")
     @Blocking
-    public void receive(payloadrecord event) {
+    public void receive(appacceptedpayloadrecord event) {
         logger.info("Payload: {}", event);
         try {
             Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
