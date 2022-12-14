@@ -128,16 +128,5 @@ public class RideDFConsumerModule {
         }
     }
 
-    @Incoming("incoming-appaccepted")
-    @Blocking
-    public void receive(appacceptedpayloadrecord event) {
-        logger.info("Payload: {}", event);
-        try {
-            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-            logger.info("Kafka decoded event UID: {}", uid);
-            consumerService.publishEventtoDecodedTopic(event.toString(),event.getEventType().toString());
-        } catch (Exception e) {
-            logger.error("Exception occurred while sending decoded event, exception details: {}", e.toString() + "; " + e.getMessage());
-        }
-    }
+
 }

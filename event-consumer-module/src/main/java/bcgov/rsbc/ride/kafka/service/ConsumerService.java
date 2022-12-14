@@ -40,23 +40,23 @@ public class ConsumerService {
 
     @Inject
     @Channel("outgoing-app_accepted_decoded")
-    MutinyEmitter<Record<Long, String>> emitterAppAccptdEvent;
+    MutinyEmitter<Record<String, String>> emitterAppAccptdEvent;
 
     @Inject
     @Channel("outgoing-disclosure_sent_decoded")
-    MutinyEmitter<Record<Long, String>> emitterDisclosureSentEvent;
+    MutinyEmitter<Record<String, String>> emitterDisclosureSentEvent;
 
     @Inject
     @Channel("outgoing-evidence_submitted_decoded")
-    MutinyEmitter<Record<Long, String>> emitterEvidenceSubmitEvent;
+    MutinyEmitter<Record<String, String>> emitterEvidenceSubmitEvent;
 
     @Inject
     @Channel("outgoing-payment_received_decoded")
-    MutinyEmitter<Record<Long, String>> emitterPayRecvdEvent;
+    MutinyEmitter<Record<String, String>> emitterPayRecvdEvent;
 
     @Inject
     @Channel("outgoing-review_scheduled_decoded")
-    MutinyEmitter<Record<Long, String>> emitterRevSchedEvent;
+    MutinyEmitter<Record<String, String>> emitterRevSchedEvent;
 
 
 
@@ -77,7 +77,7 @@ public class ConsumerService {
                 // code block
                 try {
                     logger.info(eventPayload);
-                    Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                    uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                     emitterAppAccptdEvent.send(Record.of(uid.toString(), eventPayload)).await().atMost(Duration.ofSeconds(5));
                 } catch (Exception e) {
                     logger.error("Exception occurred while sending decoded event, exception details: {}", e.toString() + "; " + e.getMessage());
@@ -87,7 +87,7 @@ public class ConsumerService {
                 // code block
                 try {
                     logger.info(eventPayload);
-                    Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                    uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                     emitterDisclosureSentEvent.send(Record.of(uid.toString(), eventPayload)).await().atMost(Duration.ofSeconds(5));
                 } catch (Exception e) {
                     logger.error("Exception occurred while sending decoded event, exception details: {}", e.toString() + "; " + e.getMessage());
@@ -97,7 +97,7 @@ public class ConsumerService {
                 // code block
                 try {
                     logger.info(eventPayload);
-                    Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                    uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                     emitterEvidenceSubmitEvent.send(Record.of(uid.toString(), eventPayload)).await().atMost(Duration.ofSeconds(5));
                 } catch (Exception e) {
                     logger.error("Exception occurred while sending decoded event, exception details: {}", e.toString() + "; " + e.getMessage());
@@ -107,7 +107,7 @@ public class ConsumerService {
                 // code block
                 try {
                     logger.info(eventPayload);
-                    Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                    uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                     emitterPayRecvdEvent.send(Record.of(uid.toString(), eventPayload)).await().atMost(Duration.ofSeconds(5));
                 } catch (Exception e) {
                     logger.error("Exception occurred while sending decoded event, exception details: {}", e.toString() + "; " + e.getMessage());
@@ -117,7 +117,7 @@ public class ConsumerService {
                 // code block
                 try {
                     logger.info(eventPayload);
-                    Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                    uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                     emitterRevSchedEvent.send(Record.of(uid.toString(), eventPayload)).await().atMost(Duration.ofSeconds(5));
                 } catch (Exception e) {
                     logger.error("Exception occurred while sending decoded event, exception details: {}", e.toString() + "; " + e.getMessage());
