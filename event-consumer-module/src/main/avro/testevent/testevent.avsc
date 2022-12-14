@@ -1,0 +1,41 @@
+{
+    "name": "testevent",
+    "type": "record",
+    "namespace": "bcgov.rsbc.ride.kafka.models",
+    "fields": [
+        {
+            "name": "typeofevent",
+            "doc": "",
+            "type": "string"
+        },
+        {
+                    "name": "payload",
+                    "doc": "",
+                    "type": {
+                         "type": "array",
+                         "items": {
+                            "type": "record",
+                                                "name": "payloadrecord",
+                                                "fields": [
+                                                        {
+                                                            "name": "username",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "fname",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "lname",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        }
+                                                    ]
+                         }
+
+                    }
+        }
+    ]
+}
