@@ -75,4 +75,69 @@ public class RideDFConsumerModule {
             logger.error("Exception occurred while sending decoded event, exception details: {}", e.toString() + "; " + e.getMessage());
         }
     }
+
+    @Incoming("incoming-disclosuresent")
+    @Blocking
+    public void receive(disclosuresentpayloadrecord event) {
+        logger.info("Payload: {}", event);
+        try {
+            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            logger.info("Kafka decoded event UID: {}", uid);
+            consumerService.publishEventtoDecodedTopic(event.toString(),event.getEventType().toString());
+        } catch (Exception e) {
+            logger.error("Exception occurred while sending decoded event, exception details: {}", e.toString() + "; " + e.getMessage());
+        }
+    }
+
+    @Incoming("incoming-evidencesubmit")
+    @Blocking
+    public void receive(evidencesubmittedpayloadrecord event) {
+        logger.info("Payload: {}", event);
+        try {
+            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            logger.info("Kafka decoded event UID: {}", uid);
+            consumerService.publishEventtoDecodedTopic(event.toString(),event.getEventType().toString());
+        } catch (Exception e) {
+            logger.error("Exception occurred while sending decoded event, exception details: {}", e.toString() + "; " + e.getMessage());
+        }
+    }
+
+    @Incoming("incoming-payreceived")
+    @Blocking
+    public void receive(payrecvdpayloadrecord event) {
+        logger.info("Payload: {}", event);
+        try {
+            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            logger.info("Kafka decoded event UID: {}", uid);
+            consumerService.publishEventtoDecodedTopic(event.toString(),event.getEventType().toString());
+        } catch (Exception e) {
+            logger.error("Exception occurred while sending decoded event, exception details: {}", e.toString() + "; " + e.getMessage());
+        }
+    }
+
+    @Incoming("incoming-reviewscheduled")
+    @Blocking
+    public void receive(reviewscheduledpayloadrecord event) {
+        logger.info("Payload: {}", event);
+        try {
+            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            logger.info("Kafka decoded event UID: {}", uid);
+            consumerService.publishEventtoDecodedTopic(event.toString(),event.getEventType().toString());
+        } catch (Exception e) {
+            logger.error("Exception occurred while sending decoded event, exception details: {}", e.toString() + "; " + e.getMessage());
+        }
+    }
+
+    @Incoming("incoming-appaccepted")
+    @Blocking
+    public void receive(appacceptedpayloadrecord event) {
+        logger.info("Payload: {}", event);
+        try {
+            Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            logger.info("Kafka decoded event UID: {}", uid);
+            consumerService.publishEventtoDecodedTopic(event.toString(),event.getEventType().toString());
+        } catch (Exception e) {
+            logger.error("Exception occurred while sending decoded event, exception details: {}", e.toString() + "; " + e.getMessage());
+        }
+    }
 }
