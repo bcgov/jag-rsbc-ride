@@ -1,0 +1,8 @@
+NAME: ride
+COMPONENT: producer-api
+NAMESPACE: be5301-dev
+SUFFIX: pr
+CLUSTER_NAME: rsbc-ride-redhat-kafka-dev
+CPU_REQUEST: 100m
+MEM_REQUEST: 200Mi
+IMAGE_NAMESPACE: be5301-tools
