@@ -12,10 +12,10 @@ public class GreetingResourceTest {
     @Test
     public void testHelloEndpoint() {
         given()
-          .when().get("/consumedf/ping")
+          .when().get("/ping")
           .then()
              .statusCode(200)
-             .body(is("pong from df consumer"));
+             .body(is("pong from consumer service"));
     }
 
 }
