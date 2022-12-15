@@ -154,6 +154,11 @@ objects:
               secretKeyRef:
                 key: REVSCHED_EVENT_DECODED_TOPIC
                 name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: TEST_EVENT_SINK_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: TEST_EVENT_SINK_TOPIC
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
           dockerfilePath: Dockerfile.multistage
       output:
         to:
