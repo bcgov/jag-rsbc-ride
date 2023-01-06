@@ -22,10 +22,7 @@ kafka.bootstrap.servers=${KAFKA_SERVER}
 kafka.security.protocol=${KAFKA_SEC_PROTOCOL}
 kafka.sasl.mechanism=${KAFKA_SASL_MECH}
 kafka.sasl.jaas.config=${KAFKA_SASL_CONFIG};
-
-# For compatibility with Confluent kind of schema
-mp.messaging.connector.smallrye-kafka.schema.registry.url=${KAFKA_CONFLUENT_COMPAT_REGISTRY}
-
+kafka.schema.registry.url=${KAFKA_SCHEMA_REGISTRY}
 
 quarkus.mongodb.connection-string = ${MONGO_CONN_STR}
 quarkus.mongodb.database = ${AUTH_DB_NAME}
@@ -35,13 +32,17 @@ quarkus.mongodb.database = ${AUTH_DB_NAME}
 
 mp.messaging.outgoing.outgoing-testevent.connector=smallrye-kafka
 mp.messaging.outgoing.outgoing-testevent.topic=${TEST_EVENT_TOPIC}
-mp.messaging.outgoing.outgoing-testevent.value.serializer=io.confluent.kafka.serializers.KafkaAvroSerializer
-mp.messaging.connector.smallrye-kafka.apicurio.registry.url=${KAFKA_CONFLUENT_COMPAT_REGISTRY}
+mp.messaging.outgoing.outgoing-testevent.value.serializer=io.apicurio.registry.utils.serde.AvroKafkaSerializer
+mp.messaging.outgoing.outgoing-testevent.apicurio.registry.artifact-id=io.apicurio.registry.utils.serde.strategy.SimpleTopicIdStrategy
+mp.messaging.outgoing.outgoing-testevent.apicurio.registry.global-id=io.apicurio.registry.utils.serde.strategy.GetOrCreateIdStrategy
+mp.messaging.outgoing.outgoing-testevent.apicurio.registry.avro-datum-provider=io.apicurio.registry.utils.serde.avro.ReflectAvroDatumProvider
+mp.messaging.connector.smallrye-kafka.apicurio.registry.url=${KAFKA_SCHEMA_REGISTRY}
 mp.messaging.outgoing.outgoing-testevent.ssl.protocol=${SSL_PROTOCOL}
 mp.messaging.outgoing.outgoing-testevent.ssl.truststore.location=${SSL_TRUSTSTORE}
 mp.messaging.outgoing.outgoing-testevent.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
 mp.messaging.outgoing.outgoing-testevent.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
 mp.messaging.outgoing.outgoing-testevent.specific.avro.reader=true
+mp.messaging.outgoing.outgoing-testevent.apicurio.registry.auto-register=true
 
 
 
