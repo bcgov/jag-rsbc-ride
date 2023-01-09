@@ -139,6 +139,11 @@ objects:
               secretKeyRef:
                 key: AUTH_DB_NAME
                 name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: KAFKA_CONFLUENT_COMPAT_REGISTRY
+            valueFrom:
+              secretKeyRef:
+                key: KAFKA_CONFLUENT_COMPAT_REGISTRY
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
           dockerfilePath: Dockerfile.multistage
       output:
         to:

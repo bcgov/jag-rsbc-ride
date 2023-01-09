@@ -32,6 +32,7 @@ jobs:
       SSL_TRUSTTORE_TYPE: ${{ secrets.SSL_TRUSTTORE_TYPE }}
       MONGO_CONN_STR: ${{ secrets.MONGO_CONN_STR }}
       AUTH_DB_NAME: ${{ secrets.AUTH_DB_NAME }}
+      KAFKA_CONFLUENT_COMPAT_REGISTRY: ${{ secrets.KAFKA_CONFLUENT_COMPAT_REGISTRY }}
 
 
     steps:
