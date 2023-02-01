@@ -21,7 +21,7 @@ RUN ls /deployments/certs/server
 RUN ./gradlew build
 RUN ls -a
 
-FROM image-registry.openshift-image-registry.svc:5000/be5301-tools/quarkus-ubi-base-image:1.1
+FROM image-registry.openshift-image-registry.svc:5000/be5301-tools/quarkus-ubi-base-image:1.2
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 COPY --from=build --chown=185 /code/build/quarkus-app/lib/ /deployments/lib/
 COPY --from=build --chown=185 /code/build/quarkus-app/*.jar /deployments/
