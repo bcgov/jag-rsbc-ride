@@ -35,7 +35,7 @@ jobs:
           git merge $GITHUB_HEAD_REF 
           git checkout -b tempbranch_consumer_proddeploy/pr-${{ env.PR_NUMBER }}
           git remote add testbranch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-          git push -u testbranch tempbranch_consumer_testdeploy/pr-${{ env.PR_NUMBER }}
+          git push -u testbranch tempbranch_consumer_proddeploy/pr-${{ env.PR_NUMBER }}
 
   create_env_secrets:
     name: Create Env secret
@@ -102,7 +102,7 @@ jobs:
       - name: Apply Build Yaml
         run: |
           cd event-consumer-module/openshift
-          oc process -f consumer-module-build.yml --param SOURCE_REPOSITORY_REF=tempbranch_consumer_testdeploy/pr-${{ env.PR_NUMBER }} --param-file consumer-module-build-prod-params.yml --param VERSION=$GITHUB_SHA | oc apply -f -
+          oc process -f consumer-module-build.yml --param SOURCE_REPOSITORY_REF=tempbranch_consumer_proddeploy/pr-${{ env.PR_NUMBER }} --param-file consumer-module-build-prod-params.yml --param VERSION=$GITHUB_SHA | oc apply -f -
           
       - name: Start the build and push
         run: |
@@ -116,7 +116,7 @@ jobs:
           cd jag-rsbc-ride
           git fetch
           git remote add testbranch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-          git push -d testbranch tempbranch_consumer_testdeploy/pr-${{ env.PR_NUMBER }}
+          git push -d testbranch tempbranch_consumer_proddeploy/pr-${{ env.PR_NUMBER }}
 
 
 
