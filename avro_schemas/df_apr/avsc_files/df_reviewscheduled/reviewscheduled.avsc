@@ -1,5 +1,5 @@
 {
-    "name": "disclosuresentevent",
+    "name": "reviewscheduleddevent",
     "type": "record",
     "namespace": "bcgov.rsbc.ride.kafka.models",
     "fields": [
@@ -9,13 +9,13 @@
             "type": "string"
         },
         {
-                    "name": "disclosuresentpayload",
+                    "name": "reviewscheduledpayload",
                     "doc": "",
                     "type": {
                          "type": "array",
                          "items": {
                             "type": "record",
-                                                "name": "disclosuresentpayloadrecord",
+                                                "name": "reviewscheduledpayloadrecord",
                                                 "fields": [
                                                         {
                                                             "name": "eventVersion",
@@ -35,10 +35,15 @@
                                                         {
                                                             "name": "prohibitionNo",
                                                             "doc": "",
-                                                            "type": "int"
+                                                            "type": "string"
                                                         },
                                                         {
-                                                            "name": "holdUntil",
+                                                            "name": "reviewStartDtm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "reviewEndDtm",
                                                             "doc": "",
                                                             "type": "string"
                                                         }

@@ -93,7 +93,7 @@ public class dfProducer {
         if(foundKeyCount==0){
             return Response.serverError().status(401).entity("Auth Error").build();
         }else{
-            logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getAppacceptedpayload());
+            logger.info("[RIDE]: Publish app accepted [payload: {}] to kafka.", eventobj.getAppacceptedpayload());
 //        logger.info("{}",issuanceEvent.getPayload().get(0));
             logger.info("{}",eventobj.getTypeofevent());
 //        return Response.ok().entity("Issuance event sent successfully").build();
@@ -102,13 +102,13 @@ public class dfProducer {
             try {
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-                logger.info("Kafka event UID: {}", uid);
+                logger.info("[RIDE]: Kafka event UID: {}", uid);
                 emitterAppAccptdEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
 //            return Response.ok().entity("success").build();
 //            return Response.ok().entity("success").build();
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
-                logger.error("Exception occurred while sending app_accepted event, exception details: {}", e.toString() + "; " + e.getMessage());
+                logger.error("[RIDE]: Exception occurred while sending app_accepted event, exception details: {}", e.toString() + "; " + e.getMessage());
                 return Response.serverError().entity("Failed sending  event to kafka").build();
             }
 
@@ -134,7 +134,7 @@ public class dfProducer {
         if(foundKeyCount==0){
             return Response.serverError().status(401).entity("Auth Error").build();
         }else{
-            logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getDisclosuresentpayload());
+            logger.info("[RIDE]: Publish disclosure sent [payload: {}] to kafka.", eventobj.getDisclosuresentpayload());
 //        logger.info("{}",issuanceEvent.getPayload().get(0));
             logger.info("{}",eventobj.getTypeofevent());
 //        return Response.ok().entity("Issuance event sent successfully").build();
@@ -143,11 +143,11 @@ public class dfProducer {
             try {
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-                logger.info("Kafka event UID: {}", uid);
+                logger.info("[RIDE]: Kafka event UID: {}", uid);
                 emitterDisclosureSentEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
-                logger.error("Exception occurred while sending disclosure event, exception details: {}", e.toString() + "; " + e.getMessage());
+                logger.error("[RIDE]: Exception occurred while sending disclosure event, exception details: {}", e.toString() + "; " + e.getMessage());
                 return Response.serverError().entity("Failed sending  event to kafka").build();
             }
         }
@@ -172,7 +172,7 @@ public class dfProducer {
         if(foundKeyCount==0){
             return Response.serverError().status(401).entity("Auth Error").build();
         }else{
-            logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getEvidencesubmittedpayload());
+            logger.info("[RIDE]: Publish evidence submitted [payload: {}] to kafka.", eventobj.getEvidencesubmittedpayload());
 //        logger.info("{}",issuanceEvent.getPayload().get(0));
             logger.info("{}",eventobj.getTypeofevent());
 //        return Response.ok().entity("Issuance event sent successfully").build();
@@ -181,11 +181,11 @@ public class dfProducer {
             try {
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-                logger.info("Kafka event UID: {}", uid);
+                logger.info("[RIDE]: Kafka event UID: {}", uid);
                 emitterEvidenceSubmitEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
-                logger.error("Exception occurred while sending evidence submitted event, exception details: {}", e.toString() + "; " + e.getMessage());
+                logger.error("[RIDE]: Exception occurred while sending evidence submitted event, exception details: {}", e.toString() + "; " + e.getMessage());
                 return Response.serverError().entity("Failed sending event to kafka").build();
             }
 
@@ -211,7 +211,7 @@ public class dfProducer {
         if(foundKeyCount==0){
             return Response.serverError().status(401).entity("Auth Error").build();
         }else{
-            logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getPayrecvdpayload());
+            logger.info("[RIDE]: Publish payment received [payload: {}] to kafka.", eventobj.getPayrecvdpayload());
 //        logger.info("{}",issuanceEvent.getPayload().get(0));
             logger.info("{}",eventobj.getTypeofevent());
 //        return Response.ok().entity("Issuance event sent successfully").build();
@@ -220,11 +220,11 @@ public class dfProducer {
             try {
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-                logger.info("Kafka event UID: {}", uid);
+                logger.info("[RIDE]: Kafka event UID: {}", uid);
                 emitterPayRecvdEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
-                logger.error("Exception occurred while sending payment_received event, exception details: {}", e.toString() + "; " + e.getMessage());
+                logger.error("[RIDE]: Exception occurred while sending payment_received event, exception details: {}", e.toString() + "; " + e.getMessage());
                 return Response.serverError().entity("Failed sending event to kafka").build();
             }
         }
@@ -247,7 +247,7 @@ public class dfProducer {
         if(foundKeyCount==0){
             return Response.serverError().status(401).entity("Auth Error").build();
         }else{
-            logger.info("Publish app accepted [payload: {}] to kafka.", eventobj.getReviewscheduledpayload());
+            logger.info("[RIDE]: Publish review scheduled [payload: {}] to kafka.", eventobj.getReviewscheduledpayload());
 //        logger.info("{}",issuanceEvent.getPayload().get(0));
             logger.info("{}",eventobj.getTypeofevent());
 //        return Response.ok().entity("Issuance event sent successfully").build();
@@ -260,7 +260,7 @@ public class dfProducer {
                 emitterRevSchedEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
-                logger.error("Exception occurred while sending review_scheduled event, exception details: {}", e.toString() + "; " + e.getMessage());
+                logger.error("[RIDE]: Exception occurred while sending review_scheduled event, exception details: {}", e.toString() + "; " + e.getMessage());
                 return Response.serverError().entity("Failed sending event to kafka").build();
             }
         }

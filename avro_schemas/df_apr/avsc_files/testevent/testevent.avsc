@@ -1,7 +1,7 @@
 {
-    "name": "disclosuresentevent",
+    "name": "testevent",
     "type": "record",
-    "namespace": "bcgov.rsbc.ride.kafka.models",
+    "namespace": "bcgov.rsbc.ride.kafka.model",
     "fields": [
         {
             "name": "typeofevent",
@@ -9,36 +9,26 @@
             "type": "string"
         },
         {
-                    "name": "disclosuresentpayload",
+                    "name": "payload",
                     "doc": "",
                     "type": {
                          "type": "array",
                          "items": {
                             "type": "record",
-                                                "name": "disclosuresentpayloadrecord",
+                                                "name": "payloadrecord",
                                                 "fields": [
                                                         {
-                                                            "name": "eventVersion",
-                                                            "doc": "",
-                                                            "type": "float"
-                                                        },
-                                                        {
-                                                            "name": "eventDtm",
+                                                            "name": "username",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "eventType",
+                                                            "name": "fname",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "prohibitionNo",
-                                                            "doc": "",
-                                                            "type": "int"
-                                                        },
-                                                        {
-                                                            "name": "holdUntil",
+                                                            "name": "lname",
                                                             "doc": "",
                                                             "type": "string"
                                                         }

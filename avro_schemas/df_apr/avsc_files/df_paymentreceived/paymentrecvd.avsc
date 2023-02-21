@@ -1,5 +1,5 @@
 {
-    "name": "appacceptedevent",
+    "name": "payrecvdevent",
     "type": "record",
     "namespace": "bcgov.rsbc.ride.kafka.models",
     "fields": [
@@ -9,13 +9,13 @@
             "type": "string"
         },
         {
-                    "name": "appacceptedpayload",
+                    "name": "payrecvdpayload",
                     "doc": "",
                     "type": {
                          "type": "array",
                          "items": {
                             "type": "record",
-                                                "name": "appacceptedpayloadrecord",
+                                                "name": "payrecvdpayloadrecord",
                                                 "fields": [
                                                         {
                                                             "name": "eventVersion",
@@ -33,62 +33,37 @@
                                                             "type": "string"
                                                         },
                                                         {
+                                                            "name": "recieptNo",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "receiptDtm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "receiptAmt",
+                                                            "doc": "",
+                                                            "type": "float"
+                                                        },
+                                                        {
+                                                            "name": "paymentMethod",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "cardType",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "transactionId",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
                                                             "name": "prohibitionNo",
-                                                            "doc": "",
-                                                            "type": "string"
-                                                        },
-                                                        {
-                                                            "name": "prohibitionNoClean",
-                                                            "doc": "",
-                                                            "type": "string"
-                                                        },
-                                                        {
-                                                            "name": "isAdp",
-                                                            "doc": "",
-                                                            "type": "boolean"
-                                                        },
-                                                        {
-                                                            "name": "isIrp",
-                                                            "doc": "",
-                                                            "type": "boolean"
-                                                        },
-                                                        {
-                                                            "name": "isUl",
-                                                            "doc": "",
-                                                            "type": "boolean"
-                                                        },
-                                                        {
-                                                            "name": "licenceNotSurrendered",
-                                                            "doc": "",
-                                                            "type": "boolean"
-                                                        },
-                                                        {
-                                                            "name": "licenceLostOrStolen",
-                                                            "doc": "",
-                                                            "type": "boolean"
-                                                        },
-                                                        {
-                                                            "name": "licenceNotIssued",
-                                                            "doc": "",
-                                                            "type": "boolean"
-                                                        },
-                                                        {
-                                                            "name": "dtOfService",
-                                                            "doc": "",
-                                                            "type": "string"
-                                                        },
-                                                        {
-                                                            "name": "applicantRole",
-                                                            "doc": "",
-                                                            "type": "string"
-                                                        },
-                                                        {
-                                                            "name": "driverInformationDriverDl",
-                                                            "doc": "",
-                                                            "type": "string"
-                                                        },
-                                                        {
-                                                            "name": "applicantDtSigned",
                                                             "doc": "",
                                                             "type": "string"
                                                         }

@@ -1,5 +1,5 @@
 {
-    "name": "disclosuresentevent",
+    "name": "evidencesubmittedevent",
     "type": "record",
     "namespace": "bcgov.rsbc.ride.kafka.models",
     "fields": [
@@ -9,13 +9,13 @@
             "type": "string"
         },
         {
-                    "name": "disclosuresentpayload",
+                    "name": "evidencesubmittedpayload",
                     "doc": "",
                     "type": {
                          "type": "array",
                          "items": {
                             "type": "record",
-                                                "name": "disclosuresentpayloadrecord",
+                                                "name": "evidencesubmittedpayloadrecord",
                                                 "fields": [
                                                         {
                                                             "name": "eventVersion",
@@ -34,11 +34,6 @@
                                                         },
                                                         {
                                                             "name": "prohibitionNo",
-                                                            "doc": "",
-                                                            "type": "int"
-                                                        },
-                                                        {
-                                                            "name": "holdUntil",
                                                             "doc": "",
                                                             "type": "string"
                                                         }
