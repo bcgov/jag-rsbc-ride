@@ -33,16 +33,6 @@
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "applicantNm",
-                                                            "doc": "",
-                                                            "type": "string"
-                                                        },
-                                                        {
-                                                            "name": "applicantEmail",
-                                                            "doc": "",
-                                                            "type": "string"
-                                                        },
-                                                        {
                                                             "name": "prohibitionNo",
                                                             "doc": "",
                                                             "type": "int"
