@@ -35,7 +35,7 @@
                                                         {
                                                             "name": "prohibitionNo",
                                                             "doc": "",
-                                                            "type": "int"
+                                                            "type": "string"
                                                         },
                                                         {
                                                             "name": "holdUntil",

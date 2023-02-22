@@ -26,7 +26,10 @@
         },        
         {
             "name": "prohibitionNo",
-            "type": "int",
+            "type": {
+                "type": "string",
+                "avro.java.string": "String"
+            },
             "doc": ""
         },
         {
