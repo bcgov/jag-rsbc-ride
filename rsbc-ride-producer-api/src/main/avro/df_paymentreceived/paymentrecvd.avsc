@@ -33,11 +33,6 @@
                                                             "type": "string"
                                                         },
                                                         {
-                                                            "name": "recieptNo",
-                                                            "doc": "",
-                                                            "type": "string"
-                                                        },
-                                                        {
                                                             "name": "receiptDtm",
                                                             "doc": "",
                                                             "type": "string"
@@ -54,11 +49,6 @@
                                                         },
                                                         {
                                                             "name": "cardType",
-                                                            "doc": "",
-                                                            "type": "string"
-                                                        },
-                                                        {
-                                                            "name": "transactionId",
                                                             "doc": "",
                                                             "type": "string"
                                                         },
