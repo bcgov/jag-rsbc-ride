@@ -88,6 +88,16 @@
                                                             "type": "string"
                                                         },
                                                         {
+                                                            "name": "driverCityTown",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "driverProvince",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
                                                             "name": "applicantDtSigned",
                                                             "doc": "",
                                                             "type": "string"
