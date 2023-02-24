@@ -40,7 +40,10 @@
                         {
                             "name": "dispute_action_code",
                             "doc": "",
-                            "type": "string"
+                            "type": "string",
+                            "@JsonProperty": "dispute_action_code",
+                            "columnName" : "dispute_action_code",
+                            "aliases" : [ "dispute_action_code" ]
                         }
                     ]
                 }
