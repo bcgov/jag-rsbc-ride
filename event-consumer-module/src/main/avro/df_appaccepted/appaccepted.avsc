@@ -1,0 +1,111 @@
+{
+    "name": "appacceptedevent",
+    "type": "record",
+    "namespace": "bcgov.rsbc.ride.kafka.models",
+    "fields": [
+        {
+            "name": "typeofevent",
+            "doc": "",
+            "type": "string"
+        },
+        {
+                    "name": "appacceptedpayload",
+                    "doc": "",
+                    "type": {
+                         "type": "array",
+                         "items": {
+                            "type": "record",
+                                                "name": "appacceptedpayloadrecord",
+                                                "fields": [
+                                                        {
+                                                            "name": "eventVersion",
+                                                            "doc": "",
+                                                            "type": "float"
+                                                        },
+                                                        {
+                                                            "name": "eventDtm",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "eventType",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "prohibitionNo",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "prohibitionNoClean",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "isAdp",
+                                                            "doc": "",
+                                                            "type": "boolean"
+                                                        },
+                                                        {
+                                                            "name": "isIrp",
+                                                            "doc": "",
+                                                            "type": "boolean"
+                                                        },
+                                                        {
+                                                            "name": "isUl",
+                                                            "doc": "",
+                                                            "type": "boolean"
+                                                        },
+                                                        {
+                                                            "name": "licenceNotSurrendered",
+                                                            "doc": "",
+                                                            "type": "boolean"
+                                                        },
+                                                        {
+                                                            "name": "licenceLostOrStolen",
+                                                            "doc": "",
+                                                            "type": "boolean"
+                                                        },
+                                                        {
+                                                            "name": "licenceNotIssued",
+                                                            "doc": "",
+                                                            "type": "boolean"
+                                                        },
+                                                        {
+                                                            "name": "dtOfService",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "applicantRole",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "driverInformationDriverDl",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "driverCityTown",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "driverProvince",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "name": "applicantDtSigned",
+                                                            "doc": "",
+                                                            "type": "string"
+                                                        }
+                                                    ]
+                         }
+
+                    }
+        }
+    ]
+}

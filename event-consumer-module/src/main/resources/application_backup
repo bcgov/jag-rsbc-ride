@@ -1,0 +1,277 @@
+
+
+#quarkus.swagger-ui.always-include=true
+#quarkus.smallrye-openapi.info-title=RIDE Producer API
+#quarkus.smallrye-openapi.info-version=1.0
+#quarkus.smallrye-openapi.info-description=API for external systems to send events to RIDE
+#quarkus.smallrye-openapi.info-terms-of-service=TBD
+#quarkus.smallrye-openapi.info-contact-email=RSIOpsSupport@gov.bc.ca
+#quarkus.smallrye-openapi.info-contact-name=RSO Ops Support
+#quarkus.smallrye-openapi.info-contact-url=https://github.com/bcgov/jag-rsbc-ride
+#quarkus.smallrye-openapi.info-license-name=Apache 2.0
+#quarkus.smallrye-openapi.info-license-url=https://www.apache.org/licenses/LICENSE-2.0.html
+
+
+# Kafka general parameters
+kafka.bootstrap.servers=${KAFKA_SERVER}
+kafka.security.protocol=${KAFKA_SEC_PROTOCOL}
+kafka.sasl.mechanism=${KAFKA_SASL_MECH}
+kafka.sasl.jaas.config=${KAFKA_SASL_CONFIG};
+kafka.schema.registry.url=${KAFKA_SCHEMA_REGISTRY}
+
+
+# Configuring Test event channel
+
+mp.messaging.incoming.incoming-testevent.connector=smallrye-kafka
+mp.messaging.incoming.incoming-testevent.topic=${TEST_EVENT_TOPIC}
+mp.messaging.incoming.incoming-testevent.key.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+mp.messaging.incoming.incoming-testevent.value.deserializer=io.apicurio.registry.utils.serde.AvroKafkaDeserializer
+mp.messaging.incoming.incoming-testevent.apicurio.registry.artifact-id=io.apicurio.registry.utils.serde.strategy.SimpleTopicIdStrategy
+mp.messaging.incoming.incoming-testevent.apicurio.registry.global-id=io.apicurio.registry.utils.serde.strategy.GetOrCreateIdStrategy
+mp.messaging.incoming.incoming-testevent.apicurio.registry.avro-datum-provider=io.apicurio.registry.utils.serde.avro.ReflectAvroDatumProvider
+mp.messaging.connector.smallrye-kafka.apicurio.registry.url=${KAFKA_SCHEMA_REGISTRY}
+mp.messaging.incoming.incoming-testevent.ssl.protocol=${SSL_PROTOCOL}
+mp.messaging.incoming.incoming-testevent.ssl.truststore.location=${SSL_TRUSTSTORE}
+mp.messaging.incoming.incoming-testevent.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
+mp.messaging.incoming.incoming-testevent.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+mp.messaging.incoming.incoming-testevent.specific.avro.reader=true
+mp.messaging.incoming.incoming-testevent.apicurio.registry.auto-register=true
+mp.messaging.incoming.incoming-testevent.enable.auto.commit=false
+mp.messaging.incoming.incoming-testevent.group.id=consumerGroup1
+mp.messaging.incoming.incoming-testevent.partitions=1
+mp.messaging.incoming.incoming-testevent.auto.offset.reset=latest
+
+
+
+# Configuring outgoing Test event channel
+
+mp.messaging.outgoing.outgoing-testevent.connector=smallrye-kafka
+mp.messaging.outgoing.outgoing-testevent.topic=${TEST_EVENT_SINK_TOPIC}
+mp.messaging.outgoing.outgoing-testevent.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-testevent.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-testevent.ssl.protocol=${SSL_PROTOCOL}
+mp.messaging.outgoing.outgoing-testevent.ssl.truststore.location=${SSL_TRUSTSTORE}
+mp.messaging.outgoing.outgoing-testevent.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
+mp.messaging.outgoing.outgoing-testevent.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+
+
+# Configuring incoming app_accepted event channel
+
+mp.messaging.incoming.incoming-appaccepted.connector=smallrye-kafka
+mp.messaging.incoming.incoming-appaccepted.topic=${APP_ACCEPTED_EVENT_TOPIC}
+mp.messaging.incoming.incoming-appaccepted.key.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+mp.messaging.incoming.incoming-appaccepted.value.deserializer=io.apicurio.registry.utils.serde.AvroKafkaDeserializer
+mp.messaging.incoming.incoming-appaccepted.apicurio.registry.artifact-id=io.apicurio.registry.utils.serde.strategy.SimpleTopicIdStrategy
+mp.messaging.incoming.incoming-appaccepted.apicurio.registry.global-id=io.apicurio.registry.utils.serde.strategy.GetOrCreateIdStrategy
+mp.messaging.incoming.incoming-appaccepted.apicurio.registry.avro-datum-provider=io.apicurio.registry.utils.serde.avro.ReflectAvroDatumProvider
+mp.messaging.connector.smallrye-appaccepted.apicurio.registry.url=${KAFKA_SCHEMA_REGISTRY}
+#mp.messaging.incoming.smallrye-appaccepted.apicurio.registry.url=${KAFKA_SCHEMA_REGISTRY}
+mp.messaging.incoming.incoming-appaccepted.ssl.protocol=${SSL_PROTOCOL}
+mp.messaging.incoming.incoming-appaccepted.ssl.truststore.location=${SSL_TRUSTSTORE}
+mp.messaging.incoming.incoming-appaccepted.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
+mp.messaging.incoming.incoming-appaccepted.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+mp.messaging.incoming.incoming-appaccepted.specific.avro.reader=true
+mp.messaging.incoming.incoming-appaccepted.apicurio.registry.auto-register=true
+mp.messaging.incoming.incoming-appaccepted.enable.auto.commit=false
+mp.messaging.incoming.incoming-appaccepted.group.id=dfappacceptedGrp
+mp.messaging.incoming.incoming-appaccepted.partitions=10
+mp.messaging.incoming.incoming-appaccepted.auto.offset.reset=latest
+
+# Configuring outgoing app_accepted decoded event channel
+
+mp.messaging.outgoing.outgoing-app_accepted_decoded.connector=smallrye-kafka
+mp.messaging.outgoing.outgoing-app_accepted_decoded.topic=${APP_ACCEPTED_EVENT_DECODED_TOPIC}
+mp.messaging.outgoing.outgoing-app_accepted_decoded.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-app_accepted_decoded.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-app_accepted_decoded.ssl.protocol=${SSL_PROTOCOL}
+mp.messaging.outgoing.outgoing-app_accepted_decoded.ssl.truststore.location=${SSL_TRUSTSTORE}
+mp.messaging.outgoing.outgoing-app_accepted_decoded.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
+mp.messaging.outgoing.outgoing-app_accepted_decoded.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+
+
+
+
+
+
+
+# Configuring incoming disclosure_sent event channel
+
+mp.messaging.incoming.incoming-disclosuresent.connector=smallrye-kafka
+mp.messaging.incoming.incoming-disclosuresent.topic=${DISCLOSURE_EVENT_TOPIC}
+mp.messaging.incoming.incoming-disclosuresent.key.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+mp.messaging.incoming.incoming-disclosuresent.value.deserializer=io.apicurio.registry.utils.serde.AvroKafkaDeserializer
+mp.messaging.incoming.incoming-disclosuresent.apicurio.registry.artifact-id=io.apicurio.registry.utils.serde.strategy.SimpleTopicIdStrategy
+mp.messaging.incoming.incoming-disclosuresent.apicurio.registry.global-id=io.apicurio.registry.utils.serde.strategy.GetOrCreateIdStrategy
+mp.messaging.incoming.incoming-disclosuresent.apicurio.registry.avro-datum-provider=io.apicurio.registry.utils.serde.avro.ReflectAvroDatumProvider
+mp.messaging.connector.smallrye-disclosuresent.apicurio.registry.url=${KAFKA_SCHEMA_REGISTRY}
+mp.messaging.incoming.incoming-disclosuresent.ssl.protocol=${SSL_PROTOCOL}
+mp.messaging.incoming.incoming-disclosuresent.ssl.truststore.location=${SSL_TRUSTSTORE}
+mp.messaging.incoming.incoming-disclosuresent.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
+mp.messaging.incoming.incoming-disclosuresent.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+mp.messaging.incoming.incoming-disclosuresent.specific.avro.reader=true
+mp.messaging.incoming.incoming-disclosuresent.apicurio.registry.auto-register=true
+mp.messaging.incoming.incoming-disclosuresent.enable.auto.commit=false
+mp.messaging.incoming.incoming-disclosuresent.group.id=dfdisclosuresentGrp
+mp.messaging.incoming.incoming-disclosuresent.partitions=10
+mp.messaging.incoming.incoming-disclosuresent.auto.offset.reset=latest
+
+# Configuring outgoing disclosure_sent decoded event channel
+
+mp.messaging.outgoing.outgoing-disclosure_sent_decoded.connector=smallrye-kafka
+mp.messaging.outgoing.outgoing-disclosure_sent_decoded.topic=${DISCLOSURE_EVENT_DECODED_TOPIC}
+mp.messaging.outgoing.outgoing-disclosure_sent_decoded.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-disclosure_sent_decoded.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-disclosure_sent_decoded.ssl.protocol=${SSL_PROTOCOL}
+mp.messaging.outgoing.outgoing-disclosure_sent_decoded.ssl.truststore.location=${SSL_TRUSTSTORE}
+mp.messaging.outgoing.outgoing-disclosure_sent_decoded.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
+mp.messaging.outgoing.outgoing-disclosure_sent_decoded.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+
+
+
+
+
+
+# Configuring incoming evidence_submitted event channel
+
+mp.messaging.incoming.incoming-evidencesubmit.connector=smallrye-kafka
+mp.messaging.incoming.incoming-evidencesubmit.topic=${EVSUBMITTED_EVENT_TOPIC}
+mp.messaging.incoming.incoming-evidencesubmit.key.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+mp.messaging.incoming.incoming-evidencesubmit.value.deserializer=io.apicurio.registry.utils.serde.AvroKafkaDeserializer
+mp.messaging.incoming.incoming-evidencesubmit.apicurio.registry.artifact-id=io.apicurio.registry.utils.serde.strategy.SimpleTopicIdStrategy
+mp.messaging.incoming.incoming-evidencesubmit.apicurio.registry.global-id=io.apicurio.registry.utils.serde.strategy.GetOrCreateIdStrategy
+mp.messaging.incoming.incoming-evidencesubmit.apicurio.registry.avro-datum-provider=io.apicurio.registry.utils.serde.avro.ReflectAvroDatumProvider
+mp.messaging.connector.smallrye-evidencesubmit.apicurio.registry.url=${KAFKA_SCHEMA_REGISTRY}
+mp.messaging.incoming.incoming-evidencesubmit.ssl.protocol=${SSL_PROTOCOL}
+mp.messaging.incoming.incoming-evidencesubmit.ssl.truststore.location=${SSL_TRUSTSTORE}
+mp.messaging.incoming.incoming-evidencesubmit.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
+mp.messaging.incoming.incoming-evidencesubmit.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+mp.messaging.incoming.incoming-evidencesubmit.specific.avro.reader=true
+mp.messaging.incoming.incoming-evidencesubmit.apicurio.registry.auto-register=true
+mp.messaging.incoming.incoming-evidencesubmit.enable.auto.commit=false
+mp.messaging.incoming.incoming-evidencesubmit.group.id=dfevusbmittedGrp
+mp.messaging.incoming.incoming-evidencesubmit.partitions=10
+mp.messaging.incoming.incoming-evidencesubmit.auto.offset.reset=latest
+
+# Configuring outgoing evidence_submitted decoded event channel
+
+mp.messaging.outgoing.outgoing-evidence_submitted_decoded.connector=smallrye-kafka
+mp.messaging.outgoing.outgoing-evidence_submitted_decoded.topic=${EVSUBMITTED_EVENT_DECODED_TOPIC}
+mp.messaging.outgoing.outgoing-evidence_submitted_decoded.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-evidence_submitted_decoded.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-evidence_submitted_decoded.ssl.protocol=${SSL_PROTOCOL}
+mp.messaging.outgoing.outgoing-evidence_submitted_decoded.ssl.truststore.location=${SSL_TRUSTSTORE}
+mp.messaging.outgoing.outgoing-evidence_submitted_decoded.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
+mp.messaging.outgoing.outgoing-evidence_submitted_decoded.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+
+
+
+
+
+
+
+
+# Configuring incoming payment_received event channel
+
+mp.messaging.incoming.incoming-payreceived.connector=smallrye-kafka
+mp.messaging.incoming.incoming-payreceived.topic=${PAYRECVD_EVENT_TOPIC}
+mp.messaging.incoming.incoming-payreceived.key.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+mp.messaging.incoming.incoming-payreceived.value.deserializer=io.apicurio.registry.utils.serde.AvroKafkaDeserializer
+mp.messaging.incoming.incoming-payreceived.apicurio.registry.artifact-id=io.apicurio.registry.utils.serde.strategy.SimpleTopicIdStrategy
+mp.messaging.incoming.incoming-payreceived.apicurio.registry.global-id=io.apicurio.registry.utils.serde.strategy.GetOrCreateIdStrategy
+mp.messaging.incoming.incoming-payreceived.apicurio.registry.avro-datum-provider=io.apicurio.registry.utils.serde.avro.ReflectAvroDatumProvider
+mp.messaging.connector.smallrye-payreceived.apicurio.registry.url=${KAFKA_SCHEMA_REGISTRY}
+mp.messaging.incoming.incoming-payreceived.ssl.protocol=${SSL_PROTOCOL}
+mp.messaging.incoming.incoming-payreceived.ssl.truststore.location=${SSL_TRUSTSTORE}
+mp.messaging.incoming.incoming-payreceived.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
+mp.messaging.incoming.incoming-payreceived.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+mp.messaging.incoming.incoming-payreceived.specific.avro.reader=true
+mp.messaging.incoming.incoming-payreceived.apicurio.registry.auto-register=true
+mp.messaging.incoming.incoming-payreceived.enable.auto.commit=false
+mp.messaging.incoming.incoming-payreceived.group.id=dfpayrecvdGrp
+mp.messaging.incoming.incoming-payreceived.partitions=10
+mp.messaging.incoming.incoming-payreceived.auto.offset.reset=latest
+
+# Configuring outgoing payment_received decoded event channel
+
+mp.messaging.outgoing.outgoing-payment_received_decoded.connector=smallrye-kafka
+mp.messaging.outgoing.outgoing-payment_received_decoded.topic=${PAYRECVD_EVENT_DECODED_TOPIC}
+mp.messaging.outgoing.outgoing-payment_received_decoded.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-payment_received_decoded.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-payment_received_decoded.ssl.protocol=${SSL_PROTOCOL}
+mp.messaging.outgoing.outgoing-payment_received_decoded.ssl.truststore.location=${SSL_TRUSTSTORE}
+mp.messaging.outgoing.outgoing-payment_received_decoded.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
+mp.messaging.outgoing.outgoing-payment_received_decoded.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+
+
+
+
+
+
+
+
+# Configuring incoming review_scheduled event channel
+
+mp.messaging.incoming.incoming-reviewscheduled.connector=smallrye-kafka
+mp.messaging.incoming.incoming-reviewscheduled.topic=${REVSCHED_EVENT_TOPIC}
+mp.messaging.incoming.incoming-reviewscheduled.key.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+mp.messaging.incoming.incoming-reviewscheduled.value.deserializer=io.apicurio.registry.utils.serde.AvroKafkaDeserializer
+mp.messaging.incoming.incoming-reviewscheduled.apicurio.registry.artifact-id=io.apicurio.registry.utils.serde.strategy.SimpleTopicIdStrategy
+mp.messaging.incoming.incoming-reviewscheduled.apicurio.registry.global-id=io.apicurio.registry.utils.serde.strategy.GetOrCreateIdStrategy
+mp.messaging.incoming.incoming-reviewscheduled.apicurio.registry.avro-datum-provider=io.apicurio.registry.utils.serde.avro.ReflectAvroDatumProvider
+mp.messaging.connector.smallrye-reviewscheduled.apicurio.registry.url=${KAFKA_SCHEMA_REGISTRY}
+mp.messaging.incoming.incoming-reviewscheduled.ssl.protocol=${SSL_PROTOCOL}
+mp.messaging.incoming.incoming-reviewscheduled.ssl.truststore.location=${SSL_TRUSTSTORE}
+mp.messaging.incoming.incoming-reviewscheduled.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
+mp.messaging.incoming.incoming-reviewscheduled.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+mp.messaging.incoming.incoming-reviewscheduled.specific.avro.reader=true
+mp.messaging.incoming.incoming-reviewscheduled.apicurio.registry.auto-register=true
+mp.messaging.incoming.incoming-reviewscheduled.enable.auto.commit=false
+mp.messaging.incoming.incoming-reviewscheduled.group.id=dfrevschedGrp
+mp.messaging.incoming.incoming-reviewscheduled.partitions=10
+mp.messaging.incoming.incoming-reviewscheduled.auto.offset.reset=latest
+
+# Configuring outgoing review_scheduled decoded event channel
+
+mp.messaging.outgoing.outgoing-review_scheduled_decoded.connector=smallrye-kafka
+mp.messaging.outgoing.outgoing-review_scheduled_decoded.topic=${REVSCHED_EVENT_DECODED_TOPIC}
+mp.messaging.outgoing.outgoing-review_scheduled_decoded.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-review_scheduled_decoded.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-review_scheduled_decoded.ssl.protocol=${SSL_PROTOCOL}
+mp.messaging.outgoing.outgoing-review_scheduled_decoded.ssl.truststore.location=${SSL_TRUSTSTORE}
+mp.messaging.outgoing.outgoing-review_scheduled_decoded.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
+mp.messaging.outgoing.outgoing-review_scheduled_decoded.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+
+
+
+
+# https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.1/kafka/kafka.html#kafka-installation
+
+# Configuring the incoming channel (read from Kafka)
+#mp.messaging.incoming.incoming-channel.connector=smallrye-kafka
+#mp.messaging.incoming.incoming-channel.topic=mock-etk-event
+#mp.messaging.incoming.incoming-channel.key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer
+#mp.messaging.incoming.incoming-channel.value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+
+# Enable both liveness and readiness checks (default is true)
+#mp.messaging.incoming.incoming-channel.health-enabled=true
+
+# Enable only the readiness check (default is true)
+#mp.messaging.incoming.incoming-channel.health-readiness-enabled=true
+
+# Configuring the application that consumes the messages
+#endpointURL.consumer_application_mock=${MOCKSVC_URL}
+
+# What to do when there is no initial offset in Kafka. Accepted values are earliest, latest and none
+#mp.messaging.incoming.incoming-channel.auto.offset.reset=latest
+
+# A unique string that identifies the consumer group the application belongs to. If not set, a unique, generated id is used
+# mp.messaging.incoming.incoming-channel.group.id=consumerGroup1
+
+#If enabled, consumer’s offset will be periodically committed in the background by the underlying Kafka client,
+# ignoring the actual processing outcome of the records. It is recommended to NOT enable this setting
+# and let Reactive Messaging handles the commit.
+#mp.messaging.incoming.incoming-channel.enable.auto.commit=false
+
+# The number of partitions to be consumed concurrently. The connector creates the specified amount of Kafka consumers.
+# It should match the number of partition of the targeted topic
+# mp.messaging.incoming.incoming-channel.partitions=1
