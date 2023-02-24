@@ -1,0 +1,106 @@
+{
+    "type": "record",
+    "name": "appacceptedpayloadrecord",
+    "namespace": "bcgov.rsbc.ride.kafka.models",
+    "fields": [
+        {
+            "name": "eventVersion",
+            "type": "float",
+            "doc": ""
+        },
+        {
+            "name": "eventDtm",
+            "type": {
+                "type": "string",
+                "avro.java.string": "String"
+            },
+            "doc": ""
+        },
+        {
+            "name": "eventType",
+            "type": {
+                "type": "string",
+                "avro.java.string": "String"
+            },
+            "doc": ""
+        },
+        {
+            "name": "prohibitionNo",
+            "type": {
+                "type": "string",
+                "avro.java.string": "String"
+            },
+            "doc": ""
+        },
+        {
+            "name": "prohibitionNoClean",
+            "type": {
+                "type": "string",
+                "avro.java.string": "String"
+            },
+            "doc": ""
+        },
+        {
+            "name": "isAdp",
+            "type": "boolean",
+            "doc": ""
+        },
+        {
+            "name": "isIrp",
+            "type": "boolean",
+            "doc": ""
+        },
+        {
+            "name": "isUl",
+            "type": "boolean",
+            "doc": ""
+        },
+        {
+            "name": "licenceNotSurrendered",
+            "type": "boolean",
+            "doc": ""
+        },
+        {
+            "name": "licenceLostOrStolen",
+            "type": "boolean",
+            "doc": ""
+        },
+        {
+            "name": "licenceNotIssued",
+            "type": "boolean",
+            "doc": ""
+        },
+        {
+            "name": "dtOfService",
+            "type": {
+                "type": "string",
+                "avro.java.string": "String"
+            },
+            "doc": ""
+        },
+        {
+            "name": "applicantRole",
+            "type": {
+                "type": "string",
+                "avro.java.string": "String"
+            },
+            "doc": ""
+        },        
+        {
+            "name": "driverInformationDriverDl",
+            "type": {
+                "type": "string",
+                "avro.java.string": "String"
+            },
+            "doc": ""
+        },
+        {
+            "name": "applicantDtSigned",
+            "type": {
+                "type": "string",
+                "avro.java.string": "String"
+            },
+            "doc": ""
+        }
+    ]
+}

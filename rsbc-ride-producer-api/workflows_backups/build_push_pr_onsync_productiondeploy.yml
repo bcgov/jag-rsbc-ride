@@ -1,0 +1,124 @@
+name: Build, Push and deploy for PR-On Sync PR from feature to release branch
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches-ignore:   
+      - 'main'
+      - 'master'
+      # - 'release**'
+
+
+jobs:
+  test_check:
+    steps:
+      - name: test
+        run: |
+        echo "new pr"
+  # merge_pr_local:
+  #   name: Merge PR locally and create temp branch
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     build_config_name: "ride-vips-adapter-nginx-proxy-build-v2"
+  #     base_image_tag: "1"
+  #     PR_NUMBER: ${{ github.event.number }}
+  #     PR_IMAGE_STREAM_TAG: pr-build-${{ github.sha}}
+
+
+  #   steps:
+  #     - name: Merge the PR branch locally
+  #       run: |
+  #         git clone "https://github.com/bcgov/rsbc-ride-adapters"
+  #         git config --global user.email "ride_vips_actions@gov.bc.ca"
+  #         git config --global user.name "ride_vips_actions"
+  #         git config --global pull.rebase true
+  #         cd rsbc-ride-adapters
+  #         git fetch
+  #         git branch -a
+  #         git checkout $GITHUB_HEAD_REF      
+  #         git checkout $GITHUB_BASE_REF  
+  #         git merge $GITHUB_HEAD_REF 
+  #         git checkout -b pr-${{ env.PR_NUMBER }}-branch
+  #         git remote add testbranch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+  #         git push -u testbranch pr-${{ env.PR_NUMBER }}-branch
+
+  # build_pr:
+  #   name: Build and Push from PR temp branch
+  #   runs-on: ubuntu-latest
+  #   needs: merge_pr_local
+  #   env:
+  #     build_config_name: "ride-vips-adapter-nginx-proxy-build-v2"
+  #     base_image_tag: "1"
+  #     PR_NUMBER: ${{ github.event.number }}
+  #     PR_IMAGE_STREAM_TAG: pr-build-${{ github.sha}}
+
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3        
+  #       with:
+  #         ref: pr-${{ env.PR_NUMBER }}-branch
+  #     - name: Authenticate and set context
+  #       uses: redhat-actions/oc-login@v1.1.2
+  #       with:
+  #         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL_SILVER }}
+  #         openshift_token: ${{ secrets.OPENSHIFT_SA_PIPELINE_TOKEN_SILVER }}
+  #         namespace: "${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools"
+  #     - name: Apply Build Yaml
+  #       run: |
+  #         cd rsbc_df_vips_adapter_gateway/github_actions_yamls
+  #         oc process -f revproxy_build_template.yml --param-file revproxy_build_params.yml --param OUTPUT_IMAGE_STREAM_TAG=pr-build-$GITHUB_SHA | oc apply -f -
+  #     - name: Start the build and push
+  #       run: |
+  #         oc start-build ${{ env.build_config_name }} --follow --wait
+  #     - name: Delete Temp Branch
+  #       run: |
+  #         git clone "https://github.com/bcgov/rsbc-ride-adapters"
+  #         git config --global user.email "ride_vips_actions@gov.bc.ca"
+  #         git config --global user.name "ride_vips_actions"
+  #         git config --global pull.rebase true
+  #         cd rsbc-ride-adapters
+  #         git fetch
+  #         git remote add testbranch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+  #         git push -d testbranch pr-${{ env.PR_NUMBER }}-branch
+
+    
+  # deploy_pr_argocd:
+  #   name: Push to Gitops repo for PR deployment via Argocd
+  #   runs-on: ubuntu-latest
+  #   needs: [merge_pr_local,build_pr]
+  #   env:
+  #     build_config_name: "ride-vips-adapter-nginx-proxy-build-v2"
+  #     base_image_tag: "1"
+  #     PR_NUMBER: ${{ github.event.number }}
+  #     PR_IMAGE_STREAM_TAG: pr-build-${{ github.sha}}
+  #   steps:
+  #     - name: Checkout Gitops repository
+  #       uses: actions/checkout@v3
+  #       with:
+  #         repository: bcgov-c/tenant-gitops-be5301
+  #         ref: deployment/rsbc-ride-vips-adapter
+  #         token: ${{ secrets.GITOPS_GITHUB_TOKEN }}
+  #     - name: New PR Branch
+  #       run: |
+  #         git config user.name github-actions
+  #         git config user.email github-actions@github.com
+  #         git pull
+  #         git checkout -b pr-branch-${{env.PR_NUMBER}}  
+  #         git push -u origin pr-branch-${{env.PR_NUMBER}} 
+  #     - name: Update Image tag for PR deploy
+  #       uses: mikefarah/yq@v4.28.1
+  #       with:
+  #         cmd: yq eval -i '.images[0].newTag = "${{env.PR_IMAGE_STREAM_TAG}}"' 'ride_vips_adapter/overlays/pr/kustomization.yaml'
+  #     - name: Update name suffix for PR deploy
+  #       uses: mikefarah/yq@v4.28.1
+  #       with:
+  #         cmd: yq eval -i '.nameSuffix = "-pr-${{env.PR_NUMBER}}"' 'ride_vips_adapter/overlays/pr/kustomization.yaml'
+  #     - name: Check Changed value
+  #       run: |
+  #         cat ride_vips_adapter/overlays/pr/kustomization.yaml
+  #     - name: Push Changes
+  #       run: |
+  #         git add .
+  #         git commit -m "updated pr details to yaml"
+  #         git push -u origin pr-branch-${{env.PR_NUMBER}}
+        
