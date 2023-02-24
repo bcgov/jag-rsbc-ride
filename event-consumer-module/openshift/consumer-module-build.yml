@@ -1,0 +1,185 @@
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  annotations:
+    description: Build template for ride consumer module
+    tags: rsbc-ride-consumer-module
+    iconClass: icon-quarkus
+  name: ${NAME}-${COMPONENT}-build-template
+objects:
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-${IMAGE_NAME}-image-${BUILD_CONFIG_SUFFIX}
+      labels:
+        shared: "true"
+  - kind: BuildConfig
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+      labels:
+        app: ${NAME}-${COMPONENT}
+        component: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+        name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+    spec:
+      source:
+        type: Git
+        contextDir: ${SOURCE_CONTEXT_DIR}
+        secrets:
+          - secret:
+              name: kafka-cert-secret-build-${BUILD_CONFIG_SUFFIX}
+            destinationDir: "tmp"
+        git:
+          uri: ${SOURCE_REPOSITORY_URL}
+          ref: ${SOURCE_REPOSITORY_REF}
+      completionDeadlineSeconds: 1440
+      resources:
+        limits:
+          cpu: 1
+          memory: 3Gi
+        requests:
+          cpu: 1
+          memory: 2Gi
+      strategy:
+        type: Docker
+        dockerStrategy:
+          env:
+          - name: APP_ACCEPTED_EVENT_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: APP_ACCEPTED_EVENT_TOPIC
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: DISCLOSURE_EVENT_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: DISCLOSURE_EVENT_TOPIC
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: EVSUBMITTED_EVENT_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: EVSUBMITTED_EVENT_TOPIC
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: IMAGE_NAMESPACE
+            valueFrom:
+              secretKeyRef:
+                key: IMAGE_NAMESPACE
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: IMAGE_REGISTRY
+            valueFrom:
+              secretKeyRef:
+                key: IMAGE_REGISTRY
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: KAFKA_SASL_CONFIG
+            valueFrom:
+              secretKeyRef:
+                key: KAFKA_SASL_CONFIG
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: KAFKA_SASL_MECH
+            valueFrom:
+              secretKeyRef:
+                key: KAFKA_SASL_MECH
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: KAFKA_SCHEMA_REGISTRY
+            valueFrom:
+              secretKeyRef:
+                key: KAFKA_SCHEMA_REGISTRY
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: KAFKA_SEC_PROTOCOL
+            valueFrom:
+              secretKeyRef:
+                key: KAFKA_SEC_PROTOCOL
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: KAFKA_SERVER
+            valueFrom:
+              secretKeyRef:
+                key: KAFKA_SERVER
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: PAYRECVD_EVENT_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: PAYRECVD_EVENT_TOPIC
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: REVSCHED_EVENT_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: REVSCHED_EVENT_TOPIC
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: SSL_PROTOCOL
+            valueFrom:
+              secretKeyRef:
+                key: SSL_PROTOCOL
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: SSL_TRUSTSTORE
+            valueFrom:
+              secretKeyRef:
+                key: SSL_TRUSTSTORE
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: SSL_TRUSTTORE_PASS
+            valueFrom:
+              secretKeyRef:
+                key: SSL_TRUSTTORE_PASS
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: SSL_TRUSTTORE_TYPE
+            valueFrom:
+              secretKeyRef:
+                key: SSL_TRUSTTORE_TYPE
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: TEST_EVENT_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: TEST_EVENT_TOPIC
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: APP_ACCEPTED_EVENT_DECODED_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: APP_ACCEPTED_EVENT_DECODED_TOPIC
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: DISCLOSURE_EVENT_DECODED_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: DISCLOSURE_EVENT_DECODED_TOPIC
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: EVSUBMITTED_EVENT_DECODED_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: EVSUBMITTED_EVENT_DECODED_TOPIC
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: PAYRECVD_EVENT_DECODED_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: PAYRECVD_EVENT_DECODED_TOPIC
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: REVSCHED_EVENT_DECODED_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: REVSCHED_EVENT_DECODED_TOPIC
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: TEST_EVENT_SINK_TOPIC
+            valueFrom:
+              secretKeyRef:
+                key: TEST_EVENT_SINK_TOPIC
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: KAFKA_CONFLUENT_COMPAT_REGISTRY
+            valueFrom:
+              secretKeyRef:
+                key: KAFKA_CONFLUENT_COMPAT_REGISTRY
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          dockerfilePath: Dockerfile.multistage
+      output:
+        to:
+          kind: ImageStreamTag
+          name: ${NAME}-${IMAGE_NAME}-image-${BUILD_CONFIG_SUFFIX}:${VERSION}
+      # triggers:
+      #   - type: ConfigChange
+parameters:
+  - name: NAME
+  - name: COMPONENT
+  - name: VERSION
+  - name: SOURCE_CONTEXT_DIR
+  - name: SOURCE_REPOSITORY_URL
+  - name: SOURCE_REPOSITORY_REF
+  - name: BUILD_CONFIG_SUFFIX
+  - name: BUILD_SECRET_NAME
+  - name: IMAGE_NAME
+
+

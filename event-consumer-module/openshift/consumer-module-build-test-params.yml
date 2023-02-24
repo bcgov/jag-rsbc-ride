@@ -1,0 +1,9 @@
+NAME: ride
+VERSION: "1.0"
+SOURCE_REPOSITORY_REF: feature/producerapi-deployv1
+BUILD_CONFIG_SUFFIX: test
+COMPONENT: consumer-module-build
+IMAGE_NAME: consumer-module
+SOURCE_CONTEXT_DIR: event-consumer-module
+SOURCE_REPOSITORY_URL: https://github.com/bcgov/jag-rsbc-ride
+BUILD_SECRET_NAME: consumer-module-build-secret

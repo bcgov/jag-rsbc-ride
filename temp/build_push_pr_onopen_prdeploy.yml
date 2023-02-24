@@ -1,0 +1,185 @@
+name: Build, Push and deploy for PR-On Open new PR from feature to release branch(Deploy to PR)
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - 'maincomponent/producerapi-release**'
+    # branches-ignore:   
+    #   - 'main'
+    #   - 'master'
+      # - 'release**'
+
+
+jobs:
+  merge_pr_local:
+    name: Merge PR locally and create temp branch
+    runs-on: ubuntu-latest
+    env:
+      build_config_name: "ride-vips-adapter-nginx-proxy-build-v2"
+      base_image_tag: "1"
+      PR_NUMBER: ${{ github.event.number }}
+      PR_IMAGE_STREAM_TAG: pr-build-${{ github.sha}}
+
+
+    steps:
+      - name: Merge the PR branch locally
+        run: |
+          git clone "https://github.com/bcgov/jag-rsbc-ride"
+          git config --global user.email "ride_actions@gov.bc.ca"
+          git config --global user.name "ride_actions"
+          git config --global pull.rebase true
+          ls -a
+          cd jag-rsbc-ride
+          git fetch
+          git branch -a
+          git checkout $GITHUB_HEAD_REF      
+          git checkout $GITHUB_BASE_REF  
+          git merge $GITHUB_HEAD_REF 
+          git checkout -b tempbranch/pr-${{ env.PR_NUMBER }}
+          git remote add testbranch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          git push -u testbranch tempbranch/pr-${{ env.PR_NUMBER }}
+
+  create_env_secrets:
+    name: Create Env secret
+    runs-on: ubuntu-latest
+    needs: merge_pr_local
+    environment: pr
+    env:
+      APP_VERSION: "pr"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3      
+      - name: Authenticate and set context for tools secret creation
+        uses: redhat-actions/oc-login@v1.1.2
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL_SILVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_SA_PIPELINE_TOKEN_SILVER }}
+          namespace: "${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools"
+      - name: Create Secrets
+        run: |
+          cd rsbc-ride-producer-api/openshift
+          oc process -f producer-api-build-secret.yml --param VERSION=${{ env.APP_VERSION }} --param NAMESPACE=${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools --param APP_ACCEPTED_EVENT_TOPIC=${{ secrets.APP_ACCEPTED_EVENT_TOPIC }} --param TEST_EVENT_TOPIC=${{ secrets.TEST_EVENT_TOPIC }} --param DISCLOSURE_EVENT_TOPIC=${{ secrets.DISCLOSURE_EVENT_TOPIC }} --param EVSUBMITTED_EVENT_TOPIC=${{ secrets.EVSUBMITTED_EVENT_TOPIC }} --param IMAGE_NAMESPACE=${{ secrets.IMAGE_NAMESPACE }} --param IMAGE_REGISTRY=${{ secrets.IMAGE_REGISTRY }} --param KAFKA_SASL_CONFIG="${{ secrets.KAFKA_SASL_CONFIG }}" --param KAFKA_SASL_MECH=${{ secrets.KAFKA_SASL_MECH }} --param KAFKA_SCHEMA_REGISTRY=${{ secrets.KAFKA_SCHEMA_REGISTRY }} --param KAFKA_SEC_PROTOCOL=${{ secrets.KAFKA_SEC_PROTOCOL }} --param KAFKA_SERVER=${{ secrets.KAFKA_SERVER }} --param PAYRECVD_EVENT_TOPIC=${{ secrets.PAYRECVD_EVENT_TOPIC }} --param REVSCHED_EVENT_TOPIC=${{ secrets.REVSCHED_EVENT_TOPIC }} --param SSL_PROTOCOL=${{ secrets.SSL_PROTOCOL }} --param SSL_TRUSTSTORE=${{ secrets.SSL_TRUSTSTORE }} --param SSL_TRUSTTORE_PASS=${{ secrets.SSL_TRUSTTORE_PASS }} --param SSL_TRUSTTORE_TYPE=${{ secrets.SSL_TRUSTTORE_TYPE }} | oc apply -f -
+      - name: Authenticate and set context for dev get cluster ca
+        uses: redhat-actions/oc-login@v1.1.2
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL_SILVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_SA_PIPELINE_TOKEN_SILVER_DEV }}
+          namespace: "${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-dev"
+      - name: Get Cluster ca secret for build
+        run: |
+          oc get secret ${{ secrets.CLUSTER_CA_SECRET_NAME }} -o jsonpath='{.data.ca\.p12}' | base64 -d -i > ca.p12
+      - name: Authenticate and set context for tools create ca secret
+        uses: redhat-actions/oc-login@v1.1.2
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL_SILVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_SA_PIPELINE_TOKEN_SILVER }}
+          namespace: "${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools"
+      - name: Create cluster ca secret for build in tools
+        run: |
+          oc create secret generic kafka-cert-secret-build-${{ env.APP_VERSION }} --dry-run=true --from-file=./ca.p12 -o yaml | oc apply -f -
+
+
+  build_push:
+    name: Build and Push the image
+    runs-on: ubuntu-latest
+    environment: pr
+    needs: [merge_pr_local,create_env_secrets]
+    env:
+      build_config_name: "ride-producer-api-build-pr"
+      PR_NUMBER: ${{ github.event.number }}
+      # base_image_tag: "1"
+      # PR_NUMBER: ${{ github.event.number }}
+      # PR_IMAGE_STREAM_TAG: pr-build-${{ github.sha}}
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3      
+      - name: Authenticate and set context
+        uses: redhat-actions/oc-login@v1.1.2
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL_SILVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_SA_PIPELINE_TOKEN_SILVER }}
+          namespace: "${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools"
+      - name: Apply Build Yaml
+        run: |
+          cd rsbc-ride-producer-api/openshift
+          oc process -f producer-api-build.yml --param SOURCE_REPOSITORY_REF=tempbranch/pr-${{ env.PR_NUMBER }} --param-file producer-api-build-pr-params.yml --param VERSION=$GITHUB_SHA | oc apply -f -
+          
+      - name: Start the build and push
+        run: |
+          oc start-build ${{ env.build_config_name }} --follow --wait
+      - name: Delete Temp Branch
+        run: |
+          git clone "https://github.com/bcgov/jag-rsbc-ride"
+          git config --global user.email "ride_actions@gov.bc.ca"
+          git config --global user.name "ride_actions"
+          git config --global pull.rebase true
+          cd jag-rsbc-ride
+          git fetch
+          git remote add testbranch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          git push -d testbranch tempbranch/pr-${{ env.PR_NUMBER }}
+
+
+
+  deploy_pr_argocd:
+    name: Push to Gitops repo for PR deployment via Argocd
+    runs-on: ubuntu-latest
+    needs: [merge_pr_local,create_env_secrets,build_push]
+    env:
+      PR_NUMBER: ${{ github.event.number }}
+      PR_IMAGE_STREAM_TAG: ${{ github.sha}}
+      RELEASE_NAME: release_1_0
+    steps:
+      - name: Checkout Gitops repository
+        uses: actions/checkout@v3
+        with:
+          repository: bcgov-c/tenant-gitops-be5301
+          ref: deployment/rsbc-ride-producer-api
+          token: ${{ secrets.GITOPS_GITHUB_TOKEN }}
+      # - name: New PR Branch
+      #   run: |
+      #     git config user.name github-actions
+      #     git config user.email github-actions@github.com
+      #     git pull
+      #     git checkout -b pr-branch-${{env.PR_NUMBER}}  
+      #     git push -u origin pr-branch-${{env.PR_NUMBER}} 
+      - name: Update Image tag for PR deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.images[0].newTag = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update name suffix for PR deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.nameSuffix = "-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update app name label for PR deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonLabels["app.kubernetes.io/name"] = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update app label for PR deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonLabels.app = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update release name for PR deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonAnnotations.release_name = "${{env.RELEASE_NAME}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update hpa pr name
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.spec.scaleTargetRef.name = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/custom-hpa-ride-producer-api.yml'
+      - name: Update sha annotation
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonAnnotations.commit_sha = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/pr/kustomization.yaml'
+      - name: Check Changed value
+        run: |
+          cat overlays/pr/kustomization.yaml
+      - name: Push Changes
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "updated pr details to yaml"
+          git push -u origin deployment/rsbc-ride-producer-api
+        
