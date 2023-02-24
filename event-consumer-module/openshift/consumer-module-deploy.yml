@@ -1,0 +1,161 @@
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  namespace: ${NAMESPACE}
+  annotations:
+    description: Template to deploy Producer API
+    tags: rsbc-ride-producer-api
+    iconClass: icon-quarkus
+  name: ${NAME}-${COMPONENT}-deploy-template
+objects:
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: allow-other-namespaces
+      namespace: ${NAMESPACE} 
+      labels:
+        template: rsbc-ride-policies
+    spec:
+      podSelector: {}
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  environment: dev
+                  name: be78d6
+            - namespaceSelector:
+                matchLabels:
+                  environment: test
+                  name: be78d6
+            - namespaceSelector:
+                matchLabels:
+                  environment: prod
+                  name: be78d6
+      policyTypes:
+        - Ingress
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      namespace: ${NAMESPACE}
+      # annotations:
+      #   app.quarkus.io/commit-id: a9637ef49f79a01e93067df03578e9fe3519126d
+      #   app.quarkus.io/build-timestamp: 2022-11-16 - 20:57:50 +0000
+      labels:
+        app.kubernetes.io/name: ${NAME}-${COMPONENT}-${SUFFIX}
+        app: ${NAME}-${COMPONENT}-${SUFFIX}
+      name: ${NAME}-${COMPONENT}-${SUFFIX}
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: ${NAME}-${COMPONENT}-${SUFFIX}
+          app: ${NAME}-${COMPONENT}-${SUFFIX}
+      template:
+        metadata:
+          # annotations:
+          #   app.quarkus.io/commit-id: a9637ef49f79a01e93067df03578e9fe3519126d
+          #   app.quarkus.io/build-timestamp: 2022-11-16 - 20:57:50 +0000
+          labels:
+            app.kubernetes.io/name: ${NAME}-${COMPONENT}-${SUFFIX}
+            app: ${NAME}-${COMPONENT}-${SUFFIX}
+        spec:
+          containers:            
+            - image: image-registry.openshift-image-registry.svc:5000/${IMAGE_NAMESPACE}/${NAME}-${COMPONENT}-image-${SUFFIX}:${IMAGE_TAG}
+              imagePullPolicy: Always
+              name: ${NAME}-${COMPONENT}-${SUFFIX}-container-1
+              resources:
+                requests:
+                  cpu: ${CPU_REQUEST}
+                  memory: ${MEM_REQUEST}
+              ports:
+                - containerPort: 8080
+                  name: http
+                  protocol: TCP
+              startupProbe:
+                httpGet:
+                  path: /ping
+                  port: 8080
+                failureThreshold: 60
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 10
+              readinessProbe:
+                httpGet:
+                  path: /ping
+                  port: 8080
+                initialDelaySeconds: 35
+                periodSeconds: 15
+                failureThreshold: 5
+                successThreshold: 1
+                timeoutSeconds: 10
+              livenessProbe:
+                httpGet:
+                  path: /ping
+                  port: 8080
+                periodSeconds: 10
+                failureThreshold: 5
+                successThreshold: 1
+                timeoutSeconds: 10
+                initialDelaySeconds: 50
+              volumeMounts:
+              - name: clustercert
+                mountPath: /deployments/certs/server
+                readOnly: false
+                subPath: ""
+          volumes:
+          - name: clustercert
+            secret:
+              secretName: ${CLUSTER_NAME}-cluster-ca-cert
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      # annotations:
+      #   app.quarkus.io/commit-id: a9637ef49f79a01e93067df03578e9fe3519126d
+      #   app.quarkus.io/build-timestamp: 2022-11-16 - 20:57:50 +0000
+      namespace: ${NAMESPACE}
+      labels:
+        app.kubernetes.io/name: ${NAME}-${COMPONENT}-${SUFFIX}
+        app: ${NAME}-${COMPONENT}-${SUFFIX}
+      name: ${NAME}-${COMPONENT}-clusterip-${SUFFIX}
+    spec:
+      ports:
+      - name: http
+        port: 80
+        targetPort: 8080
+      selector:
+        app.kubernetes.io/name: ${NAME}-${COMPONENT}-${SUFFIX}
+        app: ${NAME}-${COMPONENT}-${SUFFIX}
+      type: ClusterIP
+  - apiVersion: autoscaling/v1
+    kind: HorizontalPodAutoscaler
+    metadata:
+      namespace: ${NAMESPACE}
+      labels:
+        app.kubernetes.io/name: ${NAME}-${COMPONENT}-${SUFFIX}
+        app: ${NAME}-${COMPONENT}-${SUFFIX}
+      name: ${NAME}-${COMPONENT}-hpa-${SUFFIX}
+    spec:
+      maxReplicas: 2
+      minReplicas: 1
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: ${NAME}-${COMPONENT}-${SUFFIX}
+      targetCPUUtilizationPercentage: 85
+      metrics:
+      - type: Resource
+        resource:
+          name: memory
+          targetAverageUtilization: 80
+parameters:
+  - name: NAME
+  - name: COMPONENT
+  - name: NAMESPACE
+  - name: SUFFIX
+  - name: CLUSTER_NAME
+  - name: CPU_REQUEST
+    value: 100m
+  - name: MEM_REQUEST
+    value: 200Mi
+  - name: IMAGE_NAMESPACE
+  - name: IMAGE_TAG
