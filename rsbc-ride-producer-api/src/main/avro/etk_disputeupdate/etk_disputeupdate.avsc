@@ -38,6 +38,11 @@
                             "type": "string"
                         },
                         {
+                                                    "name": "disputeDt",
+                                                    "doc": "",
+                                                    "type": "string"
+                                                },
+                        {
                             "name": "dispute_action_code",
                             "doc": "",
                             "type": "string",

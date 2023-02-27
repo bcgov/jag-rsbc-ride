@@ -116,34 +116,37 @@ mp.messaging.outgoing.outgoing-reviewscheduled.specific.avro.reader=true
 # Configuring issuance event channel
 mp.messaging.outgoing.outgoing-issuance.connector=smallrye-kafka
 mp.messaging.outgoing.outgoing-issuance.topic=${ISSUANCE_EVENT_TOPIC}
-mp.messaging.outgoing.outgoing-issuance.value.serializer=org.apache.kafka.common.serialization.StringSerializer
-mp.messaging.outgoing.outgoing-issuance.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-issuance.value.serializer=io.confluent.kafka.serializers.KafkaAvroSerializer
+mp.messaging.connector.smallrye-issuance.apicurio.registry.url=${KAFKA_CONFLUENT_COMPAT_REGISTRY}
 mp.messaging.outgoing.outgoing-issuance.ssl.protocol=${SSL_PROTOCOL}
 mp.messaging.outgoing.outgoing-issuance.ssl.truststore.location=${SSL_TRUSTSTORE}
 mp.messaging.outgoing.outgoing-issuance.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
 mp.messaging.outgoing.outgoing-issuance.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+mp.messaging.outgoing.outgoing-issuance.specific.avro.reader=true
 
 
 # Configuring payment event channel
 mp.messaging.outgoing.outgoing-payment.connector=smallrye-kafka
 mp.messaging.outgoing.outgoing-payment.topic=${PAYMENT_EVENT_TOPIC}
-mp.messaging.outgoing.outgoing-payment.value.serializer=org.apache.kafka.common.serialization.StringSerializer
-mp.messaging.outgoing.outgoing-payment.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-payment.value.serializer=io.confluent.kafka.serializers.KafkaAvroSerializer
+mp.messaging.connector.smallrye-payment.apicurio.registry.url=${KAFKA_CONFLUENT_COMPAT_REGISTRY}
 mp.messaging.outgoing.outgoing-payment.ssl.protocol=${SSL_PROTOCOL}
 mp.messaging.outgoing.outgoing-payment.ssl.truststore.location=${SSL_TRUSTSTORE}
 mp.messaging.outgoing.outgoing-payment.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
 mp.messaging.outgoing.outgoing-payment.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+mp.messaging.outgoing.outgoing-payment.specific.avro.reader=true
 
 
 # Configuring dispute event channel
 mp.messaging.outgoing.outgoing-dispute.connector=smallrye-kafka
 mp.messaging.outgoing.outgoing-dispute.topic=${DISPUTE_EVENT_TOPIC}
-mp.messaging.outgoing.outgoing-dispute.value.serializer=org.apache.kafka.common.serialization.StringSerializer
-mp.messaging.outgoing.outgoing-dispute.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+mp.messaging.outgoing.outgoing-dispute.value.serializer=io.confluent.kafka.serializers.KafkaAvroSerializer
+mp.messaging.connector.smallrye-dispute.apicurio.registry.url=${KAFKA_CONFLUENT_COMPAT_REGISTRY}
 mp.messaging.outgoing.outgoing-dispute.ssl.protocol=${SSL_PROTOCOL}
 mp.messaging.outgoing.outgoing-dispute.ssl.truststore.location=${SSL_TRUSTSTORE}
 mp.messaging.outgoing.outgoing-dispute.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
 mp.messaging.outgoing.outgoing-dispute.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+mp.messaging.outgoing.outgoing-dispute.specific.avro.reader=true
 
 # Configuring disputeupdate event channel
 mp.messaging.outgoing.outgoing-disputeupdate.connector=smallrye-kafka
@@ -155,6 +158,7 @@ mp.messaging.outgoing.outgoing-disputeupdate.ssl.protocol=${SSL_PROTOCOL}
 mp.messaging.outgoing.outgoing-disputeupdate.ssl.truststore.location=${SSL_TRUSTSTORE}
 mp.messaging.outgoing.outgoing-disputeupdate.ssl.truststore.password=${SSL_TRUSTTORE_PASS}
 mp.messaging.outgoing.outgoing-disputeupdate.ssl.truststore.type=${SSL_TRUSTTORE_TYPE}
+#mp.messaging.outgoing.outgoing-disputeupdate.specific.avro.reader=true
 
 
 ## Configuring disputeupdate event channel
