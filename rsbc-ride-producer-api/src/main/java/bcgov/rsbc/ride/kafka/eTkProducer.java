@@ -24,6 +24,7 @@ import java.time.Duration;
 public class eTkProducer {
 
     private final static Logger logger = LoggerFactory.getLogger(eTkProducer.class);
+    
 
 
     @Inject
