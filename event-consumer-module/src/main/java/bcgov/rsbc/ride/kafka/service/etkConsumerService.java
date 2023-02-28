@@ -47,7 +47,7 @@ public class etkConsumerService {
 
     }
 
-    
+
 
     public boolean publishEventtoDisputeDecodedTopic(String eventPayload) {
 
