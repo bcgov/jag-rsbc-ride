@@ -22,6 +22,8 @@ import io.smallrye.reactive.messaging.kafka.Record;
 
 import bcgov.rsbc.ride.kafka.model.testevent;
 
+import io.vertx.core.json.JsonObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +34,7 @@ public class eTkProducer {
 
     @Inject
     @Channel("outgoing-etktestevent")
-    MutinyEmitter<Record<String, String>> emitterTestEvt;
+    MutinyEmitter<Record<Long, testEvent>> emitterTestEvt;
 
 
     @GET
@@ -50,9 +52,31 @@ public class eTkProducer {
     public Response etktestevent(String eventobj) {
         logger.info(eventobj);
         Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-        emitterTestEvt.send(Record.of(uid.toString(), eventobj)).await().atMost(Duration.ofSeconds(5));
+//        emitterTestEvt.send(Record.of(uid.toString(), eventobj)).await().atMost(Duration.ofSeconds(5));
 
         return Response.ok().entity("{\"status\":\"working\"}").build();
+    }
+
+
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/etktestevent1")
+    public Response etktestevent1(testEvent message) {
+        logger.info(message.toString());
+//        testevent newEvent=(testevent) message.toString();
+        Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        try{
+            emitterTestEvt.send(Record.of(uid, message)).await().atMost(Duration.ofSeconds(5));
+
+            return Response.ok().entity("{\"status\":\"working\"}").build();
+
+        }catch (Exception e) {
+            logger.error("[RIDE]: Exception occurred while sending app_accepted event, exception details: {}", e.toString() + "; " + e.getMessage());
+            return Response.serverError().entity("Failed sending  event to kafka").build();
+        }
+
     }
 
 
