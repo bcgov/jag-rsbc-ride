@@ -6,58 +6,106 @@
     "ticket_number": {
       "type": "string"
     },
-    "count_number": {
+    "submit_date": {
       "type": "integer"
     },
-    "dispute_action_date": {
+    "sent_time": {
       "type": "string"
     },
-    "dispute_type_code": {
+    "drivers_licence_province_code": {
       "type": "string"
     },
-    "count_act_regulation": {
+    "person_gender_code": {
       "type": "string"
     },
-    "compressed_section": {
+    "person_residence_city_name": {
       "type": "string"
     },
-    "compressed_section": {
+    "person_residence_province_code": {
       "type": "string"
     },
-    "compressed_section": {
+    "young_person_yn": {
       "type": "string"
     },
-    "compressed_section": {
+    "offender_type_code": {
       "type": "string"
     },
-    "compressed_section": {
+    "violation_date": {
       "type": "string"
     },
-    "compressed_section": {
+    "violation_time": {
       "type": "string"
     },
-    "compressed_section": {
+    "violation_highway_desc": {
       "type": "string"
     },
-    "compressed_section": {
+    "violation_city_code": {
       "type": "string"
     },
-    "compressed_section": {
+    "violation_city_name": {
       "type": "string"
     },
-    "compressed_section": {
+    "vehicle_province_code": {
       "type": "string"
     },
-    "compressed_section": {
+    "vehicle_nsj_puj_cd": {
       "type": "string"
     },
-    "compressed_section": {
+    "vehicle_make_code": {
       "type": "string"
     },
-    "compressed_section": {
+    "vehicle_type_code": {
       "type": "string"
     },
-    "compressed_section": {
+    "vehicle_year": {
+      "type": "string"
+    },
+    "accident_yn": {
+      "type": "string"
+    },
+    "dispute_address_text": {
+      "type": "string"
+    },
+    "court_location_code": {
+      "type": "string"
+    },
+    "mre_agency_text": {
+      "type": "string"
+    },
+    "enforcement_jurisdiction_code": {
+      "type": "string"
+    },
+    "certificate_of_service_date": {
+      "type": "string"
+    },
+    "certificate_of_service_number": {
+      "type": "string"
+    },
+    "e_violation_form_number": {
+      "type": "string"
+    },
+    "enforcement_jurisdiction_name": {
+      "type": "string"
+    },
+    "mre_minor_version_text": {
+      "type": "string"
+    },
+    "count_quantity": {
+      "type": "integer"
+    },
+    "enforcement_officer_number": {
+      "type": "string"
+    },
+    "enforcement_officer_name": {
+      "type": "string"
+    },
+    "sent_date": {
+      "type": "string"
+    },
+    "enforcement_org_unit_cd": {
+      "type": "string"
+    },
+    "enforcement_org_unit_cd_txt": {
       "type": "string"
     }
   }
