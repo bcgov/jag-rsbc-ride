@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "ticket_number",
@@ -21,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "payment_amount",
         "transaction_id"
 })
-//@Generated("jsonschema2pojo")
+
 public class evtpaymenteevent {
 
     @JsonProperty("ticket_number")
@@ -107,6 +106,46 @@ public class evtpaymenteevent {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(evtpaymenteevent.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+        sb.append("ticketNumber");
+        sb.append('=');
+        sb.append(((this.ticketNumber == null)?"<null>":this.ticketNumber));
+        sb.append(',');
+        sb.append("countNumber");
+        sb.append('=');
+        sb.append(((this.countNumber == null)?"<null>":this.countNumber));
+        sb.append(',');
+        sb.append("paymentCardType");
+        sb.append('=');
+        sb.append(((this.paymentCardType == null)?"<null>":this.paymentCardType));
+        sb.append(',');
+        sb.append("paymentTicketTypeCode");
+        sb.append('=');
+        sb.append(((this.paymentTicketTypeCode == null)?"<null>":this.paymentTicketTypeCode));
+        sb.append(',');
+        sb.append("paymentAmount");
+        sb.append('=');
+        sb.append(((this.paymentAmount == null)?"<null>":this.paymentAmount));
+        sb.append(',');
+        sb.append("transactionId");
+        sb.append('=');
+        sb.append(((this.transactionId == null)?"<null>":this.transactionId));
+        sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
+        if (sb.charAt((sb.length()- 1)) == ',') {
+            sb.setCharAt((sb.length()- 1), ']');
+        } else {
+            sb.append(']');
+        }
+        return sb.toString();
     }
 
 }

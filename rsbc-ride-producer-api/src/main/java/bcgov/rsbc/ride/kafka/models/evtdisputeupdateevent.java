@@ -1,6 +1,5 @@
 package bcgov.rsbc.ride.kafka.models;
 
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.Generated;
@@ -19,7 +18,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "dispute_action_date",
         "dispute_action_code"
 })
-//@Generated("jsonschema2pojo")
+
+
 public class evtdisputeupdateevent {
 
     @JsonProperty("ticket_number")
@@ -81,6 +81,38 @@ public class evtdisputeupdateevent {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(evtdisputeupdateevent.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+        sb.append("ticketNumber");
+        sb.append('=');
+        sb.append(((this.ticketNumber == null)?"<null>":this.ticketNumber));
+        sb.append(',');
+        sb.append("countNumber");
+        sb.append('=');
+        sb.append(((this.countNumber == null)?"<null>":this.countNumber));
+        sb.append(',');
+        sb.append("disputeActionDate");
+        sb.append('=');
+        sb.append(((this.disputeActionDate == null)?"<null>":this.disputeActionDate));
+        sb.append(',');
+        sb.append("disputeActionCode");
+        sb.append('=');
+        sb.append(((this.disputeActionCode == null)?"<null>":this.disputeActionCode));
+        sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
+        if (sb.charAt((sb.length()- 1)) == ',') {
+            sb.setCharAt((sb.length()- 1), ']');
+        } else {
+            sb.append(']');
+        }
+        return sb.toString();
     }
 
 }

@@ -1,7 +1,5 @@
 package bcgov.rsbc.ride.kafka.models;
 
-
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.Generated;
@@ -23,7 +21,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "fine_amount",
         "wording_number"
 })
-//@Generated("jsonschema2pojo")
+
+
 public class evtcontraventionseevent {
 
     @JsonProperty("ticket_number")
@@ -121,6 +120,50 @@ public class evtcontraventionseevent {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(evtcontraventionseevent.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+        sb.append("ticketNumber");
+        sb.append('=');
+        sb.append(((this.ticketNumber == null)?"<null>":this.ticketNumber));
+        sb.append(',');
+        sb.append("countNumber");
+        sb.append('=');
+        sb.append(((this.countNumber == null)?"<null>":this.countNumber));
+        sb.append(',');
+        sb.append("actCode");
+        sb.append('=');
+        sb.append(((this.actCode == null)?"<null>":this.actCode));
+        sb.append(',');
+        sb.append("sectionText");
+        sb.append('=');
+        sb.append(((this.sectionText == null)?"<null>":this.sectionText));
+        sb.append(',');
+        sb.append("sectionDesc");
+        sb.append('=');
+        sb.append(((this.sectionDesc == null)?"<null>":this.sectionDesc));
+        sb.append(',');
+        sb.append("fineAmount");
+        sb.append('=');
+        sb.append(((this.fineAmount == null)?"<null>":this.fineAmount));
+        sb.append(',');
+        sb.append("wordingNumber");
+        sb.append('=');
+        sb.append(((this.wordingNumber == null)?"<null>":this.wordingNumber));
+        sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
+        if (sb.charAt((sb.length()- 1)) == ',') {
+            sb.setCharAt((sb.length()- 1), ']');
+        } else {
+            sb.append(']');
+        }
+        return sb.toString();
     }
 
 }

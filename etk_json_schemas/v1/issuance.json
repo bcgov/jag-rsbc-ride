@@ -7,7 +7,7 @@
       "type": "string"
     },
     "submit_date": {
-      "type": "integer"
+      "type": "string"
     },
     "sent_time": {
       "type": "string"

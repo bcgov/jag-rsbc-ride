@@ -1,6 +1,5 @@
 package bcgov.rsbc.ride.kafka.models;
 
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.Generated;
@@ -12,8 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
-
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "ticket_number",
@@ -23,7 +20,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "count_act_regulation",
         "compressed_section"
 })
-//@Generated("jsonschema2pojo")
+
+
 public class evtdisputeevent {
 
     @JsonProperty("ticket_number")
@@ -109,6 +107,46 @@ public class evtdisputeevent {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(evtdisputeevent.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+        sb.append("ticketNumber");
+        sb.append('=');
+        sb.append(((this.ticketNumber == null)?"<null>":this.ticketNumber));
+        sb.append(',');
+        sb.append("countNumber");
+        sb.append('=');
+        sb.append(((this.countNumber == null)?"<null>":this.countNumber));
+        sb.append(',');
+        sb.append("disputeActionDate");
+        sb.append('=');
+        sb.append(((this.disputeActionDate == null)?"<null>":this.disputeActionDate));
+        sb.append(',');
+        sb.append("disputeTypeCode");
+        sb.append('=');
+        sb.append(((this.disputeTypeCode == null)?"<null>":this.disputeTypeCode));
+        sb.append(',');
+        sb.append("countActRegulation");
+        sb.append('=');
+        sb.append(((this.countActRegulation == null)?"<null>":this.countActRegulation));
+        sb.append(',');
+        sb.append("compressedSection");
+        sb.append('=');
+        sb.append(((this.compressedSection == null)?"<null>":this.compressedSection));
+        sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
+        if (sb.charAt((sb.length()- 1)) == ',') {
+            sb.setCharAt((sb.length()- 1), ']');
+        } else {
+            sb.append(']');
+        }
+        return sb.toString();
     }
 
 }
