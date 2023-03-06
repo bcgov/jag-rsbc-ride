@@ -29,8 +29,11 @@ dependencies {
 
 //    To support Confluent registry schema formats
     implementation 'io.confluent:kafka-avro-serializer:7.0.1'
+    implementation 'io.confluent:kafka-json-serializer:7.3.2'
     implementation 'io.quarkus:quarkus-confluent-registry-avro:2.10.2.Final'
+    implementation 'io.confluent:kafka-json-schema-serializer:7.3.2'
     implementation 'io.quarkus:quarkus-rest-client-reactive:2.10.2.Final'
+    implementation 'org.everit.json:org.everit.json.schema:1.5.1'
 
     // implementation group: 'io.quarkus', name: 'quarkus-vertx-http', version: '2.14.1.Final'
 
