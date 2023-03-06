@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "evtissuanceeevent",
+  "type": "object",
+  "properties": {
+    "ticket_number": {
+      "type": "string"
+    },
+    "submit_date": {
+      "type": "string"
+    },
+    "sent_time": {
+      "type": "string"
+    },
+    "drivers_licence_province_code": {
+      "type": "string"
+    },
+    "person_gender_code": {
+      "type": "string"
+    },
+    "person_residence_city_name": {
+      "type": "string"
+    },
+    "person_residence_province_code": {
+      "type": "string"
+    },
+    "young_person_yn": {
+      "type": "string"
+    },
+    "offender_type_code": {
+      "type": "string"
+    },
+    "violation_date": {
+      "type": "string"
+    },
+    "violation_time": {
+      "type": "string"
+    },
+    "violation_highway_desc": {
+      "type": "string"
+    },
+    "violation_city_code": {
+      "type": "string"
+    },
+    "violation_city_name": {
+      "type": "string"
+    },
+    "vehicle_province_code": {
+      "type": "string"
+    },
+    "vehicle_nsj_puj_cd": {
+      "type": "string"
+    },
+    "vehicle_make_code": {
+      "type": "string"
+    },
+    "vehicle_type_code": {
+      "type": "string"
+    },
+    "vehicle_year": {
+      "type": "string"
+    },
+    "accident_yn": {
+      "type": "string"
+    },
+    "dispute_address_text": {
+      "type": "string"
+    },
+    "court_location_code": {
+      "type": "string"
+    },
+    "mre_agency_text": {
+      "type": "string"
+    },
+    "enforcement_jurisdiction_code": {
+      "type": "string"
+    },
+    "certificate_of_service_date": {
+      "type": "string"
+    },
+    "certificate_of_service_number": {
+      "type": "string"
+    },
+    "e_violation_form_number": {
+      "type": "string"
+    },
+    "enforcement_jurisdiction_name": {
+      "type": "string"
+    },
+    "mre_minor_version_text": {
+      "type": "string"
+    },
+    "count_quantity": {
+      "type": "integer"
+    },
+    "enforcement_officer_number": {
+      "type": "string"
+    },
+    "enforcement_officer_name": {
+      "type": "string"
+    },
+    "sent_date": {
+      "type": "string"
+    },
+    "enforcement_org_unit_cd": {
+      "type": "string"
+    },
+    "enforcement_org_unit_cd_txt": {
+      "type": "string"
+    }
+  }
+}
