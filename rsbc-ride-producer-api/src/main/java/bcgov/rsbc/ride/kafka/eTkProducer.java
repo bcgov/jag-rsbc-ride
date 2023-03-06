@@ -17,7 +17,11 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.time.Duration;
 
-
+import bcgov.rsbc.ride.kafka.models.evtdisputeupdateevent;
+import bcgov.rsbc.ride.kafka.models.evtissuanceeevent;
+import bcgov.rsbc.ride.kafka.models.evtpaymenteevent;
+import bcgov.rsbc.ride.kafka.models.evtdisputeevent;
+import bcgov.rsbc.ride.kafka.models.evtcontraventionseevent;
 
 
 @Path("/etkevents")
@@ -29,19 +33,23 @@ public class eTkProducer {
 
     @Inject
     @Channel("outgoing-issuance")
-    MutinyEmitter<Record<String, String>> emitterIssuanceEvent;
+    MutinyEmitter<Record<Long, evtissuanceeevent>> emitterIssuanceEvent;
 
     @Inject
     @Channel("outgoing-payment")
-    MutinyEmitter<Record<String, String>> emitterPaymentEvent;
+    MutinyEmitter<Record<Long, evtpaymenteevent>> emitterPaymentEvent;
 //
     @Inject
     @Channel("outgoing-disputeupdate")
-    MutinyEmitter<Record<String, String>> emitterDisputeUpdateEvent;
+    MutinyEmitter<Record<Long, evtdisputeupdateevent>> emitterDisputeUpdateEvent;
 //
     @Inject
     @Channel("outgoing-dispute")
-    MutinyEmitter<Record<String, String>> emitterDisputeEvent;
+    MutinyEmitter<Record<Long, evtdisputeevent>> emitterDisputeEvent;
+
+    @Inject
+    @Channel("outgoing-contraventions")
+    MutinyEmitter<Record<Long, evtcontraventionseevent>> emitterContraventionsEvent;
 
 
     @GET
@@ -57,7 +65,7 @@ public class eTkProducer {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/issuance")
-    public Response publishIssuanceEvent(@HeaderParam("ride-api-key") String apiKey, String eventobj) {
+    public Response publishIssuanceEvent(@HeaderParam("ride-api-key") String apiKey, evtissuanceeevent eventobj) {
         if(apiKey== null){
             return Response.serverError().status(401).entity("Auth Error").build();
         }
@@ -68,14 +76,14 @@ public class eTkProducer {
         if(foundKeyCount==0){
             return Response.serverError().status(401).entity("Auth Error").build();
         }else{
-            logger.info("[RIDE]: Publish etk_issuance [payload: {}] to kafka.", eventobj);
+            logger.info("[RIDE]: Publish etk_issuance [payload: {}] to kafka.", eventobj.toString());
 //            logger.info("{}",eventobj.getTypeofevent());
 //            evtissuanceeventpayloadrecord payloaddata=(evtissuanceeventpayloadrecord) eventobj.getEvtissuanceeventpayload().get(0);
             try {
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                 logger.info("[RIDE]: Kafka event UID: {}", uid);
-                emitterIssuanceEvent.send(Record.of(uid.toString(), eventobj)).await().atMost(Duration.ofSeconds(5));
+                emitterIssuanceEvent.send(Record.of(uid, eventobj)).await().atMost(Duration.ofSeconds(5));
 //                emitterIssuanceEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
@@ -94,7 +102,7 @@ public class eTkProducer {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/disputeupdate")
-    public Response publishDisputeUpdateEvent(@HeaderParam("ride-api-key") String apiKey, String eventobj) {
+    public Response publishDisputeUpdateEvent(@HeaderParam("ride-api-key") String apiKey, evtdisputeupdateevent eventobj) {
         if(apiKey== null){
             return Response.serverError().status(401).entity("Auth Error").build();
         }
@@ -105,14 +113,14 @@ public class eTkProducer {
         if(foundKeyCount==0){
             return Response.serverError().status(401).entity("Auth Error").build();
         }else{
-            logger.info("[RIDE]: Publish etk_disputeupdate [payload: {}] to kafka.", eventobj);
+            logger.info("[RIDE]: Publish etk_disputeupdate [payload: {}] to kafka.", eventobj.toString());
 //            logger.info("{}",eventobj.getTypeofevent());
 //            evtissuanceeventpayloadrecord payloaddata=(evtissuanceeventpayloadrecord) eventobj.getEvtissuanceeventpayload().get(0);
             try {
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                 logger.info("[RIDE]: Kafka event UID: {}", uid);
-                emitterDisputeUpdateEvent.send(Record.of(uid.toString(), eventobj)).await().atMost(Duration.ofSeconds(5));
+                emitterDisputeUpdateEvent.send(Record.of(uid, eventobj)).await().atMost(Duration.ofSeconds(5));
 //                emitterIssuanceEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
@@ -129,7 +137,7 @@ public class eTkProducer {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/dispute")
-    public Response publishDisputeEvent(@HeaderParam("ride-api-key") String apiKey, String eventobj) {
+    public Response publishDisputeEvent(@HeaderParam("ride-api-key") String apiKey, evtdisputeevent eventobj) {
         if(apiKey== null){
             return Response.serverError().status(401).entity("Auth Error").build();
         }
@@ -140,14 +148,14 @@ public class eTkProducer {
         if(foundKeyCount==0){
             return Response.serverError().status(401).entity("Auth Error").build();
         }else{
-            logger.info("[RIDE]: Publish etk_dispute [payload: {}] to kafka.", eventobj);
+            logger.info("[RIDE]: Publish etk_dispute [payload: {}] to kafka.", eventobj.toString());
 //            logger.info("{}",eventobj.getTypeofevent());
 //            evtissuanceeventpayloadrecord payloaddata=(evtissuanceeventpayloadrecord) eventobj.getEvtissuanceeventpayload().get(0);
             try {
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                 logger.info("[RIDE]: Kafka event UID: {}", uid);
-                emitterDisputeEvent.send(Record.of(uid.toString(), eventobj)).await().atMost(Duration.ofSeconds(5));
+                emitterDisputeEvent.send(Record.of(uid, eventobj)).await().atMost(Duration.ofSeconds(5));
 //                emitterIssuanceEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
@@ -165,7 +173,7 @@ public class eTkProducer {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/payment")
-    public Response publishPaymentEvent(@HeaderParam("ride-api-key") String apiKey, String eventobj) {
+    public Response publishPaymentEvent(@HeaderParam("ride-api-key") String apiKey, evtpaymenteevent eventobj) {
         if(apiKey== null){
             return Response.serverError().status(401).entity("Auth Error").build();
         }
@@ -176,18 +184,53 @@ public class eTkProducer {
         if(foundKeyCount==0){
             return Response.serverError().status(401).entity("Auth Error").build();
         }else{
-            logger.info("[RIDE]: Publish etk_payment [payload: {}] to kafka.", eventobj);
+            logger.info("[RIDE]: Publish etk_payment [payload: {}] to kafka.", eventobj.toString());
 //            logger.info("{}",eventobj.getTypeofevent());
 //            evtissuanceeventpayloadrecord payloaddata=(evtissuanceeventpayloadrecord) eventobj.getEvtissuanceeventpayload().get(0);
             try {
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                 logger.info("[RIDE]: Kafka event UID: {}", uid);
-                emitterPaymentEvent.send(Record.of(uid.toString(), eventobj)).await().atMost(Duration.ofSeconds(5));
+                emitterPaymentEvent.send(Record.of(uid, eventobj)).await().atMost(Duration.ofSeconds(5));
 //                emitterIssuanceEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
                 logger.error("[RIDE]: Exception occurred while sending etk_payment event, exception details: {}", e.toString() + "; " + e.getMessage());
+                return Response.serverError().entity("Failed sending  event to kafka").build();
+            }
+
+        }
+
+    }
+
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/contraventions")
+    public Response publishContraventionsEvent(@HeaderParam("ride-api-key") String apiKey, evtcontraventionseevent eventobj) {
+        if(apiKey== null){
+            return Response.serverError().status(401).entity("Auth Error").build();
+        }
+        PanacheQuery<apiKeys> queryKeys = apiKeys.find("apikeyval", apiKey);
+        List<apiKeys> foundKeys = queryKeys.list();
+        long foundKeyCount=queryKeys.count();
+
+        if(foundKeyCount==0){
+            return Response.serverError().status(401).entity("Auth Error").build();
+        }else{
+            logger.info("[RIDE]: Publish etk_contraventions [payload: {}] to kafka.", eventobj.toString());
+//            logger.info("{}",eventobj.getTypeofevent());
+//            evtissuanceeventpayloadrecord payloaddata=(evtissuanceeventpayloadrecord) eventobj.getEvtissuanceeventpayload().get(0);
+            try {
+                //Change sendAndAwait to wait at most 5 seconds.
+                Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                logger.info("[RIDE]: Kafka event UID: {}", uid);
+                emitterContraventionsEvent.send(Record.of(uid, eventobj)).await().atMost(Duration.ofSeconds(5));
+//                emitterIssuanceEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+                return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
+            } catch (Exception e) {
+                logger.error("[RIDE]: Exception occurred while sending etk_contraventions event, exception details: {}", e.toString() + "; " + e.getMessage());
                 return Response.serverError().entity("Failed sending  event to kafka").build();
             }
 
