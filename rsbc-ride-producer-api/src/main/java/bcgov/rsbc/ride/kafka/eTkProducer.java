@@ -48,7 +48,7 @@ public class eTkProducer {
     MutinyEmitter<Record<Long, evtdisputeevent>> emitterDisputeEvent;
 
     @Inject
-    @Channel("outgoing-contraventions")
+    @Channel("outgoing-violations")
     MutinyEmitter<Record<Long, evtcontraventionseevent>> emitterContraventionsEvent;
 
 
@@ -207,7 +207,7 @@ public class eTkProducer {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/contraventions")
+    @Path("/violations")
     public Response publishContraventionsEvent(@HeaderParam("ride-api-key") String apiKey, evtcontraventionseevent eventobj) {
         if(apiKey== null){
             return Response.serverError().status(401).entity("Auth Error").build();
@@ -219,7 +219,7 @@ public class eTkProducer {
         if(foundKeyCount==0){
             return Response.serverError().status(401).entity("Auth Error").build();
         }else{
-            logger.info("[RIDE]: Publish etk_contraventions [payload: {}] to kafka.", eventobj.toString());
+            logger.info("[RIDE]: Publish etk_violations [payload: {}] to kafka.", eventobj.toString());
 //            logger.info("{}",eventobj.getTypeofevent());
 //            evtissuanceeventpayloadrecord payloaddata=(evtissuanceeventpayloadrecord) eventobj.getEvtissuanceeventpayload().get(0);
             try {
@@ -230,7 +230,7 @@ public class eTkProducer {
 //                emitterIssuanceEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
-                logger.error("[RIDE]: Exception occurred while sending etk_contraventions event, exception details: {}", e.toString() + "; " + e.getMessage());
+                logger.error("[RIDE]: Exception occurred while sending etk_violations event, exception details: {}", e.toString() + "; " + e.getMessage());
                 return Response.serverError().entity("Failed sending  event to kafka").build();
             }
 
