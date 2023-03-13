@@ -1,0 +1,38 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+    <module name="mongo-db-api" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="ERR_STG_COLLECTION" value="errorstaging" />
+      <env name="ERR_THRESHOLD_COUNT" value="2" />
+      <env name="LOG_LEVEL" value="DEBUG" />
+      <env name="MAIN_STG_COLLECTION" value="mainstaging" />
+      <env name="MAIN_TABLE_COLLECTION" value="maintable" />
+      <env name="MONGO_URL" value="mongodb+srv://kafkaadmin:lQYRHomUg3SMNvGr@kafkaevents.viyrbov.mongodb.net/?retryWrites=true&amp;w=majority" />
+      <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="RECON_DB_NAME" value="kafkaevents" />
+      <env name="ERR_TABLE_COLLECTION" value="errortable" />
+      <env name="BI_SQL_DB_SERVER" value="database-1.cbd8etca0d8w.us-east-1.rds.amazonaws.com" />
+      <env name="BI_SQL_DB_USERNAME" value="admin" />
+      <env name="BI_SQL_DB_PASSWORD" value="adminpassword" />
+      <env name="BI_SQL_APP1_SCHEMA" value="dbo" />
+      <env name="BI_SQL_APP1_DB" value="recondb" />
+      <env name="BI_SQL_APP1_TABLE1" value="event1" />
+      <env name="PRODUCER_API_HOST" value="http://localhost:5000" />
+    </envs>
+    <option name="SDK_HOME" value="" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="IS_MODULE_SDK" value="true" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+    <option name="PARAMETERS" value="" />
+    <option name="SHOW_COMMAND_LINE" value="false" />
+    <option name="EMULATE_TERMINAL" value="false" />
+    <option name="MODULE_MODE" value="false" />
+    <option name="REDIRECT_INPUT" value="false" />
+    <option name="INPUT_FILE" value="" />
+    <method v="2" />
+  </configuration>
+</component>
