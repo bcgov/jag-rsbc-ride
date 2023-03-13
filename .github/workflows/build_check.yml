@@ -21,7 +21,7 @@ jobs:
       - name: Perform a test build
         run: |
           cd recon-service
-          docker build -f Dockerfile-build.yml -t testimage .
+          docker build -f Dockerfile-build -t testimage .
 
 
 
