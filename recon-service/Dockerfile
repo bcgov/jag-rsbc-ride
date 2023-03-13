@@ -1,5 +1,5 @@
 # FROM registry.access.redhat.com/ubi8/python-39
-FROM image-registry.openshift-image-registry.svc:5000/amlana21-dev/python-3.9-ubi-base-image:1.0
+FROM image-registry.openshift-image-registry.svc:5000/be5301-tools/python-3.9-ubi-base-image:1.0
 
 # RUN addgroup --system app && adduser --system --group app
 

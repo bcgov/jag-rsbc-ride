@@ -2,34 +2,11 @@ kind: Template
 apiVersion: template.openshift.io/v1
 metadata:
   annotations:
-    description: Build template for ride recon api
-    tags: rsbc-ride-recon-api
+    description: Build template for ride recon service
+    tags: rsbc-ride-recon-service
     iconClass: icon-python
   name: ${NAME}-${COMPONENT}-build-template
 objects:
-  - apiVersion: image.openshift.io/v1
-    kind: ImageStream
-    metadata:
-      annotations: null
-      creationTimestamp: null
-      labels:
-        shared: "true"
-      name: python-3.9-ubi-base-image
-      # https://catalog.redhat.com/software/containers/ubi8/python-39/6065b24eb92fbda3a4c65d8f
-    spec:
-      lookupPolicy:
-        local: false
-      tags:
-      - annotations:
-          openshift.io/imported-from: registry.access.redhat.com/ubi8/python-39@sha256:c73d523319d94747977fff99c01b315f7b94587cfe9371359ea828280c7509ef
-        from:
-          kind: DockerImage
-          name: registry.access.redhat.com/ubi8/python-39@sha256:c73d523319d94747977fff99c01b315f7b94587cfe9371359ea828280c7509ef
-        generation: null
-        importPolicy: {}
-        name: "1.0"
-        referencePolicy:
-          type: "Local"
   - kind: ImageStream
     apiVersion: v1
     metadata:
@@ -40,14 +17,14 @@ objects:
     apiVersion: v1
     metadata:
       name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
-      # labels:
-      #   app: ${NAME}-${COMPONENT}
-      #   component: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
-      #   name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+      labels:
+        app: ${NAME}-${COMPONENT}
+        component: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
+        name: ${NAME}-${COMPONENT}-${BUILD_CONFIG_SUFFIX}
     spec:
       source:
         type: Git
-        # contextDir: ${SOURCE_CONTEXT_DIR}
+        contextDir: ${SOURCE_CONTEXT_DIR}
         # secrets:
         #   - secret:
         #       name: kafka-cert-secret-build-${BUILD_CONFIG_SUFFIX}
@@ -55,8 +32,6 @@ objects:
         git:
           uri: ${SOURCE_REPOSITORY_URL}
           ref: ${SOURCE_REPOSITORY_REF}
-        sourceSecret:
-          name: mongo-api-secret
       completionDeadlineSeconds: 1440
       resources:
         limits:
@@ -80,18 +55,12 @@ objects:
       #   - type: ConfigChange
 parameters:
   - name: NAME
-    value: recon-api
   - name: COMPONENT
-    value: code
   - name: VERSION
-    value: "1.3"
   - name: SOURCE_CONTEXT_DIR
   - name: SOURCE_REPOSITORY_URL
-    value: a
   - name: SOURCE_REPOSITORY_REF
-    value: feature1
   - name: BUILD_CONFIG_SUFFIX
-    value: dev
-  - name: BUILD_SECRET_NAME
+  # - name: BUILD_SECRET_NAME
   - name: IMAGE_NAME
-    value: app
+  - name: BUILD_IMAGE_VERSION
