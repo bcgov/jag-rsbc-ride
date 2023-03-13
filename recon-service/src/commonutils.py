@@ -28,3 +28,9 @@ def map_source_db(source):
         return os.getenv('DF_BI_DB')
     elif source=='etk':
         return os.getenv('ETK_BI_DB')
+
+# def map_source_api_keys(source):
+#     if source=='df':
+#         return os.getenv('R')
+#     elif source=='etk':
+#         return os.getenv('ETK_BI_DB')

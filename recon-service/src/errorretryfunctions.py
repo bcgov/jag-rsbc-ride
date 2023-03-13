@@ -10,11 +10,12 @@ def error_retry_task(dbclient,err_staging_collection,err_table_collection,err_th
     #DONE: For each do below
     for row in results:
         # try:
-        if row['event_type'] and row['event_type'] == 'event_1':
+        # if row['event_type'] and row['event_type'] == 'event_1':
+        if row['event_type'] :
             # DONE: Retry sending to producer api
             payload_json=json.loads(row['payloadstr'])
             producer_api_obj=producerAPITasks(os.getenv('PRODUCER_API_HOST'),logger)
-            headers={'api_key':'1234'}
+            headers={'ride-api-key':os.getenv('RIDE_API_KEY')}
             success=producer_api_obj.sendAPIReq(row['apipath'],headers,'POST',payload_json)
             # apiendpoint=f"{os.getenv('PRODUCER_API_HOST')}{row['apipath']}"
             # print(apiendpoint)
