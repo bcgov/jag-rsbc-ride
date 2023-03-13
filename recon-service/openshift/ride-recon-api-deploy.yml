@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment
+spec:
+  selector:
+    matchLabels:
+      app: my-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-container
+          image: image-registry.openshift-image-registry.svc:5000/amlana21-dev/recon-api-app-image-dev:1.3
+          envFrom:
+            - secretRef:
+                name: recon-api-recon-api-build-secret-dev
+          ports:
+            - containerPort: 80
