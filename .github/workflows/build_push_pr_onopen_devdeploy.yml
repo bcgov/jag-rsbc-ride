@@ -120,64 +120,64 @@ jobs:
 
 
 
-  # deploy_dev_argocd:
-  #   name: Push to Gitops repo for Dev deployment via Argocd
-  #   runs-on: ubuntu-latest
-  #   needs: [merge_pr_local,create_env_secrets,build_push]
-  #   env:
-  #     PR_NUMBER: ${{ github.event.number }}
-  #     PR_IMAGE_STREAM_TAG: ${{ github.sha}}
-  #     RELEASE_NAME: release_1_0
-  #   steps:
-  #     - name: Checkout Gitops repository
-  #       uses: actions/checkout@v3
-  #       with:
-  #         repository: bcgov-c/tenant-gitops-be5301
-  #         ref: deployment/rsbc-ride-producer-api
-  #         token: ${{ secrets.GITOPS_GITHUB_TOKEN }}
-  #     # - name: New PR Branch
-  #     #   run: |
-  #     #     git config user.name github-actions
-  #     #     git config user.email github-actions@github.com
-  #     #     git pull
-  #     #     git checkout -b pr-branch-${{env.PR_NUMBER}}  
-  #     #     git push -u origin pr-branch-${{env.PR_NUMBER}} 
-  #     - name: Update Image tag for Dev deploy
-  #       uses: mikefarah/yq@v4.28.1
-  #       with:
-  #         cmd: yq eval -i '.images[0].newTag = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/dev/kustomization.yaml'
-  #     # - name: Update name suffix for Dev deploy
-  #     #   uses: mikefarah/yq@v4.28.1
-  #     #   with:
-  #     #     cmd: yq eval -i '.nameSuffix = "-dev"' 'overlays/dev/kustomization.yaml'
-  #     # - name: Update app name label for Dev deploy
-  #     #   uses: mikefarah/yq@v4.28.1
-  #     #   with:
-  #     #     cmd: yq eval -i '.commonLabels["app.kubernetes.io/name"] = "ride-producer-api-dev"' 'overlays/pr/kustomization.yaml'
-  #     # - name: Update app label for PR deploy
-  #     #   uses: mikefarah/yq@v4.28.1
-  #     #   with:
-  #     #     cmd: yq eval -i '.commonLabels.app = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
-  #     - name: Update release name for Dev deploy
-  #       uses: mikefarah/yq@v4.28.1
-  #       with:
-  #         cmd: yq eval -i '.commonAnnotations.release_name = "${{env.RELEASE_NAME}}"' 'overlays/dev/kustomization.yaml'
-  #     # - name: Update hpa Dev name
-  #     #   uses: mikefarah/yq@v4.28.1
-  #     #   with:
-  #     #     cmd: yq eval -i '.spec.scaleTargetRef.name = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/custom-hpa-ride-producer-api.yml'
-  #     - name: Update sha annotation
-  #       uses: mikefarah/yq@v4.28.1
-  #       with:
-  #         cmd: yq eval -i '.commonAnnotations.commit_sha = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/dev/kustomization.yaml'
-  #     - name: Check Changed value
-  #       run: |
-  #         cat overlays/dev/kustomization.yaml
-  #     - name: Push Changes
-  #       run: |
-  #         git config user.name github-actions
-  #         git config user.email github-actions@github.com
-  #         git add .
-  #         git commit -m "updated dev deploy details to dev overlay yaml"
-  #         git push -u origin deployment/rsbc-ride-producer-api
+  deploy_dev_argocd:
+    name: Push to Gitops repo for Dev deployment via Argocd
+    runs-on: ubuntu-latest
+    needs: [merge_pr_local,build_push]
+    env:
+      PR_NUMBER: ${{ github.event.number }}
+      PR_IMAGE_STREAM_TAG: ${{ github.sha}}
+      RELEASE_NAME: release_1_1
+    steps:
+      - name: Checkout Gitops repository
+        uses: actions/checkout@v3
+        with:
+          repository: bcgov-c/tenant-gitops-be5301
+          ref: deployment/recon-svc
+          token: ${{ secrets.GITOPS_GITHUB_TOKEN }}
+      # - name: New PR Branch
+      #   run: |
+      #     git config user.name github-actions
+      #     git config user.email github-actions@github.com
+      #     git pull
+      #     git checkout -b pr-branch-${{env.PR_NUMBER}}  
+      #     git push -u origin pr-branch-${{env.PR_NUMBER}} 
+      - name: Update Image tag for Dev deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.images[0].newTag = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/dev/kustomization.yaml'
+      # - name: Update name suffix for Dev deploy
+      #   uses: mikefarah/yq@v4.28.1
+      #   with:
+      #     cmd: yq eval -i '.nameSuffix = "-dev"' 'overlays/dev/kustomization.yaml'
+      # - name: Update app name label for Dev deploy
+      #   uses: mikefarah/yq@v4.28.1
+      #   with:
+      #     cmd: yq eval -i '.commonLabels["app.kubernetes.io/name"] = "ride-producer-api-dev"' 'overlays/pr/kustomization.yaml'
+      # - name: Update app label for PR deploy
+      #   uses: mikefarah/yq@v4.28.1
+      #   with:
+      #     cmd: yq eval -i '.commonLabels.app = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update release name for Dev deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonAnnotations.release_name = "${{env.RELEASE_NAME}}"' 'overlays/dev/kustomization.yaml'
+      # - name: Update hpa Dev name
+      #   uses: mikefarah/yq@v4.28.1
+      #   with:
+      #     cmd: yq eval -i '.spec.scaleTargetRef.name = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/custom-hpa-ride-producer-api.yml'
+      - name: Update sha annotation
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonAnnotations.commit_sha = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/dev/kustomization.yaml'
+      - name: Check Changed value
+        run: |
+          cat overlays/dev/kustomization.yaml
+      - name: Push Changes
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "updated dev deploy details to dev overlay yaml"
+          git push -u origin deployment/recon-svc
         
