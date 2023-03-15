@@ -17,6 +17,9 @@ import javax.ws.rs.POST;
 //import org.jboss.resteasy.reactive.RestResponse;
 
 import javax.ws.rs.core.Response;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +37,17 @@ import bcgov.rsbc.ride.kafka.models.payrecvdevent;
 import bcgov.rsbc.ride.kafka.models.payrecvdpayloadrecord;
 import bcgov.rsbc.ride.kafka.models.reviewscheduleddevent;
 import bcgov.rsbc.ride.kafka.models.reviewscheduledpayloadrecord;
+import bcgov.rsbc.ride.kafka.models.reconapiMainpayload;
 
 import io.quarkus.mongodb.panache.PanacheQuery;
 import bcgov.rsbc.ride.kafka.apiKeys;
 import javax.ws.rs.*;
+
+
+//import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 
 
@@ -78,6 +88,12 @@ public class dfProducer {
     }
 
 
+    private OkHttpService okHttpService = new OkHttpService();
+
+    @ConfigProperty(name = "recon.api.host")
+    String reconapihost;
+
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -100,10 +116,23 @@ public class dfProducer {
             appacceptedpayloadrecord payloaddata=(appacceptedpayloadrecord) eventobj.getAppacceptedpayload().get(0);
 
             try {
+//                TODO: Prep payload for recon api save master
+                String url = "https://external-api.example.com/api/your-endpoint";
+                logger.info(eventobj.toString());
+                reconapiMainpayload apiObj=new reconapiMainpayload();
+                apiObj.setapipath("/dfevents/appaccepted");
+                apiObj.setpayloaddata(eventobj.toString());
+                apiObj.setdatasource("df");
+                apiObj.setEventType("app_accepted");
+                String jsonPayload = new ObjectMapper().writeValueAsString(apiObj);
+                logger.info(jsonPayload);
+                String reconapiurl=reconapihost+"/savemainstaging";
+                String response = okHttpService.postJson(reconapiurl, jsonPayload);
+//                logger.info(reconapihost);
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                 logger.info("[RIDE]: Kafka event UID: {}", uid);
-                emitterAppAccptdEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+//                emitterAppAccptdEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
 //            return Response.ok().entity("success").build();
 //            return Response.ok().entity("success").build();
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
