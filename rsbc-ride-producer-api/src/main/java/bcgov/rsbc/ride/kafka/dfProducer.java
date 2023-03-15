@@ -117,14 +117,14 @@ public class dfProducer {
 
             try {
 //                TODO: Prep payload for recon api save master
-                logger.info(eventobj.toString());
+//                logger.info(eventobj.toString());
                 reconapiMainpayload apiObj=new reconapiMainpayload();
                 apiObj.setapipath("/dfevents/appaccepted");
                 apiObj.setpayloaddata(eventobj.toString());
                 apiObj.setdatasource("df");
                 apiObj.setEventType("app_accepted");
                 String jsonPayload = new ObjectMapper().writeValueAsString(apiObj);
-                logger.info(jsonPayload);
+//                logger.info(jsonPayload);
                 String reconapiurl=reconapihost+"/savemainstaging";
                 String response = okHttpService.postJson(reconapiurl, jsonPayload);
 //                logger.info(reconapihost);
