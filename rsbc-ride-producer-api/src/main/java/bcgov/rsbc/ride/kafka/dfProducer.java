@@ -117,7 +117,6 @@ public class dfProducer {
 
             try {
 //                TODO: Prep payload for recon api save master
-                String url = "https://external-api.example.com/api/your-endpoint";
                 logger.info(eventobj.toString());
                 reconapiMainpayload apiObj=new reconapiMainpayload();
                 apiObj.setapipath("/dfevents/appaccepted");
