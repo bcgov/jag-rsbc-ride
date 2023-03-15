@@ -14,14 +14,16 @@ def recondestination(dbclient,main_staging_collection,main_table_collection,logg
     for row in results:
         # DONE: If found delete from staging if not update recon count column
         try:
-            if row['event_type']:
-                bi_table_name=map_event_type_destination(row['event_type'])
+            if row['eventType']:
+                bi_table_name=map_event_type_destination(row['eventType'])
                 bi_db_name=map_source_db(row['datasource'])
+                # print(bi_db_name)
                 # DONE: Query SQL DB
                 bi_sql_db_obj = SqlDBFunctions(bi_db_name, os.getenv('BI_SQL_DB_SERVER'),os.getenv('BI_SQL_DB_USERNAME'), os.getenv('BI_SQL_DB_PASSWORD'))
-                qrystr = bi_sql_db_obj.prepQuerystr(row['payloaddata'])
+                qrystr = bi_sql_db_obj.prepQuerystr(row['payloaddata'],row['datasource'])
                 table_name=bi_table_name
                 reconqrystr = f'SELECT * FROM {table_name} WHERE {qrystr}'
+                # print(reconqrystr)
                 found = bi_sql_db_obj.reconQuery(reconqrystr)
                 if found:
                     main_staging_collection.delete_one(row)
