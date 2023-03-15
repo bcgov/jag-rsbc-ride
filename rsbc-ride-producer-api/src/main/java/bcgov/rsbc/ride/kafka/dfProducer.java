@@ -131,7 +131,7 @@ public class dfProducer {
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                 logger.info("[RIDE]: Kafka event UID: {}", uid);
-//                emitterAppAccptdEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+                emitterAppAccptdEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
 //            return Response.ok().entity("success").build();
 //            return Response.ok().entity("success").build();
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
