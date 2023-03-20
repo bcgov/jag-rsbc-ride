@@ -1,4 +1,4 @@
-name: RECON-svc-CD for recon-svc- release branch to testbranch(Deploy to test)
+name: RECON-svc-CD for recon-svc- release branch to prodbranch(Deploy to prod)
 on:
   pull_request:
     types: [opened, reopened,edited,synchronize]
