@@ -18,6 +18,7 @@ import javax.ws.rs.POST;
 
 import javax.ws.rs.core.Response;
 
+import bcgov.rsbc.ride.kafka.services.OkHttpService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Channel;
@@ -37,18 +38,16 @@ import bcgov.rsbc.ride.kafka.models.payrecvdevent;
 import bcgov.rsbc.ride.kafka.models.payrecvdpayloadrecord;
 import bcgov.rsbc.ride.kafka.models.reviewscheduleddevent;
 import bcgov.rsbc.ride.kafka.models.reviewscheduledpayloadrecord;
-import bcgov.rsbc.ride.kafka.models.reconapiMainpayload;
+
 
 import io.quarkus.mongodb.panache.PanacheQuery;
-import bcgov.rsbc.ride.kafka.apiKeys;
+
 import javax.ws.rs.*;
+
+import bcgov.rsbc.ride.kafka.services.ReconService;
 
 
 //import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-
 
 
 @Path("/dfevents")
@@ -88,8 +87,8 @@ public class dfProducer {
     }
 
 
-    private OkHttpService okHttpService = new OkHttpService();
-
+//    private OkHttpService okHttpService = new OkHttpService();
+//
     @ConfigProperty(name = "recon.api.host")
     String reconapihost;
 
@@ -116,17 +115,24 @@ public class dfProducer {
             appacceptedpayloadrecord payloaddata=(appacceptedpayloadrecord) eventobj.getAppacceptedpayload().get(0);
 
             try {
-//                TODO: Prep payload for recon api save master
+                //DONE: Prep payload for recon api save master
+                ReconService reconObj=new ReconService();
+                Boolean reconResp= reconObj.saveTomainStaging("/dfevents/appaccepted",eventobj.toString(),"df","app_accepted",reconapihost);
+                if(!reconResp){
+//                    throw new Exception("error in saving to main staging table");
+                    logger.error("[RIDE]: Exception occurred while saving to main staging table");
+                }
+
 //                logger.info(eventobj.toString());
-                reconapiMainpayload apiObj=new reconapiMainpayload();
-                apiObj.setapipath("/dfevents/appaccepted");
-                apiObj.setpayloaddata(eventobj.toString());
-                apiObj.setdatasource("df");
-                apiObj.setEventType("app_accepted");
-                String jsonPayload = new ObjectMapper().writeValueAsString(apiObj);
-//                logger.info(jsonPayload);
-                String reconapiurl=reconapihost+"/savemainstaging";
-                String response = okHttpService.postJson(reconapiurl, jsonPayload);
+//                reconapiMainpayload apiObj=new reconapiMainpayload();
+//                apiObj.setapipath("/dfevents/appaccepted");
+//                apiObj.setpayloaddata(eventobj.toString());
+//                apiObj.setdatasource("df");
+//                apiObj.setEventType("app_accepted");
+//                String jsonPayload = new ObjectMapper().writeValueAsString(apiObj);
+////                logger.info(jsonPayload);
+//                String reconapiurl=reconapihost+"/savemainstaging";
+//                String response = okHttpService.postJson(reconapiurl, jsonPayload);
 //                logger.info(reconapihost);
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
@@ -169,6 +175,13 @@ public class dfProducer {
             disclosuresentpayloadrecord payloaddata=(disclosuresentpayloadrecord) eventobj.getDisclosuresentpayload().get(0);
 
             try {
+                //DONE: Prep payload for recon api save master
+                ReconService reconObj=new ReconService();
+                Boolean reconResp= reconObj.saveTomainStaging("/dfevents/disclosuresent",eventobj.toString(),"df","disclosure_sent",reconapihost);
+                if(!reconResp){
+//                    throw new Exception("error in saving to main staging table");
+                    logger.error("[RIDE]: Exception occurred while saving to main staging table");
+                }
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                 logger.info("[RIDE]: Kafka event UID: {}", uid);
@@ -207,6 +220,13 @@ public class dfProducer {
             evidencesubmittedpayloadrecord payloaddata=(evidencesubmittedpayloadrecord) eventobj.getEvidencesubmittedpayload().get(0);
 
             try {
+                //DONE: Prep payload for recon api save master
+                ReconService reconObj=new ReconService();
+                Boolean reconResp= reconObj.saveTomainStaging("/dfevents/evidencesubmitted",eventobj.toString(),"df","evidence_submitted",reconapihost);
+                if(!reconResp){
+//                    throw new Exception("error in saving to main staging table");
+                    logger.error("[RIDE]: Exception occurred while saving to main staging table");
+                }
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                 logger.info("[RIDE]: Kafka event UID: {}", uid);
@@ -246,6 +266,13 @@ public class dfProducer {
             payrecvdpayloadrecord payloaddata=(payrecvdpayloadrecord) eventobj.getPayrecvdpayload().get(0);
 
             try {
+                //DONE: Prep payload for recon api save master
+                ReconService reconObj=new ReconService();
+                Boolean reconResp= reconObj.saveTomainStaging("/dfevents/paymentreceived",eventobj.toString(),"df","payment_received",reconapihost);
+                if(!reconResp){
+//                    throw new Exception("error in saving to main staging table");
+                    logger.error("[RIDE]: Exception occurred while saving to main staging table");
+                }
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                 logger.info("[RIDE]: Kafka event UID: {}", uid);
@@ -282,6 +309,13 @@ public class dfProducer {
             reviewscheduledpayloadrecord payloaddata=(reviewscheduledpayloadrecord) eventobj.getReviewscheduledpayload().get(0);
 
             try {
+                //DONE: Prep payload for recon api save master
+                ReconService reconObj=new ReconService();
+                Boolean reconResp= reconObj.saveTomainStaging("/dfevents/reviewscheduled",eventobj.toString(),"df","review_scheduled",reconapihost);
+                if(!reconResp){
+//                    throw new Exception("error in saving to main staging table");
+                    logger.error("[RIDE]: Exception occurred while saving to main staging table");
+                }
                 //Change sendAndAwait to wait at most 5 seconds.
                 Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                 logger.info("Kafka event UID: {}", uid);

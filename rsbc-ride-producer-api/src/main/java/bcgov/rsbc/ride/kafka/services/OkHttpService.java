@@ -1,4 +1,4 @@
-package bcgov.rsbc.ride.kafka;
+package bcgov.rsbc.ride.kafka.services;
 
 import java.io.IOException;
 import okhttp3.MediaType;
