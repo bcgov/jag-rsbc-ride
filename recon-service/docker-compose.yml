@@ -1,0 +1,17 @@
+version: "3"
+services:
+  web:
+    build:
+      context: .  # 5
+      dockerfile: Dockerfile  # 6
+    ports:
+      - "80:80"  # 7
+    environment:  # 9
+      - ERR_STG_COLLECTION=
+      - ERR_THRESHOLD_COUNT=2
+      - LOG_LEVEL=DEBUG
+      - MAIN_STG_COLLECTION=
+      - MAIN_TABLE_COLLECTION=
+      - MONGO_URL=
+      - RECON_DB_NAME=
+      - ERR_TABLE_COLLECTION=
