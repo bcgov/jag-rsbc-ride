@@ -32,6 +32,8 @@ dependencies {
     implementation 'io.quarkus:quarkus-confluent-registry-avro:2.10.2.Final'
     implementation 'io.quarkus:quarkus-rest-client-reactive:2.10.2.Final'
 
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.11'
+
     // implementation group: 'io.quarkus', name: 'quarkus-vertx-http', version: '2.14.1.Final'
 
 
