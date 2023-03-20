@@ -1,0 +1,145 @@
+name: RECON-svc-CD for recon-svc- release branch to testbranch(Deploy to test)
+on:
+  pull_request:
+    types: [opened, reopened,edited,synchronize]
+    branches:   
+      - 'maincomponent/ride_recon_service_testbranch'
+      # - 'master'
+      # - 'release**'
+
+
+jobs:
+  merge_pr_local:
+    name: Merge PR locally and create temp branch
+    runs-on: ubuntu-latest
+    env:
+      # build_config_name: "ride-vips-adapter-nginx-proxy-build-v2"
+      # base_image_tag: "1"
+      PR_NUMBER: ${{ github.event.number }}
+      PR_IMAGE_STREAM_TAG: pr-build-${{ github.sha}}
+
+
+    steps:
+      - name: Merge the PR branch locally
+        run: |
+          git clone "https://github.com/bcgov/jag-rsbc-ride"
+          git config --global user.email "ride_actions@gov.bc.ca"
+          git config --global user.name "ride_actions"
+          git config --global pull.rebase true
+          ls -a
+          cd jag-rsbc-ride
+          git fetch
+          git branch -a
+          git checkout $GITHUB_HEAD_REF      
+          git checkout $GITHUB_BASE_REF  
+          git merge $GITHUB_HEAD_REF 
+          git checkout -b tempbranch_testdeploy/pr-${{ env.PR_NUMBER }}
+          git remote add testbranch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          git push -u testbranch tempbranch_testdeploy/pr-${{ env.PR_NUMBER }}
+
+
+
+  build_push:
+    name: Build and Push the image
+    runs-on: ubuntu-latest
+    environment: test
+    needs: [merge_pr_local]
+    env:
+      build_config_name: "ride-recon-svc-build-test"
+      PR_NUMBER: ${{ github.event.number }}
+      # base_image_tag: "1"
+      # PR_NUMBER: ${{ github.event.number }}
+      # PR_IMAGE_STREAM_TAG: pr-build-${{ github.sha}}
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3      
+      - name: Authenticate and set context
+        uses: redhat-actions/oc-login@v1.1.2
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL_SILVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_SA_PIPELINE_TOKEN_SILVER }}
+          namespace: "${{ secrets.OPENSHIFT_LICENSE_PLATE_SILVER }}-tools"
+      - name: Apply Build Yaml
+        run: |
+          cd recon-service/openshift
+          oc process -f ride-recon-svc-build.yml --param SOURCE_REPOSITORY_REF=tempbranch_testdeploy/pr-${{ env.PR_NUMBER }} --param-file ride-recon-svc-build-test-params.yml --param VERSION=$GITHUB_SHA | oc apply -f -
+          
+      - name: Start the build and push
+        run: |
+          oc start-build ${{ env.build_config_name }} --follow --wait
+      - name: Delete Temp Branch
+        run: |
+          git clone "https://github.com/bcgov/jag-rsbc-ride"
+          git config --global user.email "ride_actions@gov.bc.ca"
+          git config --global user.name "ride_actions"
+          git config --global pull.rebase true
+          cd jag-rsbc-ride
+          git fetch
+          git remote add testbranch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          git push -d testbranch tempbranch_testdeploy/pr-${{ env.PR_NUMBER }}
+
+
+
+  deploy_dev_argocd:
+    name: Push to Gitops repo for test deployment via Argocd
+    runs-on: ubuntu-latest
+    needs: [merge_pr_local,build_push]
+    env:
+      PR_NUMBER: ${{ github.event.number }}
+      PR_IMAGE_STREAM_TAG: ${{ github.sha}}
+      RELEASE_NAME: release_1_1
+    steps:
+      - name: Checkout Gitops repository
+        uses: actions/checkout@v3
+        with:
+          repository: bcgov-c/tenant-gitops-be5301
+          ref: deployment/recon-svc
+          token: ${{ secrets.GITOPS_GITHUB_TOKEN }}
+      # - name: New PR Branch
+      #   run: |
+      #     git config user.name github-actions
+      #     git config user.email github-actions@github.com
+      #     git pull
+      #     git checkout -b pr-branch-${{env.PR_NUMBER}}  
+      #     git push -u origin pr-branch-${{env.PR_NUMBER}} 
+      - name: Update Image tag for test deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.images[0].newTag = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/test/kustomization.yaml'
+      # - name: Update name suffix for Dev deploy
+      #   uses: mikefarah/yq@v4.28.1
+      #   with:
+      #     cmd: yq eval -i '.nameSuffix = "-dev"' 'overlays/dev/kustomization.yaml'
+      # - name: Update app name label for Dev deploy
+      #   uses: mikefarah/yq@v4.28.1
+      #   with:
+      #     cmd: yq eval -i '.commonLabels["app.kubernetes.io/name"] = "ride-producer-api-dev"' 'overlays/pr/kustomization.yaml'
+      # - name: Update app label for PR deploy
+      #   uses: mikefarah/yq@v4.28.1
+      #   with:
+      #     cmd: yq eval -i '.commonLabels.app = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/kustomization.yaml'
+      - name: Update release name for test deploy
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonAnnotations.release_name = "${{env.RELEASE_NAME}}"' 'overlays/test/kustomization.yaml'
+      # - name: Update hpa Dev name
+      #   uses: mikefarah/yq@v4.28.1
+      #   with:
+      #     cmd: yq eval -i '.spec.scaleTargetRef.name = "ride-producer-api-pr-${{env.PR_NUMBER}}"' 'overlays/pr/custom-hpa-ride-producer-api.yml'
+      - name: Update sha annotation
+        uses: mikefarah/yq@v4.28.1
+        with:
+          cmd: yq eval -i '.commonAnnotations.commit_sha = "${{env.PR_IMAGE_STREAM_TAG}}"' 'overlays/test/kustomization.yaml'
+      - name: Check Changed value
+        run: |
+          cat overlays/test/kustomization.yaml
+      - name: Push Changes
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "updated test deploy details to test overlay yaml"
+          git push -u origin deployment/recon-svc
+        
