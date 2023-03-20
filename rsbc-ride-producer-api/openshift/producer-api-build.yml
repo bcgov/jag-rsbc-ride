@@ -144,7 +144,6 @@ objects:
               secretKeyRef:
                 key: KAFKA_CONFLUENT_COMPAT_REGISTRY
                 name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
-          dockerfilePath: Dockerfile.multistage
           - name: RECON_SVC_HOST
             valueFrom:
               secretKeyRef:
