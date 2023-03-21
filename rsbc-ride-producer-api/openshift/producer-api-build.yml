@@ -144,6 +144,10 @@ objects:
               secretKeyRef:
                 key: KAFKA_CONFLUENT_COMPAT_REGISTRY
                 name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
+          - name: RECON_SVC_HOST
+            valueFrom:
+              secretKeyRef:
+                key: RECON_SVC_HOST
           - name: ISSUANCE_EVENT_TOPIC
             valueFrom:
               secretKeyRef:
