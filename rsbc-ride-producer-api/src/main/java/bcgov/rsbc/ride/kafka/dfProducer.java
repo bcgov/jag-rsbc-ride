@@ -116,6 +116,7 @@ public class dfProducer {
 
             try {
                 //DONE: Prep payload for recon api save master
+//                throw new Exception("error in saving to main staging table");
                 ReconService reconObj=new ReconService();
                 Boolean reconResp= reconObj.saveTomainStaging("/dfevents/appaccepted",eventobj.toString(),"df","app_accepted",reconapihost);
                 if(!reconResp){
@@ -143,6 +144,12 @@ public class dfProducer {
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
                 logger.error("[RIDE]: Exception occurred while sending app_accepted event, exception details: {}", e.toString() + "; " + e.getMessage());
+                ReconService reconObj=new ReconService();
+                Boolean reconResp= reconObj.saveToErrStaging("/dfevents/appaccepted",eventobj.toString(),"df","app_accepted",reconapihost,"producer_api",e.toString());
+                if(!reconResp){
+//                    throw new Exception("error in saving to main staging table");
+                    logger.error("[RIDE]: Exception occurred while saving to err staging table");
+                }
                 return Response.serverError().entity("Failed sending  event to kafka").build();
             }
 
@@ -189,6 +196,12 @@ public class dfProducer {
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
                 logger.error("[RIDE]: Exception occurred while sending disclosure event, exception details: {}", e.toString() + "; " + e.getMessage());
+                ReconService reconObj=new ReconService();
+                Boolean reconResp= reconObj.saveToErrStaging("/dfevents/disclosuresent",eventobj.toString(),"df","disclosure_sent",reconapihost,"producer_api",e.toString());
+                if(!reconResp){
+//                    throw new Exception("error in saving to main staging table");
+                    logger.error("[RIDE]: Exception occurred while saving to err staging table");
+                }
                 return Response.serverError().entity("Failed sending  event to kafka").build();
             }
         }
@@ -234,6 +247,12 @@ public class dfProducer {
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
                 logger.error("[RIDE]: Exception occurred while sending evidence submitted event, exception details: {}", e.toString() + "; " + e.getMessage());
+                ReconService reconObj=new ReconService();
+                Boolean reconResp= reconObj.saveToErrStaging("/dfevents/evidencesubmitted",eventobj.toString(),"df","evidence_submitted",reconapihost,"producer_api",e.toString());
+                if(!reconResp){
+//                    throw new Exception("error in saving to main staging table");
+                    logger.error("[RIDE]: Exception occurred while saving to err staging table");
+                }
                 return Response.serverError().entity("Failed sending event to kafka").build();
             }
 
@@ -280,6 +299,12 @@ public class dfProducer {
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
                 logger.error("[RIDE]: Exception occurred while sending payment_received event, exception details: {}", e.toString() + "; " + e.getMessage());
+                ReconService reconObj=new ReconService();
+                Boolean reconResp= reconObj.saveToErrStaging("/dfevents/paymentreceived",eventobj.toString(),"df","payment_received",reconapihost,"producer_api",e.toString());
+                if(!reconResp){
+//                    throw new Exception("error in saving to main staging table");
+                    logger.error("[RIDE]: Exception occurred while saving to err staging table");
+                }
                 return Response.serverError().entity("Failed sending event to kafka").build();
             }
         }
@@ -323,6 +348,12 @@ public class dfProducer {
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
                 logger.error("[RIDE]: Exception occurred while sending review_scheduled event, exception details: {}", e.toString() + "; " + e.getMessage());
+                ReconService reconObj=new ReconService();
+                Boolean reconResp= reconObj.saveToErrStaging("/dfevents/reviewscheduled",eventobj.toString(),"df","review_scheduled",reconapihost,"producer_api",e.toString());
+                if(!reconResp){
+//                    throw new Exception("error in saving to main staging table");
+                    logger.error("[RIDE]: Exception occurred while saving to err staging table");
+                }
                 return Response.serverError().entity("Failed sending event to kafka").build();
             }
         }
