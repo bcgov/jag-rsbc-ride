@@ -148,6 +148,7 @@ objects:
             valueFrom:
               secretKeyRef:
                 key: RECON_SVC_HOST
+                name: ${NAME}-${BUILD_SECRET_NAME}-${BUILD_CONFIG_SUFFIX}
           dockerfilePath: Dockerfile.multistage
       output:
         to:
