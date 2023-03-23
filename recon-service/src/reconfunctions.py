@@ -13,6 +13,8 @@ def recondestination(dbclient,main_staging_collection,main_table_collection,logg
     # DONE: Query for each record in destination db(based on row type)
     for row in results:
         # DONE: If found delete from staging if not update recon count column
+        logger.debug('processing row')
+        logger.debug(row)
         try:
             if row['eventType']:
                 bi_table_name=map_event_type_destination(row['eventType'])
@@ -24,7 +26,7 @@ def recondestination(dbclient,main_staging_collection,main_table_collection,logg
                 table_name=bi_table_name
                 reconqrystr = f'SELECT * FROM {table_name} WHERE {qrystr}'
                 # print(reconqrystr)
-                found = bi_sql_db_obj.reconQuery(reconqrystr)
+                found = bi_sql_db_obj.reconQuery(reconqrystr,logger)
                 if found:
                     main_staging_collection.delete_one(row)
                     # DONE: If found save to master table

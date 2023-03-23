@@ -49,11 +49,15 @@ class SqlDBFunctions():
 
 
 
-    def reconQuery(self,queryStr):
+    def reconQuery(self,queryStr,logger):
         # print(queryStr)
         recordfound=False
         result = self.cursor.execute(queryStr)
         rows = self.cursor.fetchall()
+        logger.debug(queryStr)
+        logger.debug(rows)
+        # print(queryStr)
+        # print(rows)
         if len(rows)>0:
             recordfound=True
 
