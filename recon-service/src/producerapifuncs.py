@@ -14,7 +14,7 @@ class producerAPITasks:
         try:
             if apimethod=='POST':
                 response = requests.post(apiurl, headers=headers, data=payload,timeout=10)
-            # print(response.status_code)
+            print(response.status_code)
             if response.status_code==200:
                 apistatus=True
         except Exception as e:
