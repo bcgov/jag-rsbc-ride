@@ -118,8 +118,8 @@ async def error_retry():
         respstatus = {"status": "success"}
         status_code = 200
     except Exception as e:
-        logging.info('error in recon job')
-        logging.error('error in recon job')
+        logging.info('error in error retry job')
+        logging.error('error in eror retry job')
         logging.error(e)
 
     return JSONResponse(status_code=status_code, content=respstatus)
