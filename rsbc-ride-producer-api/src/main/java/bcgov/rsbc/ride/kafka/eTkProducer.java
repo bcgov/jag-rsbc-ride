@@ -22,6 +22,7 @@ import bcgov.rsbc.ride.kafka.models.evtissuanceeevent;
 import bcgov.rsbc.ride.kafka.models.evtpaymenteevent;
 import bcgov.rsbc.ride.kafka.models.evtdisputeevent;
 import bcgov.rsbc.ride.kafka.models.evtcontraventionseevent;
+import bcgov.rsbc.ride.kafka.models.evtpaymentqueryeevent;
 
 
 @Path("/etkevents")
@@ -50,6 +51,11 @@ public class eTkProducer {
     @Inject
     @Channel("outgoing-violations")
     MutinyEmitter<Record<Long, evtcontraventionseevent>> emitterContraventionsEvent;
+
+
+    @Inject
+    @Channel("outgoing-payquery")
+    MutinyEmitter<Record<Long, evtpaymentqueryeevent>> emitterPayQueryEvent;
 
 
     @GET
@@ -231,6 +237,42 @@ public class eTkProducer {
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
                 logger.error("[RIDE]: Exception occurred while sending etk_violations event, exception details: {}", e.toString() + "; " + e.getMessage());
+                return Response.serverError().entity("Failed sending  event to kafka").build();
+            }
+
+        }
+
+    }
+
+
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/payquery")
+    public Response publishPaymentQueryEvent(@HeaderParam("ride-api-key") String apiKey, evtpaymentqueryeevent eventobj) {
+        if(apiKey== null){
+            return Response.serverError().status(401).entity("Auth Error").build();
+        }
+        PanacheQuery<apiKeys> queryKeys = apiKeys.find("apikeyval", apiKey);
+        List<apiKeys> foundKeys = queryKeys.list();
+        long foundKeyCount=queryKeys.count();
+
+        if(foundKeyCount==0){
+            return Response.serverError().status(401).entity("Auth Error").build();
+        }else{
+            logger.info("[RIDE]: Publish payment_query [payload: {}] to kafka.", eventobj.toString());
+//            logger.info("{}",eventobj.getTypeofevent());
+//            evtissuanceeventpayloadrecord payloaddata=(evtissuanceeventpayloadrecord) eventobj.getEvtissuanceeventpayload().get(0);
+            try {
+                //Change sendAndAwait to wait at most 5 seconds.
+                Long uid = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                logger.info("[RIDE]: Kafka event UID: {}", uid);
+                emitterPayQueryEvent.send(Record.of(uid, eventobj)).await().atMost(Duration.ofSeconds(5));
+//                emitterIssuanceEvent.send(Record.of(uid, payloaddata)).await().atMost(Duration.ofSeconds(5));
+                return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
+            } catch (Exception e) {
+                logger.error("[RIDE]: Exception occurred while sending payment_query event, exception details: {}", e.toString() + "; " + e.getMessage());
                 return Response.serverError().entity("Failed sending  event to kafka").build();
             }
 
