@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "evtcontraventionseevent",
+  "type": "object",
+  "properties": {
+    "ticket_number": {
+      "type": "string"
+    },
+    "count_number": {
+      "type": "integer"
+    },
+    "act_code": {
+      "type": "string"
+    },
+    "section_text": {
+      "type": "string"
+    },
+    "section_desc": {
+      "type": "string"
+    },
+    "fine_amount": {
+      "type": "string"
+    },
+    "wording_number": {
+      "type": "integer"
+    }
+  }
+}
