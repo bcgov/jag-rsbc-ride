@@ -1,0 +1,49 @@
+name: CI Checks for build
+
+on:
+  push:
+    branches-ignore:   
+      - 'release**'
+      - 'main'
+      - 'master'
+      - 'feature/buildpushpr'
+      - 'maincomponent/**'
+      - 'feature/producerapi-deployv1'
+
+jobs:
+  test_build:
+    name: Test the Build
+    runs-on: ubuntu-latest
+    # needs: create_env_secrets
+    environment: pr
+    env:
+      APP_ACCEPTED_EVENT_TOPIC: ${{ secrets.APP_ACCEPTED_EVENT_TOPIC }}
+      TEST_EVENT_TOPIC: ${{ secrets.TEST_EVENT_TOPIC }}
+      DISCLOSURE_EVENT_TOPIC: ${{ secrets.DISCLOSURE_EVENT_TOPIC }}
+      EVSUBMITTED_EVENT_TOPIC: ${{ secrets.EVSUBMITTED_EVENT_TOPIC }}
+      KAFKA_SASL_CONFIG: ${{ secrets.KAFKA_SASL_CONFIG }}
+      KAFKA_SASL_MECH: ${{ secrets.KAFKA_SASL_MECH }}
+      KAFKA_SCHEMA_REGISTRY: ${{ secrets.KAFKA_SCHEMA_REGISTRY }}
+      KAFKA_SEC_PROTOCOL: ${{ secrets.KAFKA_SEC_PROTOCOL }}
+      KAFKA_SERVER: ${{ secrets.KAFKA_SERVER }}
+      SSL_PROTOCOL: ${{ secrets.SSL_PROTOCOL }}
+      SSL_TRUSTSTORE: ${{ secrets.SSL_TRUSTSTORE }}
+      SSL_TRUSTTORE_PASS: ${{ secrets.SSL_TRUSTTORE_PASS }}
+      SSL_TRUSTTORE_TYPE: ${{ secrets.SSL_TRUSTTORE_TYPE }}
+      MONGO_CONN_STR: ${{ secrets.MONGO_CONN_STR }}
+      AUTH_DB_NAME: ${{ secrets.AUTH_DB_NAME }}
+      KAFKA_CONFLUENT_COMPAT_REGISTRY: ${{ secrets.KAFKA_CONFLUENT_COMPAT_REGISTRY }}
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3      
+      - name: Perform a test build
+        run: |
+          cd rsbc-ride-producer-api
+          chmod +x ./gradlew
+          ./gradlew build -x test
+
+
+
+
