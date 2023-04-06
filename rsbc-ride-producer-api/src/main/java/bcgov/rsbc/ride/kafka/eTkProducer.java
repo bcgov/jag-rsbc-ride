@@ -1,6 +1,8 @@
 package bcgov.rsbc.ride.kafka;
 
 import bcgov.rsbc.ride.kafka.models.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.mongodb.panache.PanacheQuery;
 import io.smallrye.reactive.messaging.MutinyEmitter;
 import io.smallrye.reactive.messaging.kafka.Record;
@@ -78,6 +80,7 @@ public class eTkProducer {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/issuance")
     public Response publishIssuanceEvent(@HeaderParam("ride-api-key") String apiKey, evtissuanceeevent eventobj) {
+
         if(apiKey== null){
             return Response.serverError().status(401).entity("Auth Error").build();
         }
@@ -92,9 +95,11 @@ public class eTkProducer {
 //            logger.info("{}",eventobj.getTypeofevent());
 //            evtissuanceeventpayloadrecord payloaddata=(evtissuanceeventpayloadrecord) eventobj.getEvtissuanceeventpayload().get(0);
             try {
+                String jsonPayload = new ObjectMapper().writeValueAsString(eventobj);
+//                logger.info(jsonPayload);
                 //DONE: Prep payload for recon api save master
                 ReconService reconObj=new ReconService();
-                Boolean reconResp= reconObj.saveTomainStaging("/etkevents/issuance",eventobj.toString(),"etk","etk_issuance",reconapihost);
+                Boolean reconResp= reconObj.saveTomainStaging("/etkevents/issuance",jsonPayload,"etk","etk_issuance",reconapihost);
                 if(!reconResp){
 //                    throw new Exception("error in saving to main staging table");
                     logger.error("[RIDE]: Exception occurred while saving to main staging table");
@@ -107,12 +112,19 @@ public class eTkProducer {
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
                 logger.error("[RIDE]: Exception occurred while sending etk_issuance event, exception details: {}", e.toString() + "; " + e.getMessage());
-                ReconService reconObj=new ReconService();
-                Boolean reconResp= reconObj.saveToErrStaging("/etkevents/issuance",eventobj.toString(),"etk","etk_issuance",reconapihost,"producer_api",e.toString());
-                if(!reconResp){
+                String jsonPayload = null;
+                try {
+                    jsonPayload = new ObjectMapper().writeValueAsString(eventobj);
+                    ReconService reconObj=new ReconService();
+                    Boolean reconResp= reconObj.saveToErrStaging("/etkevents/issuance",jsonPayload,"etk","etk_issuance",reconapihost,"producer_api",e.toString());
+                    if(!reconResp){
 //                    throw new Exception("error in saving to main staging table");
+                        logger.error("[RIDE]: Exception occurred while saving to err staging table");
+                    }
+                } catch (JsonProcessingException ex) {
                     logger.error("[RIDE]: Exception occurred while saving to err staging table");
                 }
+
                 return Response.serverError().entity("Failed sending  event to kafka").build();
             }
 
@@ -142,9 +154,10 @@ public class eTkProducer {
 //            logger.info("{}",eventobj.getTypeofevent());
 //            evtissuanceeventpayloadrecord payloaddata=(evtissuanceeventpayloadrecord) eventobj.getEvtissuanceeventpayload().get(0);
             try {
+                String jsonPayload = new ObjectMapper().writeValueAsString(eventobj);
                 //DONE: Prep payload for recon api save master
                 ReconService reconObj=new ReconService();
-                Boolean reconResp= reconObj.saveTomainStaging("/etkevents/disputeupdate",eventobj.toString(),"etk","etk_disputeupdate",reconapihost);
+                Boolean reconResp= reconObj.saveTomainStaging("/etkevents/disputeupdate",jsonPayload,"etk","etk_disputeupdate",reconapihost);
                 if(!reconResp){
 //                    throw new Exception("error in saving to main staging table");
                     logger.error("[RIDE]: Exception occurred while saving to main staging table");
@@ -157,12 +170,18 @@ public class eTkProducer {
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
                 logger.error("[RIDE]: Exception occurred while sending etk_disputeupdate event, exception details: {}", e.toString() + "; " + e.getMessage());
-                ReconService reconObj=new ReconService();
-                Boolean reconResp= reconObj.saveToErrStaging("/etkevents/disputeupdate",eventobj.toString(),"etk","etk_disputeupdate",reconapihost,"producer_api",e.toString());
-                if(!reconResp){
+                try {
+                    String jsonPayload = new ObjectMapper().writeValueAsString(eventobj);
+                    ReconService reconObj=new ReconService();
+                    Boolean reconResp= reconObj.saveToErrStaging("/etkevents/disputeupdate",jsonPayload,"etk","etk_disputeupdate",reconapihost,"producer_api",e.toString());
+                    if(!reconResp){
 //                    throw new Exception("error in saving to main staging table");
+                        logger.error("[RIDE]: Exception occurred while saving to err staging table");
+                    }
+                } catch (JsonProcessingException ex) {
                     logger.error("[RIDE]: Exception occurred while saving to err staging table");
                 }
+
                 return Response.serverError().entity("Failed sending  event to kafka").build();
             }
 
@@ -190,9 +209,10 @@ public class eTkProducer {
 //            logger.info("{}",eventobj.getTypeofevent());
 //            evtissuanceeventpayloadrecord payloaddata=(evtissuanceeventpayloadrecord) eventobj.getEvtissuanceeventpayload().get(0);
             try {
+                String jsonPayload = new ObjectMapper().writeValueAsString(eventobj);
                 //DONE: Prep payload for recon api save master
                 ReconService reconObj=new ReconService();
-                Boolean reconResp= reconObj.saveTomainStaging("/etkevents/dispute",eventobj.toString(),"etk","etk_dispute",reconapihost);
+                Boolean reconResp= reconObj.saveTomainStaging("/etkevents/dispute",jsonPayload,"etk","etk_dispute",reconapihost);
                 if(!reconResp){
 //                    throw new Exception("error in saving to main staging table");
                     logger.error("[RIDE]: Exception occurred while saving to main staging table");
@@ -205,12 +225,18 @@ public class eTkProducer {
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
                 logger.error("[RIDE]: Exception occurred while sending etk_dispute event, exception details: {}", e.toString() + "; " + e.getMessage());
-                ReconService reconObj=new ReconService();
-                Boolean reconResp= reconObj.saveToErrStaging("/etkevents/dispute",eventobj.toString(),"etk","etk_dispute",reconapihost,"producer_api",e.toString());
-                if(!reconResp){
+                try {
+                    String jsonPayload = new ObjectMapper().writeValueAsString(eventobj);
+                    ReconService reconObj=new ReconService();
+                    Boolean reconResp= reconObj.saveToErrStaging("/etkevents/dispute",jsonPayload,"etk","etk_dispute",reconapihost,"producer_api",e.toString());
+                    if(!reconResp){
 //                    throw new Exception("error in saving to main staging table");
+                        logger.error("[RIDE]: Exception occurred while saving to err staging table");
+                    }
+                } catch (JsonProcessingException ex) {
                     logger.error("[RIDE]: Exception occurred while saving to err staging table");
                 }
+
                 return Response.serverError().entity("Failed sending  event to kafka").build();
             }
 
@@ -239,9 +265,10 @@ public class eTkProducer {
 //            logger.info("{}",eventobj.getTypeofevent());
 //            evtissuanceeventpayloadrecord payloaddata=(evtissuanceeventpayloadrecord) eventobj.getEvtissuanceeventpayload().get(0);
             try {
+                String jsonPayload = new ObjectMapper().writeValueAsString(eventobj);
                 //DONE: Prep payload for recon api save master
                 ReconService reconObj=new ReconService();
-                Boolean reconResp= reconObj.saveTomainStaging("/etkevents/payment",eventobj.toString(),"etk","etk_payment",reconapihost);
+                Boolean reconResp= reconObj.saveTomainStaging("/etkevents/payment",jsonPayload,"etk","etk_payment",reconapihost);
                 if(!reconResp){
 //                    throw new Exception("error in saving to main staging table");
                     logger.error("[RIDE]: Exception occurred while saving to main staging table");
@@ -254,12 +281,18 @@ public class eTkProducer {
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
                 logger.error("[RIDE]: Exception occurred while sending etk_payment event, exception details: {}", e.toString() + "; " + e.getMessage());
-                ReconService reconObj=new ReconService();
-                Boolean reconResp= reconObj.saveToErrStaging("/etkevents/payment",eventobj.toString(),"etk","etk_payment",reconapihost,"producer_api",e.toString());
-                if(!reconResp){
+                try {
+                    String jsonPayload = new ObjectMapper().writeValueAsString(eventobj);
+                    ReconService reconObj=new ReconService();
+                    Boolean reconResp= reconObj.saveToErrStaging("/etkevents/payment",jsonPayload,"etk","etk_payment",reconapihost,"producer_api",e.toString());
+                    if(!reconResp){
 //                    throw new Exception("error in saving to main staging table");
+                        logger.error("[RIDE]: Exception occurred while saving to err staging table");
+                    }
+                } catch (JsonProcessingException ex) {
                     logger.error("[RIDE]: Exception occurred while saving to err staging table");
                 }
+
                 return Response.serverError().entity("Failed sending  event to kafka").build();
             }
 
@@ -287,9 +320,10 @@ public class eTkProducer {
 //            logger.info("{}",eventobj.getTypeofevent());
 //            evtissuanceeventpayloadrecord payloaddata=(evtissuanceeventpayloadrecord) eventobj.getEvtissuanceeventpayload().get(0);
             try {
+                String jsonPayload = new ObjectMapper().writeValueAsString(eventobj);
                 //DONE: Prep payload for recon api save master
                 ReconService reconObj=new ReconService();
-                Boolean reconResp= reconObj.saveTomainStaging("/etkevents/violations",eventobj.toString(),"etk","etk_violations",reconapihost);
+                Boolean reconResp= reconObj.saveTomainStaging("/etkevents/violations",jsonPayload,"etk","etk_violations",reconapihost);
                 if(!reconResp){
 //                    throw new Exception("error in saving to main staging table");
                     logger.error("[RIDE]: Exception occurred while saving to main staging table");
@@ -302,12 +336,18 @@ public class eTkProducer {
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
                 logger.error("[RIDE]: Exception occurred while sending etk_violations event, exception details: {}", e.toString() + "; " + e.getMessage());
-                ReconService reconObj=new ReconService();
-                Boolean reconResp= reconObj.saveToErrStaging("/etkevents/violations",eventobj.toString(),"etk","etk_violations",reconapihost,"producer_api",e.toString());
-                if(!reconResp){
+                try {
+                    String jsonPayload = new ObjectMapper().writeValueAsString(eventobj);
+                    ReconService reconObj=new ReconService();
+                    Boolean reconResp= reconObj.saveToErrStaging("/etkevents/violations",jsonPayload,"etk","etk_violations",reconapihost,"producer_api",e.toString());
+                    if(!reconResp){
 //                    throw new Exception("error in saving to main staging table");
+                        logger.error("[RIDE]: Exception occurred while saving to err staging table");
+                    }
+                } catch (JsonProcessingException ex) {
                     logger.error("[RIDE]: Exception occurred while saving to err staging table");
                 }
+
                 return Response.serverError().entity("Failed sending  event to kafka").build();
             }
 
@@ -336,9 +376,10 @@ public class eTkProducer {
 //            logger.info("{}",eventobj.getTypeofevent());
 //            evtissuanceeventpayloadrecord payloaddata=(evtissuanceeventpayloadrecord) eventobj.getEvtissuanceeventpayload().get(0);
             try {
+                String jsonPayload = new ObjectMapper().writeValueAsString(eventobj);
                 //DONE: Prep payload for recon api save master
                 ReconService reconObj=new ReconService();
-                Boolean reconResp= reconObj.saveTomainStaging("/etkevents/payquery",eventobj.toString(),"etk","payment_query",reconapihost);
+                Boolean reconResp= reconObj.saveTomainStaging("/etkevents/payquery",jsonPayload,"etk","payment_query",reconapihost);
                 if(!reconResp){
 //                    throw new Exception("error in saving to main staging table");
                     logger.error("[RIDE]: Exception occurred while saving to main staging table");
@@ -351,12 +392,18 @@ public class eTkProducer {
                 return Response.ok().entity("{\"status\":\"sent to kafka\",\"event_id\":\""+uid+"\"}").build();
             } catch (Exception e) {
                 logger.error("[RIDE]: Exception occurred while sending payment_query event, exception details: {}", e.toString() + "; " + e.getMessage());
-                ReconService reconObj=new ReconService();
-                Boolean reconResp= reconObj.saveToErrStaging("/etkevents/payquery",eventobj.toString(),"etk","payment_query",reconapihost,"producer_api",e.toString());
-                if(!reconResp){
+                try {
+                    String jsonPayload = new ObjectMapper().writeValueAsString(eventobj);
+                    ReconService reconObj=new ReconService();
+                    Boolean reconResp= reconObj.saveToErrStaging("/etkevents/payquery",jsonPayload,"etk","payment_query",reconapihost,"producer_api",e.toString());
+                    if(!reconResp){
 //                    throw new Exception("error in saving to main staging table");
+                        logger.error("[RIDE]: Exception occurred while saving to err staging table");
+                    }
+                } catch (JsonProcessingException ex) {
                     logger.error("[RIDE]: Exception occurred while saving to err staging table");
                 }
+
                 return Response.serverError().entity("Failed sending  event to kafka").build();
             }
 
