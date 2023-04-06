@@ -12,16 +12,18 @@ def map_event_type_destination(event_type):
         return os.getenv('DF_PAY_RECVD_TABLE_NAME')
     elif event_type=='review_scheduled':
         return os.getenv('DF_REV_SCHED_TABLE_NAME')
-    elif event_type=='disputeupdate':
+    elif event_type=='etk_disputeupdate':
         return os.getenv('ETK_DISP_UPDATE_TABLE_NAME')
-    elif event_type=='issuance':
+    elif event_type=='etk_issuance':
         return os.getenv('ETK_ISSUANCE_TABLE_NAME')
-    elif event_type=='violations':
+    elif event_type=='etk_violations':
         return os.getenv('ETK_VIOLATIONS_TABLE_NAME')
-    elif event_type=='payment':
+    elif event_type=='etk_payment':
         return os.getenv('ETK_PAYMENT_TABLE_NAME')
-    elif event_type=='dispute':
-        return os.getenv('ETK_DISPUTE_TABLE_NAME')
+    elif event_type=='payment_query':
+        return os.getenv('ETK_PAYMENT_TABLE_NAME')
+    elif event_type=='etk_dispute':
+        return os.getenv('ETK_PAYQUERY_TABLE_NAME')
 
 def map_source_db(source):
     if source=='df':
