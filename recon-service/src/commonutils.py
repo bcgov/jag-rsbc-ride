@@ -21,9 +21,9 @@ def map_event_type_destination(event_type):
     elif event_type=='etk_payment':
         return os.getenv('ETK_PAYMENT_TABLE_NAME')
     elif event_type=='payment_query':
-        return os.getenv('ETK_PAYMENT_TABLE_NAME')
-    elif event_type=='etk_dispute':
         return os.getenv('ETK_PAYQUERY_TABLE_NAME')
+    elif event_type=='etk_dispute':
+        return os.getenv('ETK_DISPUTE_TABLE_NAME')
 
 def map_source_db(source):
     if source=='df':
