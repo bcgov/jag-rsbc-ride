@@ -36,7 +36,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: payment-query-service
-          file: Dockerfile
+          file: payment-query-service/Dockerfile
           push: false
     # env:
     #   APP_ACCEPTED_EVENT_TOPIC: ${{ secrets.APP_ACCEPTED_EVENT_TOPIC }}
