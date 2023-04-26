@@ -1,17 +1,18 @@
 import json
-
-from fastapi import FastAPI,Response
+from typing import List
+from fastapi import FastAPI,Response,Header, Request
 from fastapi.responses import PlainTextResponse,JSONResponse
 import os
 from pymongo import MongoClient
 import uvicorn
 import logging
 
-from aioprometheus import Gauge,MetricsMiddleware
+from aioprometheus import Gauge,MetricsMiddleware, render,REGISTRY,Counter
 from aioprometheus.asgi.starlette import metrics
 
 from reconfunctions import recondestination
 from errorretryfunctions import error_retry_task
+from metricsfuncs import reconmetrics
 
 
 numeric_level = getattr(logging, os.getenv('LOG_LEVEL').upper(), 10)
@@ -22,9 +23,30 @@ logging.basicConfig(
     format='%(asctime)s %(levelname)s %(module)s:%(lineno)d [RIDE_RECON]: %(message)s'
 )
 
+
+
+# print(REGISTRY.get_all())
+
 app = FastAPI()
+# err_metric=None
+# for collector in REGISTRY.get_all():
+#     print(collector.name)
+#     if collector.name=='msgs_err_count':
+#         app.state.err_metric=collector
+#         err_metric = collector
+#         print(err_metric)
+#         pass
+#
+#     else:
+#         app.state.err_metric = Gauge("msgs_err_count", "Count of errored messages")
+#         err_metric = Gauge("msgs_err_count", "Count of errored messages")
+#         print(err_metric)
+# app.state.err_metric = Gauge("msgs_err_count", "Count of errored messages")
+# app.state.users_events_counter = Counter("events", "Number of events.")
 app.add_middleware(MetricsMiddleware)
 app.add_route("/metrics", metrics)
+# print(app.state.err_metric)
+
 
 
 
@@ -40,6 +62,18 @@ err_threshold=os.getenv('ERR_THRESHOLD_COUNT')
 @app.get('/ping', response_class=JSONResponse)
 async def main_ping():
     return JSONResponse(status_code=200, content={"status":"working"})
+
+
+# @app.get("/metrics")
+# async def handle_metrics(
+#     request: Request,  # pylint: disable=unused-argument
+#     accept: List[str] = Header(None),
+# ) -> Response:
+#
+#     content, http_headers = render(REGISTRY, accept)
+#     print('in metrics')
+#     logging.debug('here is the payload to be saved to main staging table')
+#     return Response(content=content, media_type=http_headers["Content-Type"])
 
 
 
@@ -129,6 +163,45 @@ async def error_retry():
 
     return JSONResponse(status_code=status_code, content=respstatus)
 
+
+@app.get('/genmetrics',response_class=PlainTextResponse)
+async def genmetrics(request: Request):
+    logging.info('triggering metrics generation')
+    # respstatus = {"status": "failure"}
+    respstatus='error'
+    status_code = 500
+    try:
+        metricObj=reconmetrics(db)
+        # print(request.app.state.err_metric)
+        # err_metric.set({'err_type': "staging"}, 1)
+        metric_resp=metricObj.genErrMetrics()
+        # respstatus = {"status": "success"}
+        respstatus=metric_resp
+        status_code = 200
+    except Exception as e:
+        logging.info('error in getting metrics')
+        logging.error('error in getting metrics')
+        logging.error(e)
+    return respstatus
+
+# @app.get("/users")
+# async def get_user( request: Request):
+#     for collector in REGISTRY.get_all():
+#         print(collector.name)
+#         if collector.name=='users_events_counter':
+#             # app.state.users_events_counter=collector
+#             # err_metric = collector
+#             # print(err_metric)
+#             pass
+#
+#         else:
+#             app.state.users_events_counter = Counter("events", "Number of events.")
+#             # err_metric = Gauge("msgs_err_count", "Count of errored messages")
+#             # print(err_metric)
+#     # app.state.users_events_counter = Counter("events", "Number of events.")
+#
+#     # request.app.state.users_events_counter.inc({"path": request.scope["path"]})
+#     return Response(f"a")
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=5001, reload=True)
