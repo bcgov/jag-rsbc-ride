@@ -7,6 +7,9 @@ from pymongo import MongoClient
 import uvicorn
 import logging
 
+from aioprometheus import Gauge,MetricsMiddleware
+from aioprometheus.asgi.starlette import metrics
+
 from reconfunctions import recondestination
 from errorretryfunctions import error_retry_task
 
@@ -20,6 +23,8 @@ logging.basicConfig(
 )
 
 app = FastAPI()
+app.add_middleware(MetricsMiddleware)
+app.add_route("/metrics", metrics)
 
 
 
