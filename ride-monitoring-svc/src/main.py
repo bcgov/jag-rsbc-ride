@@ -28,6 +28,12 @@ main_table_collection = db[os.getenv('MAIN_TABLE_COLLECTION')]
 err_table_collection=db[os.getenv('ERR_TABLE_COLLECTION')]
 
 
+metricsobj=reconmetrics(db)
+
+err_metric = Gauge("msgs_err_count", "Count of errored messages",['count_type'])
+err_metric.labels("err_staging").set_function(metricsobj.genStageErrMetric)
+
+
 @app.route('/ping')
 def pingroute():
     resp="working"
