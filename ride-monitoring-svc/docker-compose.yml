@@ -12,8 +12,8 @@ services:
       - 5000
     ports:
       - "80:5000"  
-    environment:
-      - MONGO_URL=mongodb://root-user:root-password@mongo:27017/
+    # environment:
+    #   - MONGO_URL=mongodb://root-user:root-password@mongo:27017/
     # environment:  
     #   - ERR_STG_COLLECTION=errorstaging
   # stastd:
