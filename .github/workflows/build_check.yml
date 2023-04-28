@@ -1,0 +1,28 @@
+name: CI Checks for monitoring_svc build
+
+on:
+  push:
+    branches-ignore:   
+      - 'release**'
+      - 'main'
+      - 'master'
+      - 'feature/buildpushpr'
+      - 'maincomponent/**'
+      - 'feature/producerapi-deployv1'
+
+jobs:
+  test_build:
+    name: Test the Build
+    runs-on: ubuntu-latest
+    environment: pr
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3      
+      - name: Perform a test build
+        run: |
+          cd ride-monitoring-svc
+          docker build -f Dockerfile-build -t testimage .
+
+
+
+
