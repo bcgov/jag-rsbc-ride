@@ -1,6 +1,6 @@
-FROM registry.access.redhat.com/ubi8/python-39
+# FROM registry.access.redhat.com/ubi8/python-39
 # FROM image-registry.openshift-image-registry.svc:5000/be5301-tools/python-3.9-ubi-base-image:1.0
-# FROM python:3.9-slim-buster
+FROM artifacts.developer.gov.bc.ca/rbe5-images/python:3.9-slim-buster
 
 # RUN addgroup --system app && adduser --system --group app
 
@@ -12,6 +12,6 @@ ENV TESTING 0
 
 WORKDIR /app
 COPY src/ .
-RUN /opt/app-root/bin/python3.9 -m pip install --upgrade pip
+# RUN /opt/app-root/bin/python3.9 -m pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements-build.txt
 CMD ["gunicorn", "main:app", "-w", "2","-b", "0.0.0.0:5000", "--error-logfile", "-"]
