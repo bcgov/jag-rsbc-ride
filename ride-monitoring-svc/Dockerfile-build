@@ -12,5 +12,6 @@ ENV TESTING 0
 
 WORKDIR /app
 COPY src/ .
+RUN /opt/app-root/bin/python3.9 -m pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements-build.txt
 CMD ["gunicorn", "main:app", "-w", "2","-b", "0.0.0.0:5000", "--error-logfile", "-"]
