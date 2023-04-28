@@ -1,0 +1,70 @@
+version: "3"
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
+services:
+  monitoringsvc:
+    build:
+      context: .  
+      dockerfile: Dockerfile-build  
+    container_name: monitoringsvc
+    expose:
+      - 5000
+    ports:
+      - "80:5000"  
+    env_file:
+      - ./.env
+    # environment:
+    #   - MONGO_URL=mongodb://root-user:root-password@mongo:27017/
+    # environment:  
+    #   - ERR_STG_COLLECTION=errorstaging
+  # stastd:
+  #   image: prom/statsd-exporter
+  #   container_name: statsd
+  #   expose:
+  #     - 9125
+  #     - 9102
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./local_dev/config/prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    expose:
+      - 9090
+    ports:
+      - 9090:9090
+  grafana:
+    image: grafana/grafana
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=testpassword
+      - GF_USERS_ALLOW_SIGN_UP=false
+
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root-user
+      - MONGO_INITDB_ROOT_PASSWORD=root-password
+      - MONGO_INITDB_DATABASE=testdb
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root-user
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=root-password
+      - ME_CONFIG_MONGODB_URL=mongodb://root-user:root-password@mongo:27017/
