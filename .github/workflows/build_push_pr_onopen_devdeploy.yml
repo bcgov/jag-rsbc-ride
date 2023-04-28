@@ -21,7 +21,7 @@ jobs:
     # if: startsWith(github.event.pull_request.head.ref, 'release/')
     env:
       DOCKER_IMAGE_TAG: ${{ github.sha}}
-      DOCKER_IMAGE_NAME: ride-monitoring-service
+      DOCKER_IMAGE_NAME: rbe5-images/ride-monitoring-service
       # DOCKER_CONTEXT: ride-monitoring-svc
       DOCKER_FILE: ride-monitoring-svc/Dockerfile
     steps:
