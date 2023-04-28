@@ -22,7 +22,7 @@ jobs:
     env:
       DOCKER_IMAGE_TAG: ${{ github.sha}}
       DOCKER_IMAGE_NAME: ride-monitoring-service
-      DOCKER_CONTEXT: ride-monitoring-svc
+      # DOCKER_CONTEXT: ride-monitoring-svc
       DOCKER_FILE: ride-monitoring-svc/Dockerfile
     steps:
       - name: Checkout
@@ -51,7 +51,7 @@ jobs:
       - name: Build
         uses: docker/build-push-action@v3
         with:
-          context: ${{ env.DOCKER_CONTEXT }}
+          context: ride-monitoring-svc
           file: ${{ env.DOCKER_FILE }}
           push: true
           build-args: |
