@@ -63,3 +63,13 @@ class reconmetrics():
             self.logging.error("error in generating metrics for main table")
             self.logging.info(e)
         return total_main_count
+
+    def genReconExcpCount(self):
+        self.logging.info("generating metrics for recon exceptions")
+        total_recon_count=0
+        try:
+            total_recon_count = self.main_staging_collection.count_documents({'recon_count': {'$gt': int(os.getenv('ERR_THRESHOLD_COUNT'))}})
+        except Exception as e:
+            self.logging.error("error in generating metrics for recon exceptions")
+            self.logging.info(e)
+        return total_recon_count
