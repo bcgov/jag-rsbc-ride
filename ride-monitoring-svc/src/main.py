@@ -38,6 +38,9 @@ total_count_metric = Gauge("msgs_total_count", "Count of total messages",['count
 total_count_metric.labels("total_staging").set_function(metricsobj.genStageMetric)
 total_count_metric.labels("total_main").set_function(metricsobj.genMainMetric)
 
+recon_exception_metric = Gauge("msgs_recon_exceptions", "Count of messages exceeding recon threshold",['count_type'])
+recon_exception_metric.labels("count_staging").set_function(metricsobj.genReconExcpCount)
+
 
 @app.route('/ping')
 def pingroute():
