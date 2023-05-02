@@ -12,3 +12,4 @@ prometheus-client==0.16.0
 pymongo==4.3.3
 Werkzeug==2.3.1
 zipp==3.15.0
+pandas==2.0.1
