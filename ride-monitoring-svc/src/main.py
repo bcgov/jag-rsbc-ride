@@ -41,6 +41,10 @@ total_count_metric.labels("total_main").set_function(metricsobj.genMainMetric)
 recon_exception_metric = Gauge("msgs_recon_exceptions", "Count of messages exceeding recon threshold",['count_type'])
 recon_exception_metric.labels("count_staging").set_function(metricsobj.genReconExcpCount)
 
+# detailed_count_metric = Gauge("ride_msgs_detailed_counts", "Count of messages detailed by types",['source_type','event_type'])
+event_type_count_metric = Gauge("ride_msgs_by_eventtype_counts", "Count of messages by event type",['event_type'])
+source_type_count_metric = Gauge("ride_msgs_by_source_counts", "Count of messages by data source",['source_type'])
+
 
 @app.route('/ping')
 def pingroute():
@@ -51,6 +55,22 @@ def pingroute():
 @app.route('/metrics')
 def metrics():
     return generate_latest()
+
+@app.route('/gendetailedmetrics')
+def genDetailedmetrics():
+    metricsgenerated=0
+    respstatus="error"
+    statuscode=500
+    try:
+        detmetricsobj = reconmetrics(db, logging)
+        metricresult=detmetricsobj.genDetailedCounts(event_type_count_metric,source_type_count_metric)
+        if metricresult==1:
+            respstatus="success"
+            statuscode=200
+    except Exception as e:
+        logging.error("error in generating detailed metrics")
+        logging.info(e)
+    return make_response(jsonify(status=respstatus),statuscode)
 
 
 
