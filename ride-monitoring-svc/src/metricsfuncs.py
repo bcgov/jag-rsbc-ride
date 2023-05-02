@@ -1,6 +1,6 @@
 
 import os
-
+import pandas as pd
 
 class reconmetrics():
 
@@ -73,3 +73,23 @@ class reconmetrics():
             self.logging.error("error in generating metrics for recon exceptions")
             self.logging.info(e)
         return total_recon_count
+
+    def genDetailedCounts(self,event_type_count_metric,source_type_count_metric):
+        self.logging.info("generating detailed metrics")
+        genSuccess = 0
+        try:
+            alldocs=self.main_table_collection.find({})
+            df=pd.DataFrame(list(alldocs))
+            # print(df['datasource','eventType'].value_counts())
+            # print(df['datasource'].value_counts().keys())
+            for k,v in df['datasource'].value_counts().items():
+                source_type_count_metric.labels(source_type=k).set(v)
+            for k, v in df['eventType'].value_counts().items():
+                event_type_count_metric.labels(event_type=k).set(v)
+                # print(k)
+                # print(v)
+            genSuccess=1
+        except Exception as e:
+            self.logging.error("error in generating detailed metrics")
+            self.logging.info(e)
+        return genSuccess
