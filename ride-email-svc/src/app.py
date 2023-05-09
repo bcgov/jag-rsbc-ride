@@ -20,10 +20,14 @@ async def sendbasicemail(payload: dict):
         templateid=payloadinput['templateid']
         receiver=payloadinput['receiver']
         emailobj=EmailFunctions(os.getenv('GC_API_KEY'),os.getenv('GC_BASE_URL'))
-        emailobj.sendbasicemail(templateid,receiver)
-        respstatus = {"status": "success"}
-        status_code = 200
+        emailresp=emailobj.sendbasicemail(templateid,receiver)
+        if emailresp['status_code']==201:
+            respstatus = {"status": "success","resp_id":emailresp['resp_id']}
+            status_code = 200
+        else:
+            raise Exception(emailresp['err_resp'] )
     except Exception as e:
         print(e)
+        respstatus = {"status": "failure","error":str(e)}
 
     return JSONResponse(status_code=status_code, content=respstatus)
