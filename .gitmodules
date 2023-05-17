@@ -1,15 +1,12 @@
-[submodule "rsbc-ride-producer-api/rsbc-ride-producer-api"]
-	path = rsbc-ride-producer-api/rsbc-ride-producer-api
-	url = https://github.com/bcgov/rsbc-ride-producer-api.git
-[submodule "rsbc-ride-consumer-service/rsbc-ride-consumer-service"]
-	path = rsbc-ride-consumer-service/rsbc-ride-consumer-service
-	url = https://github.com/bcgov/rsbc-ride-consumer-service.git
-[submodule "rsbc-ride-recon-service/rsbc-ride-recon-svc"]
-	path = rsbc-ride-recon-service/rsbc-ride-recon-svc
-	url = https://github.com/bcgov/rsbc-ride-recon-svc.git
-[submodule "rsbc-ride-monitoring-service/rsbc-ride-monitoring-svc"]
-	path = rsbc-ride-monitoring-service/rsbc-ride-monitoring-svc
-	url = https://github.com/bcgov/rsbc-ride-monitoring-svc.git
 [submodule "rsbc-ride-monitoring-svc"]
 	path = rsbc-ride-monitoring-svc
 	url = https://github.com/bcgov/rsbc-ride-monitoring-svc.git
+[submodule "rsbc-ride-recon-svc"]
+	path = rsbc-ride-recon-svc
+	url = https://github.com/bcgov/rsbc-ride-recon-svc.git
+[submodule "rsbc-ride-consumer-service"]
+	path = rsbc-ride-consumer-service
+	url = https://github.com/bcgov/rsbc-ride-consumer-service.git
+[submodule "rsbc-ride-producer-api"]
+	path = rsbc-ride-producer-api
+	url = https://github.com/bcgov/rsbc-ride-producer-api.git
