@@ -10,3 +10,6 @@
 [submodule "rsbc-ride-monitoring-service/rsbc-ride-monitoring-svc"]
 	path = rsbc-ride-monitoring-service/rsbc-ride-monitoring-svc
 	url = https://github.com/bcgov/rsbc-ride-monitoring-svc.git
+[submodule "rsbc-ride-monitoring-svc"]
+	path = rsbc-ride-monitoring-svc
+	url = https://github.com/bcgov/rsbc-ride-monitoring-svc.git
