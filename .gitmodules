@@ -1,0 +1,3 @@
+[submodule "rsbc-ride-producer-api/rsbc-ride-producer-api"]
+	path = rsbc-ride-producer-api/rsbc-ride-producer-api
+	url = https://github.com/bcgov/rsbc-ride-producer-api.git
