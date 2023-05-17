@@ -1,5 +1,5 @@
-[submodule "rsbc-ride-producer-api"]
-	path = rsbc-ride-producer-api
+[submodule "rsbc-ride-producer-api/rsbc-ride-producer-api"]
+	path = rsbc-ride-producer-api/rsbc-ride-producer-api
 	url = https://github.com/bcgov/rsbc-ride-producer-api.git
 [submodule "rsbc-ride-consumer-service/rsbc-ride-consumer-service"]
 	path = rsbc-ride-consumer-service/rsbc-ride-consumer-service
