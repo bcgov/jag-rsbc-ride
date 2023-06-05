@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "eTkTestEvent",
+  "type": "object",
+  "properties": {
+    "ticket_number": {
+      "type": "string"
+    },
+    "count_number": {
+      "type": "integer"
+    },
+    "dispute_action_date": {
+      "type": "string"
+    },
+    "dispute_type_code": {
+      "type": "string"
+    },
+    "count_act_regulation": {
+      "type": "string"
+    },
+    "compressed_section": {
+      "type": "string"
+    }
+  }
+}

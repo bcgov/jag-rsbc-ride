@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "evtpaymenteevent",
+  "type": "object",
+  "properties": {
+    "ticket_number": {
+      "type": "string"
+    },
+    "count_number": {
+      "type": "integer"
+    },
+    "payment_card_type": {
+      "type": "string"
+    },
+    "payment_ticket_type_code": {
+      "type": "string"
+    },
+    "payment_amount": {
+      "type": "integer"
+    },
+    "transaction_id": {
+      "type": "string"
+    }
+  }
+}
