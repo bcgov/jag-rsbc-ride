@@ -10,3 +10,6 @@
 [submodule "rsbc-ride-producer-api"]
 	path = rsbc-ride-producer-api
 	url = https://github.com/bcgov/rsbc-ride-producer-api.git
+[submodule "rsbc-ride-api-services"]
+	path = rsbc-ride-api-services
+	url = https://github.com/bcgov/rsbc-ride-api-services.git
