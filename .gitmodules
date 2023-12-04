@@ -13,3 +13,6 @@
 [submodule "rsbc-ride-api-services"]
 	path = rsbc-ride-api-services
 	url = https://github.com/bcgov/rsbc-ride-api-services.git
+[submodule "rsbc-ride-notification-service"]
+	path = rsbc-ride-notification-service
+	url = https://github.com/bcgov/rsbc-ride-notification-service.git
