@@ -16,3 +16,6 @@
 [submodule "rsbc-ride-notification-service"]
 	path = rsbc-ride-notification-service
 	url = https://github.com/bcgov/rsbc-ride-notification-service.git
+[submodule "rsbc-ride-console"]
+	path = rsbc-ride-console
+	url = https://github.com/bcgov/rsbc-ride-console.git
